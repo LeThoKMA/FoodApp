@@ -1,8 +1,17 @@
 package com.example.footapp.model
 
+import com.google.firebase.database.IgnoreExtraProperties
+import com.google.gson.annotations.SerializedName
+
+@IgnoreExtraProperties
 data class User(
-   var id:Int,
-   var name:String,
-   var salary:Int,
-   var isAdmin:Boolean?=false
-)
+   @SerializedName("id")
+   var id:Int?=0,
+   @SerializedName("name")
+   var name:String?="",
+   @SerializedName("password")
+   var password:String?="",
+   @SerializedName("salary")
+   var salary:Int?=0
+
+):java.io.Serializable
