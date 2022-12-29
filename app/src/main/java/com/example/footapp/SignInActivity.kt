@@ -6,18 +6,23 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.footapp.ui.home.HomeActivity
+import com.example.footapp.ui.home.HomeAdapter
+import com.example.footapp.ui.login.LoginInterface
+import com.example.footapp.ui.login.LoginPresenter
 import com.google.firebase.auth.FirebaseAuth
 
-class SignInActivity : AppCompatActivity() {
+class SignInActivity : AppCompatActivity(), LoginInterface {
 
     private var edtEmail: EditText? = null
     private var edtPassword: EditText? = null
     private var btnSignIn: Button? = null
+    lateinit var presenter: LoginPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_in)
-
+        presenter = LoginPresenter(this, this)
         initUI()
         initListener()
     }
@@ -29,27 +34,22 @@ class SignInActivity : AppCompatActivity() {
     }
 
     private fun initListener() {
-        btnSignIn!!.setOnClickListener { onClickSignIn() }
+        btnSignIn!!.setOnClickListener {
+            presenter.signIn(
+                edtEmail?.text.toString(),
+                edtPassword?.text.toString()
+            )
+        }
     }
 
-    private fun onClickSignIn() {
-        val mAuth = FirebaseAuth.getInstance()
-        val email = edtEmail!!.text.toString().trim { it <= ' ' }
-        val password = edtPassword!!.text.toString().trim { it <= ' ' }
-        if (password.length < 6){
-            Toast.makeText(applicationContext, "Mật khẩu phải đủ 6 kí tự!", Toast.LENGTH_LONG).show()
-            return
-        }
-        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(
-            this
-        ) { task ->
-            if (task.isSuccessful) {
-                val intent = Intent(applicationContext, MainActivity::class.java)
-                startActivity(intent)
-                finish()
-            } else {
-                Toast.makeText(applicationContext, "Tài khoản hoặc mật khẩu không đúng!", Toast.LENGTH_LONG).show()
-            }
-        }
+    override fun messageLogin(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
+
+    override fun loginSuccess() {
+             var intent=Intent(this,HomeActivity::class.java)
+        startActivity(intent)
+    }
+
+
 }

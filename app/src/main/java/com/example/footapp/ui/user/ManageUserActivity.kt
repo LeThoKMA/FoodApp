@@ -26,63 +26,26 @@ class ManageUserActivity : BaseActivity<ActivityManageUserBinding>(), UserInterf
 
     lateinit var adapter: UserAdapter
     lateinit var databaseReference: DatabaseReference
-    lateinit var userPresenter:UserPresenter
+    lateinit var userPresenter: UserPresenter
     var list: ArrayList<User?> = arrayListOf()
-   var size=0
+    var size = 0
 
     override fun initView() {
-        databaseReference=dao.userReference
-        userPresenter= UserPresenter(this)
+        userPresenter = UserPresenter(this)
         loadingDialog?.show()
-        adapter= UserAdapter(list,this)
-        binding.rcView.layoutManager=LinearLayoutManager(this)
-        binding.rcView.adapter=adapter
+        adapter = UserAdapter(list, this, userPresenter)
+        binding.rcView.layoutManager = LinearLayoutManager(this)
+        binding.rcView.adapter = adapter
 
-        val userListener = object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                // Get Post object and use the values to update the UI
-                loadingDialog?.show()
+        userPresenter.users.observe(this@ManageUserActivity)
+        {
+            if (it != null) {
                 list.clear()
-
-                dataSnapshot.getValue<List<User>>()?.let { list.addAll(it) }
-//                list.addAll(
-//                    Gson().fromJson(
-//                        dataSnapshot.value.toString(),
-//                        object : TypeToken<List<User?>?>() {}.type
-//                    )
-//
-//                )
-                size=list.size
+                list.addAll(it)
                 adapter.notifyDataSetChanged()
                 loadingDialog?.dismiss()
-
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                // Getting Post failed, log a message
-                Log.w("TAG", "loadPost:onCancelled", databaseError.toException())
             }
         }
-        databaseReference.addValueEventListener(userListener)
-
-//        databaseReference.child("users").get()
-//            .addOnSuccessListener(OnSuccessListener<DataSnapshot> { dataSnapshot ->
-//                list.addAll(
-//                    Gson().fromJson(
-//                        dataSnapshot.value.toString(),
-//                        object : TypeToken<List<User?>?>() {}.type
-//                    )
-//
-//                )
-//                size=list.size
-//
-//                adapter= UserAdapter(list,this)
-//
-//                binding.rcView.layoutManager=LinearLayoutManager(this)
-//                binding.rcView.adapter=adapter
-//                loadingDialog?.dismiss()
-//            }).addOnFailureListener(OnFailureListener { Log.e("TAG", "onFailure: ") })
-
 
 
     }
@@ -92,21 +55,21 @@ class ManageUserActivity : BaseActivity<ActivityManageUserBinding>(), UserInterf
     }
 
     override fun initListener() {
-       binding.imvBack.setOnClickListener { finish() }
-        binding.imgPlus.setOnClickListener { var intent=Intent(this,AddUserActivity::class.java)
-        intent.putExtra(TOTAL_USER, size)
-        startActivity(intent)}
+        binding.imvBack.setOnClickListener { finish() }
+        binding.imgPlus.setOnClickListener {
+            var intent = Intent(this, AddUserActivity::class.java)
+            intent.putExtra(TOTAL_USER, size)
+            startActivity(intent)
+        }
     }
 
-
     override fun deleteUser(position: Int) {
-        userPresenter.deleteUser(position)
         adapter.deleteUser(position)
     }
 
 
     override fun notify(message: String) {
-        Toast.makeText(this,message,Toast.LENGTH_LONG).show()
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
 
     override fun complete() {
