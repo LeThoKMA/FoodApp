@@ -1,15 +1,16 @@
-package com.example.footapp.ui.user
+package com.example.footapp.presenter
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.example.footapp.DAO.DAO
 import com.example.footapp.model.User
+import com.example.footapp.`interface`.UserInterface
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.getValue
 
-class UserPresenter(var callback:UserInterface) {
+class UserPresenter(var callback: UserInterface) {
     private var dao=DAO()
     val users= MutableLiveData<List<User>>()
     init {

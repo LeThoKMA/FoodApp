@@ -13,6 +13,7 @@ data class User(
    var password:String?="",
    @SerializedName("salary")
    var salary:Int?=0,
-   var isAdmin:Boolean? = false
+
+   var admin:Int? = 0
 
 ):java.io.Serializable

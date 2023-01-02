@@ -60,13 +60,13 @@ abstract class BaseActivity<BINDING : ViewDataBinding> :
 
 
 
-//    open fun isDoubleClick(): Boolean {
-//        if (SystemClock.elapsedRealtime() - mLastClickTime < DOUBLE_PRESS_INTERVAL) {
-//            return true
-//        }
-//        mLastClickTime = SystemClock.elapsedRealtime()
-//        return false
-//    }
+    open fun isDoubleClick(): Boolean {
+        if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+            return true
+        }
+        mLastClickTime = SystemClock.elapsedRealtime()
+        return false
+    }
 
 
 

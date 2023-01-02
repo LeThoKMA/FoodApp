@@ -1,4 +1,4 @@
-package com.example.footapp
+package com.example.footapp.ui.login
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,11 +6,10 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.footapp.R
+import com.example.footapp.`interface`.LoginInterface
 import com.example.footapp.ui.home.HomeActivity
-import com.example.footapp.ui.home.HomeAdapter
-import com.example.footapp.ui.login.LoginInterface
-import com.example.footapp.ui.login.LoginPresenter
-import com.google.firebase.auth.FirebaseAuth
+import com.example.footapp.presenter.LoginPresenter
 
 class SignInActivity : AppCompatActivity(), LoginInterface {
 

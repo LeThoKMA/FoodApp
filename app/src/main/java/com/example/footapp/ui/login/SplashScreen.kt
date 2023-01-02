@@ -1,14 +1,14 @@
-package com.example.footapp
+package com.example.footapp.ui.login
 
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.example.footapp.R
 import com.example.footapp.model.User
-import com.example.footapp.ui.MyPreference
+import com.example.footapp.MyPreference
 import com.example.footapp.ui.home.HomeActivity
-import com.google.firebase.auth.FirebaseAuth
 
 class SplashScreen : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,7 +20,7 @@ class SplashScreen : AppCompatActivity() {
     }
 
     private fun nextActivity() {
-        var user=MyPreference().getInstance(this)?.getUser()
+        var user= MyPreference().getInstance(this)?.getUser()
         Log.e("TAG", user.toString())
         val intent: Intent = if (user == User()) {
             Intent(this, SignInActivity::class.java)

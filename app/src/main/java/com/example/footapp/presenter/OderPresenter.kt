@@ -1,23 +1,24 @@
-package com.example.footapp.ui.Oder
+package com.example.footapp.presenter
 
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.example.footapp.DAO.DAO
-import com.example.footapp.model.Bill
+import com.example.footapp.model.DetailItemChoose
 import com.example.footapp.model.Item
-import com.example.footapp.model.ItemBill
-import com.example.footapp.ui.MyPreference
+import com.example.footapp.MyPreference
+import com.example.footapp.ui.Oder.CartActivity
+import com.example.footapp.`interface`.OderInterface
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.getValue
 import java.text.SimpleDateFormat
-import java.util.Calendar
 
 class OderPresenter(var callback: OderInterface, var context: Context, var activity: CartActivity) {
     var simpleDateFormat = SimpleDateFormat("dd-MM-yyyy mm-HH")
     val dataItems= MutableLiveData<ArrayList<Item?>>()
+    var mapDetailItemChoose:HashMap<Int,DetailItemChoose> = hashMapOf()
 
     private var map: HashMap<Int, Int> = hashMapOf()
     private var mapItem: HashMap<String, Int> = hashMapOf()
@@ -39,60 +40,31 @@ class OderPresenter(var callback: OderInterface, var context: Context, var activ
 
     }
 
-    fun addPrice(id: Int, priceItem: Int, count: Int) {
-        map.put(id, priceItem)
-        mapItem.put(id.toString(), count)
+
+
+    fun addItemToBill(item:DetailItemChoose) {
+        mapDetailItemChoose.put(item.id?:0, item)
         var total = 0
-        for (item in map) {
-            total += item.value
+        for (item in mapDetailItemChoose) {
+            total += item.value.totalPrice?:0
         }
         this.totalPrice = total
         callback.price(total)
     }
-
-    fun payConfirm() {
+    fun payConfirm()
+    {
         if(totalPrice>0)
-        {var itemBills: ArrayList<ItemBill> = arrayListOf()
-
-        for (item in mapItem) {
-            itemBills.add(ItemBill(item.key.toInt(), item.value))
-        }
-
-        for (item in items)
         {
-            for (itemBill in itemBills)
-            {
-                if (item?.id==itemBill.id)
-                {
-                   var amount= itemBill.count?.let { item?.amount?.minus(it) }
-                    var map:HashMap<String,Any> = hashMapOf()
-                    if (amount != null) {
-                        map.put("amount", amount)
-                    }
-                    item?.let { dao.updateItem(it,map) }
-                }
-            }
+            callback.confirm(this.mapDetailItemChoose,this.totalPrice)
         }
-
-        var mapItemBill: HashMap<String, ArrayList<ItemBill>>? = hashMapOf()
-        mapItemBill?.put("items", itemBills)
-        var bill = Bill(
-            size,
-            myPreference?.getUser()?.id,
-            mapItemBill,
-            totalPrice,
-            simpleDateFormat.format(Calendar.getInstance().time)
-        )
-            callback.confirm(bill)
-        //dao.addBill(bill)
-
-        callback.complete("Thành công")
-    }
         else
         {
+
             callback.complete("Vui lòng chọn đồ uống trước")
+
         }
     }
+
 
 
 
@@ -120,12 +92,5 @@ class OderPresenter(var callback: OderInterface, var context: Context, var activ
 
     }
 
-//    fun getPrice(){
-//        var total=0
-//        for(item in map)
-//        {
-//            total+=item.value
-//        }
-//        return total
-//    }
+
 }

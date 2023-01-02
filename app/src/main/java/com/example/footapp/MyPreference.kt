@@ -1,11 +1,9 @@
-package com.example.footapp.ui
+package com.example.footapp
 
 import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
-import android.util.Log
 import com.example.footapp.model.User
-import com.google.gson.Gson
 
 class MyPreference {
     private var accountUtil: MyPreference? = null
@@ -21,7 +19,7 @@ class MyPreference {
         return accountUtil
     }
 
-    fun saveUser(id: String, username: String, passwd: String, salary: String, isAdmin: Boolean) {
+    fun saveUser(id: String, username: String, passwd: String, salary: String, isAdmin: Int) {
         editor = pref?.edit()
 
 
@@ -29,7 +27,7 @@ class MyPreference {
         editor?.putString("username", username)
         editor?.putString("passwd", passwd)
         editor?.putString("salary", salary)
-        editor?.putBoolean("isAdmin", isAdmin)
+        editor?.putInt("admin", isAdmin)
         editor?.apply()
     }
 
@@ -41,7 +39,7 @@ class MyPreference {
                 pref?.getString("username", ""),
                 pref?.getString("passwd", ""),
                 pref?.getString("salary", "")?.toInt(),
-                pref?.getBoolean("isAdmin", false)
+                pref?.getInt("admin", 0)
             )
         }
 

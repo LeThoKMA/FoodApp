@@ -1,17 +1,14 @@
 package com.example.footapp.ui.user
 
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import com.example.footapp.R
-import com.example.footapp.databinding.ActivityAddUserBinding
+import com.example.footapp.`interface`.UserInterface
 import com.example.footapp.databinding.ActivityUserDetailBinding
 import com.example.footapp.model.User
+import com.example.footapp.presenter.UserPresenter
 import com.example.footapp.ui.BaseActivity
-import com.example.footapp.utils.TOTAL_USER
-import kotlin.random.Random
 
 class UserDetailActivity : BaseActivity<ActivityUserDetailBinding>(), View.OnClickListener,
     UserInterface {

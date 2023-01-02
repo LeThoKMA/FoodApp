@@ -6,7 +6,7 @@
     android:gravity="center"
     android:orientation="vertical"
     android:padding="20dp"
-    tools:context=".SplashScreen">
+    tools:context=".ui.login.SplashScreen">
 
     <ImageView
         android:layout_width="wrap_content"

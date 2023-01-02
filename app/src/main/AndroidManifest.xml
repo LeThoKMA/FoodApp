@@ -15,7 +15,28 @@
         android:theme="@style/AppTheme"
         tools:targetApi="31">
         <activity
-            android:name=".PayConfirmActivity"
+            android:name=".StatisticByYearActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".ui.statistic.StatisticTypeActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".ui.statistic.StatisticByMonthActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".ui.pay.PayConfirmActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -71,7 +92,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".SignInActivity"
+            android:name=".ui.login.SignInActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -85,7 +106,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".SplashScreen"
+            android:name=".ui.login.SplashScreen"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

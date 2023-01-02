@@ -1,26 +1,16 @@
 package com.example.footapp.ui.user
 
 import android.content.Intent
-import android.util.Log
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.footapp.R
+import com.example.footapp.`interface`.UserInterface
 import com.example.footapp.databinding.ActivityManageUserBinding
 import com.example.footapp.model.User
+import com.example.footapp.presenter.UserPresenter
 import com.example.footapp.ui.BaseActivity
 import com.example.footapp.utils.TOTAL_USER
-import com.google.android.gms.tasks.OnFailureListener
-import com.google.android.gms.tasks.OnSuccessListener
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.GenericTypeIndicator
-import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.ktx.getValue
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import com.google.gson.stream.JsonReader
-import java.io.StringReader
 
 class ManageUserActivity : BaseActivity<ActivityManageUserBinding>(), UserInterface {
 

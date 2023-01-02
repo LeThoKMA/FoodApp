@@ -1,4 +1,4 @@
-package com.example.footapp.ui.user
+package com.example.footapp.`interface`
 
 import com.example.footapp.model.User
 

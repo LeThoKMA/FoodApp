@@ -16,25 +16,32 @@ import com.google.gson.reflect.TypeToken
 
 class DAO {
     private var database: DatabaseReference
-    val bills=MutableLiveData<ArrayList<Bill?>>()
+    val bills = MutableLiveData<ArrayList<Bill?>>()
+
     init {
         database = FirebaseDatabase.getInstance(API_DATABASE).reference
     }
 
     val reference: DatabaseReference
         get() {
-            database = FirebaseDatabase.getInstance(API_DATABASE).reference
-            return database
+            return FirebaseDatabase.getInstance(API_DATABASE).reference
+
         }
     val userReference: DatabaseReference
         get() {
-            database = FirebaseDatabase.getInstance(API_DATABASE).reference.child("users")
-            return database
+            return FirebaseDatabase.getInstance(API_DATABASE).reference.child("users")
+
         }
     val itemReference: DatabaseReference
         get() {
-            database = FirebaseDatabase.getInstance(API_DATABASE).reference.child("items")
-            return database
+            return FirebaseDatabase.getInstance(API_DATABASE).reference.child("items")
+
+        }
+
+    val billReference: DatabaseReference
+        get() {
+
+            return FirebaseDatabase.getInstance(API_DATABASE).reference.child("bills")
         }
 
     fun addUser(user: User): Boolean {
@@ -67,9 +74,9 @@ class DAO {
             false
         }
     }
-    fun updateItem(item:Item,map: HashMap<String, Any>?)
-    {
-       try {
+
+    fun updateItem(item: Item, map: HashMap<String, Any>?) {
+        try {
             map?.let { database.child("items").child(item.id.toString()).updateChildren(it) }
 
         } catch (e: Exception) {
@@ -77,31 +84,6 @@ class DAO {
 
         }
     }
-
-
-//    fun getItems()
-//    {
-//        val list: ArrayList<Item?> = arrayListOf()
-//        val itemListener = object : ValueEventListener {
-//            override fun onDataChange(dataSnapshot: DataSnapshot) {
-//                // Get Post object and use the values to update the UI
-//
-//
-//                dataSnapshot.getValue<List<Item>>()?.let { list.addAll(it) }
-//                items.postValue(list)
-//
-//
-//            }
-//
-//            override fun onCancelled(databaseError: DatabaseError) {
-//                // Getting Post failed, log a message
-//                Log.w("TAG", "loadPost:onCancelled", databaseError.toException())
-//                items.postValue(null)
-//            }
-//        }
-//        itemReference.addValueEventListener(itemListener)
-//
-//    }
 
 
     fun addBill(bill: Bill): Boolean {
@@ -114,22 +96,20 @@ class DAO {
         }
     }
 
-  fun getBills(){
-            val list: ArrayList<Bill?> = arrayListOf()
-            database.child("bills").get().addOnSuccessListener { dataSnapshot ->
-                if(dataSnapshot.value.toString().isNotBlank()) {
-                    Log.e("TAG", dataSnapshot.getValue().toString())
-                    dataSnapshot.getValue<List<Bill>>()?.let { list.addAll(it) }
-                    bills.postValue(list)
-                }
-                else
-                {
-                    bills.postValue(null)
-                }
+    fun getBills() {
+        val list: ArrayList<Bill?> = arrayListOf()
+        database.child("bills").get().addOnSuccessListener { dataSnapshot ->
+            if (dataSnapshot.value.toString().isNotBlank()) {
+                Log.e("TAG", dataSnapshot.getValue().toString())
+                dataSnapshot.getValue<List<Bill>>()?.let { list.addAll(it) }
+                bills.postValue(list)
+            } else {
+                bills.postValue(null)
             }
-                .addOnFailureListener { }
-
         }
+            .addOnFailureListener { }
+
+    }
 
     fun deleteUser(pos: Int) {
         database.child("users").child(pos.toString() + "").removeValue()

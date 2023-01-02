@@ -9,8 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.footapp.R
 import com.example.footapp.databinding.ItemCatgoryBinding
-import com.example.footapp.databinding.ItemTableBinding
+import com.example.footapp.model.DetailItemChoose
 import com.example.footapp.model.Item
+import com.example.footapp.presenter.OderPresenter
 
 class OderAdapter(var list: ArrayList<Item?>, var oderPresenter: OderPresenter) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -42,10 +43,24 @@ class OderAdapter(var list: ArrayList<Item?>, var oderPresenter: OderPresenter) 
             binding.edtNumber.setText("0")
             binding.ivCheck.setOnClickListener {
                 if (binding.ivCheck.isChecked) {
+
                     var priceItem = binding.edtNumber.text.toString().toInt() * (item?.price ?: 0)
-                    item?.id?.let { it1 -> callback.addPrice(it1,priceItem,binding.edtNumber.text.toString().toInt()) }
+                    var detailBill = DetailItemChoose(
+                        item?.id,
+                        item?.name,
+                        binding.edtNumber.text.toString().toInt(),
+                        priceItem,
+                        item?.price,
+                        item?.imgUrl
+
+                    )
+
+                    callback.addItemToBill(detailBill)
+
                 } else {
-                    item?.id?.let { it1 -> callback.addPrice(it1,0,0) }
+                    var detailBill = DetailItemChoose(item?.id, item?.name, 0, 0)
+                    callback.addItemToBill(detailBill)
+
                 }
             }
             binding.ivUp.setOnClickListener {
@@ -60,9 +75,20 @@ class OderAdapter(var list: ArrayList<Item?>, var oderPresenter: OderPresenter) 
 
                 if (binding.ivCheck.isChecked) {
                     var priceItem = binding.edtNumber.text.toString().toInt() * (item?.price ?: 0)
-                    item?.id?.let { it1 -> callback.addPrice(it1,priceItem,binding.edtNumber.text.toString().toInt()) }
+                    var detailBill = DetailItemChoose(
+                        item?.id,
+                        item?.name,
+                        binding.edtNumber.text.toString().toInt(),
+                        priceItem,
+                        item?.price,
+                        item?.imgUrl
+                    )
+                    callback.addItemToBill(detailBill)
+
                 } else {
-                    item?.id?.let { it1 -> callback.addPrice(it1,0,0) }
+                    var detailBill = DetailItemChoose(item?.id, item?.name, 0, 0)
+                    callback.addItemToBill(detailBill)
+
                 }
             }
             binding.edtNumber.addTextChangedListener(object : TextWatcher {
@@ -81,16 +107,28 @@ class OderAdapter(var list: ArrayList<Item?>, var oderPresenter: OderPresenter) 
                             binding.edtNumber.setText(binding.amount.text.toString())
                         }
 
-                        binding.ivCheck.setOnClickListener {
-                            if (binding.ivCheck.isChecked) {
-                                var priceItem = binding.edtNumber.text.toString().toInt() * (item?.price ?: 0)
-                                item?.id?.let { it1 -> callback.addPrice(it1,priceItem,binding.edtNumber.text.toString().toInt()) }
-                            } else {
-                                item?.id?.let { it1 -> callback.addPrice(it1,0,0) }
-                            }
-                        }
 
+                        if (binding.ivCheck.isChecked) {
+                            var priceItem =
+                                binding.edtNumber.text.toString().toInt() * (item?.price ?: 0)
+                            var detailBill = DetailItemChoose(
+                                item?.id,
+                                item?.name,
+                                binding.edtNumber.text.toString().toInt(),
+                                priceItem,
+                                item?.price,
+                                item?.imgUrl
+
+                            )
+                            callback.addItemToBill(detailBill)
+
+                        } else {
+                            var detailBill = DetailItemChoose(item?.id, item?.name, 0, 0)
+                            callback.addItemToBill(detailBill)
+                        }
                     }
+
+                    //  }
                 }
 
             })
@@ -103,16 +141,31 @@ class OderAdapter(var list: ArrayList<Item?>, var oderPresenter: OderPresenter) 
                 }
 
                 if (binding.ivCheck.isChecked) {
-                    var priceItem = binding.edtNumber.text.toString().toInt() * (item?.price ?: 0)
-                    item?.id?.let { it1 -> callback.addPrice(it1,priceItem,binding.edtNumber.text.toString().toInt()) }
-                } else {
-                    item?.id?.let { it1 -> callback.addPrice(it1,0,0) }
+
+                    if (binding.ivCheck.isChecked) {
+                        var priceItem =
+                            binding.edtNumber.text.toString().toInt() * (item?.price ?: 0)
+                        var detailBill = DetailItemChoose(
+                            item?.id,
+                            item?.name,
+                            binding.edtNumber.text.toString().toInt(),
+                            priceItem,
+                            item?.price,
+                            item?.imgUrl
+
+                        )
+                        callback.addItemToBill(detailBill)
+                    } else {
+                        var detailBill = DetailItemChoose(item?.id, item?.name, 0, 0)
+                        callback.addItemToBill(detailBill)
+
+                    }
                 }
+
             }
 
         }
 
+
     }
-
-
 }
