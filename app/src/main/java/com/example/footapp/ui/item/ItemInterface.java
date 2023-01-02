@@ -6,6 +6,6 @@ import com.example.footapp.model.Item;
 
 public interface ItemInterface {
     void deleteItem(int pos, Item item);
-    void updateItem(int pos, Item item, Context context);
-    void addItem(Context context);
+    void updateItem(Item item);
+    void addItem(Item item);
 }

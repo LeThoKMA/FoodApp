@@ -3,6 +3,7 @@ package com.example.footapp.ui.item;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -75,21 +76,23 @@ public class ItemActivity extends AppCompatActivity {
             }
 
             @Override
-            public void updateItem(int pos , Item item, Context context) {
-                itemPresenter.updateItem(pos, item, context);
+            public void updateItem( Item item) {
+                Intent intent = new Intent(ItemActivity.this, UpdateItem.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("item", item);
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
 
             @Override
-            public void addItem(Context context) {
+            public void addItem(Item item) {
 
             }
         });
 
-        binding.imgPlus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                itemPresenter.addItem(ItemActivity.this);
-            }
+        binding.imgPlus.setOnClickListener(v -> {
+            Intent intent = new Intent(ItemActivity.this, AddItem.class);
+            startActivity(intent);
         });
 
         binding.rcView.setAdapter(itemAdapter);

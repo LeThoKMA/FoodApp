@@ -1,12 +1,10 @@
 package com.example.footapp.ui.item;
 
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -41,21 +39,13 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
             return;
         }
         holder.tvItemName.setText(item.getName());
-        if (item.getAmount() != null) {
-            holder.tvItemAmount.setText(String.valueOf(item.getAmount()));
-        } else {
-            holder.tvItemAmount.setText("0");
-        }
-        if (item.getPrice() != null) {
-            holder.tvItemPrice.setText(String.valueOf(item.getPrice()));
-        } else {
-            holder.tvItemPrice.setText("0");
-        }
+        holder.tvItemAmount.setText(String.valueOf(item.getAmount()));
+        holder.tvItemPrice.setText(String.valueOf(item.getPrice()));
 
         Glide.with(holder.imgAvatar.getContext()).load(item.getImgUrl()).into(holder.imgAvatar);
 
         holder.imgUpdate.setOnClickListener(v -> {
-            mItemInterface.updateItem(position, item, v.getContext());
+            mItemInterface.updateItem(item);
         });
         holder.imgDelete.setOnClickListener(v -> {
             mItemInterface.deleteItem(position, item);
@@ -86,7 +76,8 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
             tvItemPrice = itemView.findViewById(R.id.tv_item_price);
         }
     }
-    public void remove(int pos){
+
+    public void remove(int pos) {
         mListItem.remove(pos);
         notifyItemRemoved(pos);
     }
