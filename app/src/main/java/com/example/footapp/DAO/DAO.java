@@ -6,8 +6,6 @@ import android.annotation.SuppressLint;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.footapp.model.Bill;
 import com.example.footapp.model.Item;
@@ -20,16 +18,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
-
-import io.reactivex.Observable;
-import io.reactivex.Observer;
 
 public class DAO {
     private DatabaseReference database;
@@ -78,10 +69,6 @@ public class DAO {
                 list.addAll(new Gson().fromJson(dataSnapshot.getValue().toString(), new TypeToken<List<User>>() {
                 }.getType()));
                 Log.e("TAG", list.size()+"");
-
-
-
-
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -89,40 +76,40 @@ public class DAO {
                 Log.e("TAG", "onFailure: ");
             }
         });
-
         return list;
     }
 
 
-    public boolean addItem(Item item)
-    {
-        try {
-            database.child("items").child(item.getId().toString()).setValue(item);
-            return true;
-        } catch (Exception e) {
-            Log.e("Exception", e.toString());
-            return false;
-        }
+//    public boolean addItem(Item item)
+//    {
+//        try {
+//            database.child("items").child(item.getId().toString()).setValue(item);
+//            return true;
+//        } catch (Exception e) {
+//            Log.e("Exception", e.toString());
+//            return false;
+//        }
+//
+//    }
+//    public ArrayList<Item> getItems() {
+//        ArrayList<Item> list = new ArrayList();
+//        database.child("items").get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
+//            @Override
+//            public void onSuccess(DataSnapshot dataSnapshot) {
+//                list.addAll(new Gson().fromJson(dataSnapshot.getValue().toString(), new TypeToken<List<Item>>() {
+//                }.getType()));
+//
+//            }
+//        }).addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception e) {
+//
+//            }
+//        });
+//
+//        return list;
+//    }
 
-    }
-    public ArrayList<Item> getItems() {
-        ArrayList<Item> list = new ArrayList();
-        database.child("items").get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
-            @Override
-            public void onSuccess(DataSnapshot dataSnapshot) {
-                list.addAll(new Gson().fromJson(dataSnapshot.getValue().toString(), new TypeToken<List<Item>>() {
-                }.getType()));
-
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-
-            }
-        });
-
-        return list;
-    }
 
     public boolean addBill(Bill bill)
     {

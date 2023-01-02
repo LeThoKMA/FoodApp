@@ -26,7 +26,6 @@ class UserPresenter(var callback:UserInterface) {
 
      fun deleteUser(postion: Int) {
         dao.deleteUser(postion)
-
     }
 
      fun updateUser(user: User,name:String,salary:String) {

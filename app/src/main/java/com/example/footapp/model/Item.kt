@@ -1,10 +1,10 @@
 package com.example.footapp.model
 
-import java.net.IDN
-
 data class Item(
-    var id:Int?,
-    var name:String?,
-    var price:Int?,
-    var amount:Int?=0
+    var id: Int? = 0,
+    var name: String? = "",
+    var price: Int? = 0,
+    var amount: Int? = 0,
+    var imgUrl: String? = "",
+    var type: Int? = 0
 )
