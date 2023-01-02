@@ -39,6 +39,7 @@ public class AddItem extends AppCompatActivity {
 
     private final Item item = new Item();
     private final int REQUEST = 10;
+    private int CAMERA_PIC_REQUEST=100;
     private Uri imageUri;
 
     private final ActivityResultLauncher<Intent> mActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
@@ -132,7 +133,18 @@ public class AddItem extends AppCompatActivity {
 
     private void openCamera() {
         Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        mActivityResultLauncher.launch(Intent.createChooser(cameraIntent, "Take photo"));
+        startActivityForResult(cameraIntent, CAMERA_PIC_REQUEST);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode== CAMERA_PIC_REQUEST &&resultCode==RESULT_OK){
+            if (data != null) {
+                Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+                binding.img.setImageBitmap(bitmap);
+            }
+        }
     }
 
     @Override

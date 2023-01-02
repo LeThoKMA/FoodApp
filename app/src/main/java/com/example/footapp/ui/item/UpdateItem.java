@@ -19,6 +19,7 @@ import android.widget.TextView;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
@@ -36,6 +37,7 @@ public class UpdateItem extends AppCompatActivity {
     private String type;
     private final ItemPresenter itemPresenter = new ItemPresenter();
     private final int REQUEST = 10;
+    private int CAMERA_PIC_REQUEST=100;
     private Uri imageUri;
 
     private final ActivityResultLauncher<Intent> mActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
@@ -163,9 +165,18 @@ public class UpdateItem extends AppCompatActivity {
 
     private void openCamera() {
         Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        mActivityResultLauncher.launch(Intent.createChooser(cameraIntent, "Take photo"));
+        startActivityForResult(cameraIntent, CAMERA_PIC_REQUEST);
     }
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode== CAMERA_PIC_REQUEST &&resultCode==RESULT_OK){
+            if (data != null) {
+                Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+                binding.img.setImageBitmap(bitmap);
+            }
+        }
+    }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
