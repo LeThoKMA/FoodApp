@@ -24,14 +24,14 @@ class ManageActivity : AppCompatActivity() {
 
         }
         binding.tvStatistic.setOnClickListener {
-            binding.tvStatistic.setOnClickListener {
+
                 startActivity(
                     Intent(
                         this,
                         StatisticTypeActivity::class.java
                     )
                 )
-            }
+
         }
     }
 

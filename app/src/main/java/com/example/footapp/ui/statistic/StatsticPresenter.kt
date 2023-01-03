@@ -93,7 +93,14 @@ class StatsticPresenter(var context: Context) {
           var year=Calendar.YEAR
            for(i in 1 until 13)
            {
-               map.put(i,getTotalInMonth(i.toString()+year))
+               if(i<10)
+               {
+                   map.put(i,getTotalInMonth("0"+i.toString()+"-2022"))
+               }
+               else
+               {
+                   map.put(i,getTotalInMonth(i.toString()+"-2022"))
+               }
            }
         dataInYear.postValue(map)
 

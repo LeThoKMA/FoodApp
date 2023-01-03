@@ -12,5 +12,5 @@
     <color name="colorPrimaryDark">#a3001d</color>
     <color name="colorAccent">#ff6c6f</color>
     <color name="color_gray_black">#6B6B6B</color>
-
+    <color name="color_line">#E9E6E8</color>
 </resources>

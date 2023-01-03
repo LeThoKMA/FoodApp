@@ -78,7 +78,7 @@
             android:paddingVertical="16dp"
             android:paddingStart="32dp"
             android:paddingEnd="12dp"
-            android:text="Thống kê cả năm"
+            android:text="Thống kê trong năm"
             android:textSize="15sp"
             app:drawableRightCompat="@drawable/ic_next" />
 

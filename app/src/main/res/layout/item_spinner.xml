@@ -11,6 +11,7 @@
             android:id="@+id/item"
             android:paddingVertical="10dp"
             android:paddingStart="8dp"
+
             android:textSize="14sp"
             android:textColor="@color/colorPrimary"
             android:layout_width="match_parent"

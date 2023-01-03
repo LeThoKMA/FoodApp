@@ -40,6 +40,8 @@ class StatisticByMonthActivity : BaseActivity<ActivityStatisticBinding>() {
         {
             if (it != null) {
 
+                binding.chart.visibility=View.VISIBLE
+                binding.tvLabel.visibility=View.VISIBLE
                 setUpViewChart(it)
                 loadingDialog?.dismiss()
             }
@@ -66,6 +68,7 @@ class StatisticByMonthActivity : BaseActivity<ActivityStatisticBinding>() {
             }
 
         }
+        binding.imvBack.setOnClickListener { finish() }
     }
 
     fun setUpViewChart(map: HashMap<String, Int>) {
@@ -76,6 +79,7 @@ class StatisticByMonthActivity : BaseActivity<ActivityStatisticBinding>() {
             i++
         }
         var lineDataSet = LineDataSet(list,"")
+        lineDataSet.color = (ContextCompat.getColor(this, R.color.colorPrimary))
 
         var lineData = LineData(lineDataSet)
         binding.chart.xAxis.labelCount = list.size
@@ -85,6 +89,7 @@ class StatisticByMonthActivity : BaseActivity<ActivityStatisticBinding>() {
         binding.chart.legend.horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT
 
         //chart.xAxis.valueFormatter=IndexAxisValueFormatter()
+        binding.chart.legend.isEnabled=false
         binding.chart.data = lineData
         binding.chart.invalidate()
     }

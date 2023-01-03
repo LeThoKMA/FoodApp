@@ -19,6 +19,10 @@ class StatisticTypeActivity : BaseActivity<ActivityStatisticTypeBinding>() {
         binding.tvMonth.setOnClickListener {
             startActivity(Intent(this,StatisticByMonthActivity::class.java))
         }
+        binding.tvYear.setOnClickListener {
+            startActivity(Intent(this,StatisticByYearActivity::class.java))
+
+        }
     }
 
 }
