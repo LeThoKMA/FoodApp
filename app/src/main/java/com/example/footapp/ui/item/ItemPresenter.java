@@ -1,15 +1,5 @@
 package com.example.footapp.ui.item;
 
-import android.app.Dialog;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
-
-import com.example.footapp.R;
 import com.example.footapp.model.Item;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -42,9 +32,9 @@ public class ItemPresenter implements ItemInterface {
 
     @Override
     public void addItem(Item item) {
-            FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-            DatabaseReference reference = firebaseDatabase.getReference("items");
-            reference.push().child(String.valueOf(item.getId()));
-            reference.child(String.valueOf(item.getId())).setValue(item);
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference reference = firebaseDatabase.getReference("items");
+        reference.push().child(String.valueOf(item.getId()));
+        reference.child(String.valueOf(item.getId())).setValue(item);
     }
 }
