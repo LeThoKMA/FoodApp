@@ -2,4 +2,10 @@
     <string name="app_name">Food App</string>
     <string name="nav_home">Home</string>
     <string name="nav_account">Account</string>
+    <string-array name="type">
+        <item>Coffee</item>
+        <item>Tea</item>
+        <item>Juice</item>
+        <item>Smoothie</item>
+    </string-array>
 </resources>

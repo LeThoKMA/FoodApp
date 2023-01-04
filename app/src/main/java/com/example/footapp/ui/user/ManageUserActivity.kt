@@ -10,7 +10,15 @@ import com.example.footapp.model.User
 import com.example.footapp.presenter.UserPresenter
 import com.example.footapp.ui.BaseActivity
 import com.example.footapp.utils.TOTAL_USER
+<<<<<<< HEAD
 import com.google.firebase.database.DatabaseReference
+=======
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.getValue
+>>>>>>> origin/huuduy
 
 class ManageUserActivity : BaseActivity<ActivityManageUserBinding>(), UserInterface {
 

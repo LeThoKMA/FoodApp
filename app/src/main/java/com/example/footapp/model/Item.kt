@@ -18,4 +18,4 @@ data class Item(
     @SerializedName("imgUrl")
     var imgUrl:String ? ="",
     var type:Int? = 0
-)
+):java.io.Serializable

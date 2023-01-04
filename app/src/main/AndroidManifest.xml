@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
@@ -13,29 +15,43 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+<<<<<<< HEAD
             android:name=".ui.statistic.StatisticByYearActivity"
+=======
+            android:name=".ui.item.AddItem"
+>>>>>>> origin/huuduy
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
+<<<<<<< HEAD
             android:name=".ui.statistic.StatisticTypeActivity"
+=======
+            android:name=".ui.item.UpdateItem"
+>>>>>>> origin/huuduy
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
+<<<<<<< HEAD
             android:name=".ui.statistic.StatisticByMonthActivity"
+=======
+            android:name=".ui.item.ItemActivity"
+>>>>>>> origin/huuduy
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
+<<<<<<< HEAD
             android:name=".ui.pay.PayConfirmActivity"
             android:exported="false">
             <meta-data
@@ -64,6 +80,8 @@
             <!-- </intent-filter> -->
         </activity>
         <activity
+=======
+>>>>>>> origin/huuduy
             android:name=".ui.user.AddUserActivity"
             android:exported="false">
             <meta-data
