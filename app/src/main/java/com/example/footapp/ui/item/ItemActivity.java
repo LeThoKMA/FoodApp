@@ -8,6 +8,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -65,12 +66,8 @@ public class ItemActivity extends AppCompatActivity {
             }
 
             @Override
-            public void updateItem( Item item) {
-                Intent intent = new Intent(ItemActivity.this, UpdateItem.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("item", item);
-                intent.putExtras(bundle);
-                startActivity(intent);
+            public void updateItem(Item item) {
+
             }
 
             @Override
@@ -90,47 +87,23 @@ public class ItemActivity extends AppCompatActivity {
 
     private void getListItem() {
         progressDialog.show();
+        itemPresenter.getListItem();
 
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference reference = firebaseDatabase.getReference("items");
-        Query query = reference.orderByChild("type");
-        query.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                Item item = snapshot.getValue(Item.class);
-                if (item != null) {
-                    mListItem.add(item);
-                    itemAdapter.notifyDataSetChanged();
-                }
-                progressDialog.dismiss();
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                Item item = snapshot.getValue(Item.class);
-                if (item != null){
-                    for (int i = 0;i<mListItem.size();i++){
-                        if (Objects.equals(item.getId(), mListItem.get(i).getId())){
-                            mListItem.set(i,item);
-                        }
-                    }
-                    itemAdapter.notifyDataSetChanged();
-                }
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
-
+        itemPresenter.addItem.observe(this, item -> {
+            mListItem.add(item);
+            itemAdapter.notifyDataSetChanged();
+            progressDialog.dismiss();
         });
+
+        itemPresenter.updateItem.observe(this, item -> {
+            for (int i = 0; i < mListItem.size(); i++) {
+                if (Objects.equals(item.getId(), mListItem.get(i).getId())) {
+                    mListItem.set(i, item);
+                }
+            }
+            itemAdapter.notifyDataSetChanged();
+        });
+
 
     }
 
