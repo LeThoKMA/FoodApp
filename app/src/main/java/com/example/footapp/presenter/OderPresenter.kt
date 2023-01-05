@@ -76,7 +76,15 @@ class OderPresenter(var callback: OderInterface, var context: Context, var activ
                 // Get Post object and use the values to update the UI
 
 
-                dataSnapshot.getValue<List<Item>>()?.let { list.addAll(it) }
+                dataSnapshot.getValue<List<Item>>()?.let {
+                    for(item in it)
+                    {
+                        if(item!=null)
+                        {
+                            list.add(item) }
+
+                    }
+                    }
                 dataItems.postValue(list)
 
 

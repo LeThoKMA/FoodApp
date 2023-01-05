@@ -12,7 +12,7 @@ import com.google.firebase.database.ktx.getValue
 
 class UserPresenter(var callback: UserInterface) {
     private var dao=DAO()
-    val users= MutableLiveData<List<User>>()
+    val users= MutableLiveData<MutableList<User>>()
     init {
         getUsers()
     }
@@ -60,11 +60,18 @@ class UserPresenter(var callback: UserInterface) {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 // Get Post object and use the values to update the UI
 
-
+               var list:MutableList<User> = mutableListOf()
                 dataSnapshot.getValue<List<User>>()?.let {
-                    users.postValue(it)
-                }
+                    for(user in it)
+                    {
+                        if(user!=null)
+                        {
+                            list.add(user)
+                        }
+                    }
 
+                }
+                users.postValue(list)
 
             }
 

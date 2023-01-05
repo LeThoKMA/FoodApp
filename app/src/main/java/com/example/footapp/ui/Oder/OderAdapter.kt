@@ -27,7 +27,7 @@ class OderAdapter(var list: ArrayList<Item?>, var oderPresenter: OderPresenter) 
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        (holder as ViewHolder).bind(position, list[position], oderPresenter)
+        list[position]?.let { (holder as ViewHolder).bind(position, it, oderPresenter) }
     }
 
     override fun getItemCount(): Int {
