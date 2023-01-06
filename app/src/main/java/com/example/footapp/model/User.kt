@@ -14,6 +14,7 @@ data class User(
    @SerializedName("salary")
    var salary:Int?=0,
 
-   var admin:Int? = 0
+   var admin:Int? = 0,
+   var delete:Int= 0
 
 ):java.io.Serializable
