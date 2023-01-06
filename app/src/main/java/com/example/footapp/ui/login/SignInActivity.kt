@@ -47,7 +47,9 @@ class SignInActivity : AppCompatActivity(), LoginInterface {
 
     override fun loginSuccess() {
              var intent=Intent(this,HomeActivity::class.java)
+
         startActivity(intent)
+        finishAffinity()
     }
 
 

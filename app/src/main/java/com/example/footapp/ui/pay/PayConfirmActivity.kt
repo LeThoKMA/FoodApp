@@ -32,7 +32,8 @@ class PayConfirmActivity :BaseActivity<ActivityPayConfirmBinding>(), PayConfirmI
         map= intent.getSerializableExtra("map") as HashMap<Int, DetailItemChoose>
         binding.tvName.text= MyPreference().getInstance(this)?.getUser()?.name
         binding.tvTime.text=simpleDateFormat.format(Calendar.getInstance().time)
-        items.addAll(map.values)
+
+        items.addAll(map.values.filter { it.count!! >0 })
         adapter= ItemConfirmAdapter(items)
         binding.rcItem.layoutManager=LinearLayoutManager(this)
         binding.rcItem.adapter=adapter

@@ -51,7 +51,7 @@ class UserAdapter(
             binding.tvName.text = user.name
             binding.tvSalary.text = user.salary.toString()
             binding.imvDel.setOnClickListener {
-                presenter.deleteUser(position)
+                presenter.deleteUser(position,user)
                 callback.notify("Đã xóa")
             }
             binding.parent.setOnClickListener {
@@ -65,7 +65,7 @@ class UserAdapter(
 
     fun deleteUser(position: Int) {
         list.removeAt(position)
-        notifyItemChanged(position)
+     //   notifyItemChanged(position)
     }
 
 }

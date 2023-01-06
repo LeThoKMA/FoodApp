@@ -47,6 +47,7 @@ class DAO {
     fun addUser(user: User): Boolean {
         return try {
             database.child("users").child(user.id.toString()).setValue(user)
+
             true
         } catch (e: Exception) {
             Log.e("Exception", e.toString())

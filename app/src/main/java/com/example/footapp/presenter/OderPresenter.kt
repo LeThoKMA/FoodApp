@@ -16,14 +16,10 @@ import com.google.firebase.database.ktx.getValue
 import java.text.SimpleDateFormat
 
 class OderPresenter(var callback: OderInterface, var context: Context, var activity: CartActivity) {
-    var simpleDateFormat = SimpleDateFormat("dd-MM-yyyy mm-HH")
+    var simpleDateFormat = SimpleDateFormat("dd-MM-yyyy HH-mm")
     val dataItems= MutableLiveData<ArrayList<Item?>>()
     var mapDetailItemChoose:HashMap<Int,DetailItemChoose> = hashMapOf()
 
-    private var map: HashMap<Int, Int> = hashMapOf()
-    private var mapItem: HashMap<String, Int> = hashMapOf()
-    private var myPreference = MyPreference().getInstance(context)
-    private var items: List<Item?> = arrayListOf()
     private var dao = DAO()
     var size = 0
     var totalPrice = 0

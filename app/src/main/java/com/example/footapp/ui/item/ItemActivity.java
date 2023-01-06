@@ -87,10 +87,17 @@ public class ItemActivity extends AppCompatActivity {
 
     private void getListItem() {
         progressDialog.show();
-        itemPresenter.getListItem();
+        itemPresenter.getDataItem();
 
-        itemPresenter.addItem.observe(this, item -> {
-            mListItem.add(item);
+//        itemPresenter.addItem.observe(this, item -> {
+//            mListItem.add(item);
+//            itemAdapter.notifyDataSetChanged();
+//            progressDialog.dismiss();
+//        });
+
+        itemPresenter.listItem.observe(this,items -> {
+            mListItem.clear();
+            mListItem.addAll(items);
             itemAdapter.notifyDataSetChanged();
             progressDialog.dismiss();
         });

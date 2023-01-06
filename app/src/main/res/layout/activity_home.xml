@@ -51,6 +51,17 @@
             app:layout_constraintBottom_toBottomOf="@+id/imv_back"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/imv_back" />
+        <ImageView
+            android:id="@+id/img_logout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_ant_design_logout_outlined"
+            android:padding="8dp"
+            android:visibility="gone"
+            android:layout_marginEnd="4dp"
+            app:layout_constraintBottom_toBottomOf="@+id/imv_back"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/imv_back" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView

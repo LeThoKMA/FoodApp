@@ -28,6 +28,6 @@ class SplashScreen : AppCompatActivity() {
             Intent(this, HomeActivity::class.java)
         }
         startActivity(intent)
-        finish()
+        finishAffinity()
     }
 }

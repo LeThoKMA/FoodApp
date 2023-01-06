@@ -11,13 +11,15 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.getValue
 
 class UserPresenter(var callback: UserInterface) {
-    private var dao=DAO()
-    val users= MutableLiveData<MutableList<User>>()
+    private var dao = DAO()
+    val users = MutableLiveData<MutableList<User>>()
+    val size = MutableLiveData<Int>()
+
     init {
         getUsers()
     }
 
-    fun addUser(user: User,pass:String,confirmPass:String) {
+    fun addUser(user: User, pass: String, confirmPass: String) {
         if (user.id != -1) {
             if (pass == confirmPass) {
                 dao.addUser(user)
@@ -25,33 +27,29 @@ class UserPresenter(var callback: UserInterface) {
             } else {
                 callback.notify("Mật khẩu không trùng khớp")
             }
-        }
-        else
-        {
+        } else {
             callback.notify("Có lỗi xảy ra")
 
         }
     }
 
-     fun deleteUser(postion: Int) {
-        dao.deleteUser(postion)
-         callback.deleteUser(postion)
+    fun deleteUser(postion: Int, user: User) {
+        user.id?.let { dao.deleteUser(it) }
+        callback.deleteUser(postion)
 
     }
 
-     fun updateUser(user: User,name:String,salary:String) {
-         var map:HashMap<String,Any>? = hashMapOf()
-         if(name.isNotBlank())
-         {
-             map?.put("name",name)
-         }
-         if(salary.isNotBlank())
-         {
-             map?.put("salary",salary)
-         }
-         dao.updateUser(map,user)
-         callback.notify("Đã xử lí")
-         callback.complete()
+    fun updateUser(user: User, name: String, salary: String) {
+        var map: HashMap<String, Any>? = hashMapOf()
+        if (name.isNotBlank()) {
+            map?.put("name", name)
+        }
+        if (salary.isNotBlank()) {
+            map?.put("salary", salary)
+        }
+        dao.updateUser(map, user)
+        callback.notify("Đã xử lí")
+        callback.complete()
     }
 
     fun getUsers() {
@@ -60,18 +58,23 @@ class UserPresenter(var callback: UserInterface) {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 // Get Post object and use the values to update the UI
 
-               var list:MutableList<User> = mutableListOf()
-                dataSnapshot.getValue<List<User>>()?.let {
-                    for(user in it)
-                    {
-                        if(user!=null)
-                        {
-                            list.add(user)
+                var list: MutableList<User> = mutableListOf()
+                dataSnapshot.getValue<List<User>>().let {
+
+                    Log.e("TAG", it.toString() )
+                        size.postValue(it?.size)
+                    if (it != null) {
+                        for (user in it) {
+                            if (user != null) {
+
+                                list.add(user)
+                            }
                         }
                     }
+                    users.postValue(list)
+                        }
 
-                }
-                users.postValue(list)
+
 
             }
 

@@ -41,6 +41,13 @@ class ManageUserActivity : BaseActivity<ActivityManageUserBinding>(), UserInterf
             }
         }
 
+        userPresenter.size.observe(this@ManageUserActivity)
+        {
+            if(it!=null)
+            {
+                size=it
+            }
+        }
 
     }
 

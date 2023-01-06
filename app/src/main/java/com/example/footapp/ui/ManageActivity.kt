@@ -4,10 +4,13 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
+import com.example.footapp.MyPreference
 import com.example.footapp.R
 import com.example.footapp.databinding.ActivityManageBinding
+import com.example.footapp.ui.home.ConfirmDialog
 import com.example.footapp.ui.statistic.StatisticTypeActivity
 import com.example.footapp.ui.item.ItemActivity
+import com.example.footapp.ui.login.SignInActivity
 import com.example.footapp.ui.user.ManageUserActivity
 
 class ManageActivity : AppCompatActivity() {
@@ -36,6 +39,23 @@ class ManageActivity : AppCompatActivity() {
             )
 
         }
+        binding.tvLogout.setOnClickListener {
+        showDialog()
+
+        }
+    }
+    fun showDialog()
+    {
+        var dialog= ConfirmDialog(object : ConfirmDialog.CallBack {
+            override fun accept() {
+                MyPreference().getInstance(this@ManageActivity)?.logout()
+                val intent = Intent(applicationContext, SignInActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                startActivity(intent)
+            }
+
+        })
+        dialog.show(supportFragmentManager,"")
     }
 
 

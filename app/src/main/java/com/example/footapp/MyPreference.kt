@@ -21,8 +21,6 @@ class MyPreference {
 
     fun saveUser(id: String, username: String, passwd: String, salary: String, isAdmin: Int) {
         editor = pref?.edit()
-
-
         editor?.putString("id", id)
         editor?.putString("username", username)
         editor?.putString("passwd", passwd)
@@ -44,6 +42,17 @@ class MyPreference {
         }
 
         return user
+    }
+
+    fun logout()
+    {
+        editor = pref?.edit()
+        editor?.remove("id")
+        editor?.remove("username")
+        editor?.remove("passwd")
+        editor?.remove("salary")
+        editor?.remove("admin")
+        editor?.apply()
     }
 
 }

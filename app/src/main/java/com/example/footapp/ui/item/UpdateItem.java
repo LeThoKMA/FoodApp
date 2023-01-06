@@ -15,7 +15,6 @@ import com.example.footapp.ui.BaseActivity;
 
 public class UpdateItem extends BaseActivity<ActivityUpdateItemBinding> {
 
-    private ActivityUpdateItemBinding binding;
     private ArrayAdapter<CharSequence> adapter;
     private Item item;
     private String type;
@@ -23,6 +22,7 @@ public class UpdateItem extends BaseActivity<ActivityUpdateItemBinding> {
 
     private void setItemInfo() {
         if (getIntent().getExtras() != null) {
+
             item = (Item) getIntent().getExtras().get("item");
         }
         binding.edtName.setText(item.getName());
@@ -59,9 +59,14 @@ public class UpdateItem extends BaseActivity<ActivityUpdateItemBinding> {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         binding.spinner.setAdapter(adapter);
 
+
         setItemInfo();
 
 
+    }
+
+    @Override
+    public void initListener() {
         binding.edtImgUrl.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -92,12 +97,6 @@ public class UpdateItem extends BaseActivity<ActivityUpdateItemBinding> {
         binding.imvBack.setOnClickListener(v -> {
             finish();
         });
-
-
-    }
-
-    @Override
-    public void initListener() {
 
     }
 }

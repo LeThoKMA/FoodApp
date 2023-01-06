@@ -12,24 +12,19 @@ import com.example.footapp.ui.BaseActivity
 import com.example.footapp.MyPreference
 import com.example.footapp.model.Table
 import com.example.footapp.ui.ManageActivity
+import com.example.footapp.ui.login.SignInActivity
+
 
 class HomeActivity : BaseActivity<ActivityHomeBinding>()
 {
     var listTable:ArrayList<Table> = arrayListOf()
      lateinit  var adapter:HomeAdapter
-     var broadcastReceiver=object : BroadcastReceiver() {
-         override fun onReceive(p0: Context?, p1: Intent?) {
 
-         }
-
-     }
     override fun getContentLayout(): Int {
         return R.layout.activity_home
     }
 
     override fun initView() {
-        var intentFilter=IntentFilter("update_table")
-        registerReceiver(broadcastReceiver,intentFilter)
 
      for(i in 0 until 20)
      {
@@ -45,6 +40,10 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>()
         {
             binding.imgEdit.visibility=View.VISIBLE
         }
+        else
+        {
+            binding.imgLogout.visibility=View.VISIBLE
+        }
 
         if(intent.hasExtra("pos_table"))
         {
@@ -58,10 +57,26 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>()
        binding.imgEdit.setOnClickListener {
            startActivity(Intent(this,ManageActivity::class.java))
        }
+        binding.imgLogout.setOnClickListener {
+             showDialog()
+        }
+    }
+    fun showDialog()
+    {
+        var dialog= ConfirmDialog(object : ConfirmDialog.CallBack {
+            override fun accept() {
+                MyPreference().getInstance(this@HomeActivity)?.logout()
+                val intent = Intent(applicationContext, SignInActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                startActivity(intent)
+            }
+
+        })
+        dialog.show(supportFragmentManager,"")
     }
 
     override fun onDestroy() {
-        unregisterReceiver(broadcastReceiver)
+
         super.onDestroy()
     }
 
