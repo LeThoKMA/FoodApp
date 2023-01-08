@@ -37,6 +37,7 @@ class UserDetailActivity : BaseActivity<ActivityUserDetailBinding>(), View.OnCli
     override fun initListener() {
         binding.tvRegister.setOnClickListener(this)
         binding.imgEdit.setOnClickListener(this)
+        binding.imvBack.setOnClickListener { finish() }
     }
 
     override fun onClick(p0: View?) {

@@ -23,6 +23,7 @@ class StatisticTypeActivity : BaseActivity<ActivityStatisticTypeBinding>() {
             startActivity(Intent(this,StatisticByYearActivity::class.java))
 
         }
+        binding.imvBack.setOnClickListener { finish() }
     }
 
 }

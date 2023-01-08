@@ -27,6 +27,7 @@ class ChangePassActivity : BaseActivity<ActivityChangePassBinding>(), ChangePass
                 binding.edtPassRepeat.text.toString()
             )
         }
+        binding.imvBack.setOnClickListener { finish() }
     }
 
     override fun message(message: String) {

@@ -61,18 +61,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
 
     }
 
-    fun showDialog() {
-        var dialog = ConfirmDialog(object : ConfirmDialog.CallBack {
-            override fun accept() {
-                MyPreference().getInstance(this@HomeActivity)?.logout()
-                val intent = Intent(applicationContext, SignInActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                startActivity(intent)
-            }
 
-        })
-        dialog.show(supportFragmentManager, "")
-    }
 
     override fun onDestroy() {
         unregisterReceiver(broadcastReceiver)

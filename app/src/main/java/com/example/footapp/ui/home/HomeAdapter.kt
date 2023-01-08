@@ -45,7 +45,7 @@ class HomeAdapter(var list: ArrayList<Table>) : RecyclerView.Adapter<RecyclerVie
                 binding.check.visibility = View.INVISIBLE
 
             }
-            binding.tbPos.text = position.toString()
+            binding.tbPos.text = position.plus(1).toString()
             binding.parent.setOnClickListener {
                 var intent = Intent(binding.root.context, CartActivity::class.java)
                 intent.putExtra("pos_table", position)

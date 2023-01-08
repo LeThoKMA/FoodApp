@@ -43,7 +43,11 @@ public class UpdateItem extends BaseActivity<ActivityUpdateItemBinding> {
                 break;
         }
         binding.spinner.setSelection(adapter.getPosition(type));
+        binding.imvBack.setOnClickListener(v->{
+            finish();
+        });
     }
+
 
     @Override
     public int getContentLayout() {

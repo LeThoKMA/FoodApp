@@ -75,6 +75,9 @@ public class ItemActivity extends AppCompatActivity {
         });
 
         binding.rcView.setAdapter(itemAdapter);
+        binding.imvBack.setOnClickListener(v->{
+            finish();
+        });
     }
 
 

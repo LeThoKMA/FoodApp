@@ -26,13 +26,14 @@ class AddUserActivity : BaseActivity<ActivityAddUserBinding>(), View.OnClickList
 
     override fun initListener() {
         binding.tvRegister.setOnClickListener(this)
-
+      binding.imvBack.setOnClickListener { finish() }
     }
 
     override fun onClick(p0: View?) {
         if (p0?.id?.equals(binding.tvRegister.id) == true) {
             addUser()
         }
+
     }
 
     private fun addUser() {
