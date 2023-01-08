@@ -7,7 +7,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.footapp.R
-import com.example.footapp.`interface`.LoginInterface
+import com.example.footapp.interface1.LoginInterface
 import com.example.footapp.ui.home.HomeActivity
 import com.example.footapp.presenter.LoginPresenter
 

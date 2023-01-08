@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.footapp.R;
+import com.example.footapp.interface1.ItemInterface;
 import com.example.footapp.model.Item;
 
 import java.util.List;

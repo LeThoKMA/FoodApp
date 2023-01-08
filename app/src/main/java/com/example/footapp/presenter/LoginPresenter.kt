@@ -5,7 +5,7 @@ import android.util.Log
 import com.example.footapp.DAO.DAO
 import com.example.footapp.model.User
 import com.example.footapp.MyPreference
-import com.example.footapp.`interface`.LoginInterface
+import com.example.footapp.interface1.LoginInterface
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener

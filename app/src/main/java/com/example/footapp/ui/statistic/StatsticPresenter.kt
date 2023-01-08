@@ -90,16 +90,16 @@ class StatsticPresenter(var context: Context) {
 
     fun getDataInYear() {
         var map:HashMap<Int,Int> = hashMapOf()
-          var year=Calendar.YEAR
+          var year= Calendar.getInstance().get(Calendar.YEAR)
            for(i in 1 until 13)
            {
                if(i<10)
                {
-                   map.put(i,getTotalInMonth("0"+i.toString()+"-2022"))
+                   map.put(i,getTotalInMonth("0"+i.toString()+"-"+year))
                }
                else
                {
-                   map.put(i,getTotalInMonth(i.toString()+"-2022"))
+                   map.put(i,getTotalInMonth(i.toString()+"-"+year))
                }
            }
         dataInYear.postValue(map)

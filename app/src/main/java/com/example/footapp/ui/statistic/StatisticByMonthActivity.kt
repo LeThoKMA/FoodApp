@@ -56,8 +56,9 @@ class StatisticByMonthActivity : BaseActivity<ActivityStatisticBinding>() {
                 {
                     if (it) {
                         loadingDialog?.show()
-                        presenter.getDataInMonth("12-2022")
-                        //  presenter.getDataInMonth("${p2.plus(1)}-2022)")
+                        var year= Calendar.getInstance().get(Calendar.YEAR)
+
+                        presenter.getDataInMonth("${p2.plus(1)}-$year")
 
                     }
                 }

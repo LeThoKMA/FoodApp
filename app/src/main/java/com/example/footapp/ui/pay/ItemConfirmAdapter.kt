@@ -39,7 +39,7 @@ class ItemConfirmAdapter(var list: ArrayList<DetailItemChoose>) :
             binding.tvNameProduct.text = item?.name
             binding.amount.text = item?.totalPrice.toString()
             binding.tvPrice.text=item?.price.toString()
-            binding.edtNumber.text = item?.count.toString()
+            binding.edtNumber.text = "x"+item?.count.toString()
             binding.ivUp.visibility= View.GONE
             binding.ivDown.visibility= View.GONE
             binding.ivCheck.visibility= View.GONE

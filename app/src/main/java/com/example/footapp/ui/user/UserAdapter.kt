@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.footapp.R
-import com.example.footapp.`interface`.UserInterface
+import com.example.footapp.interface1.UserInterface
 import com.example.footapp.databinding.ItemUserBinding
 import com.example.footapp.model.User
 import com.example.footapp.presenter.UserPresenter

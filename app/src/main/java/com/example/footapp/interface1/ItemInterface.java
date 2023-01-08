@@ -1,4 +1,4 @@
-package com.example.footapp.ui.item;
+package com.example.footapp.interface1;
 
 import com.example.footapp.model.Item;
 

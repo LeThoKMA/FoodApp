@@ -4,7 +4,7 @@ import android.os.Build
 import android.view.View
 import android.widget.Toast
 import com.example.footapp.R
-import com.example.footapp.`interface`.UserInterface
+import com.example.footapp.interface1.UserInterface
 import com.example.footapp.databinding.ActivityUserDetailBinding
 import com.example.footapp.model.User
 import com.example.footapp.presenter.UserPresenter

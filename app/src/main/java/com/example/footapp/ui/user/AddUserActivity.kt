@@ -3,7 +3,7 @@ package com.example.footapp.ui.user
 import android.view.View
 import android.widget.Toast
 import com.example.footapp.R
-import com.example.footapp.`interface`.UserInterface
+import com.example.footapp.interface1.UserInterface
 import com.example.footapp.databinding.ActivityAddUserBinding
 import com.example.footapp.model.User
 import com.example.footapp.presenter.UserPresenter
@@ -26,6 +26,7 @@ class AddUserActivity : BaseActivity<ActivityAddUserBinding>(), View.OnClickList
 
     override fun initListener() {
         binding.tvRegister.setOnClickListener(this)
+
     }
 
     override fun onClick(p0: View?) {

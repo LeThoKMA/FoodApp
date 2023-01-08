@@ -64,29 +64,17 @@ class StatisticByYearActivity : BaseActivity<ActivityStatisticByYearBinding>() {
     fun setUpViewChart(map: HashMap<Int, Int>) {
         var list: ArrayList<BarEntry> = arrayListOf()
         var months: ArrayList<String> = arrayListOf()
-        var i = 0
+        var i = 1
         months.add("")
         for (item in map) {
-//            list.add(BarEntry(item.value.toFloat(), item.value.toFloat()))
-            //   list.add(BarEntry(i.toFloat(), item.value.toFloat()))
+
+               list.add(BarEntry(i.toFloat(), item.value.toFloat()))
             total+=item.value
 
             i++
             months.add("T" + item.key)
         }
-       // list.add(BarEntry(0f, 100f))
-        list.add(BarEntry(1f, 100f))
-        list.add(BarEntry(2f, 120f))
-        list.add(BarEntry(3f, 150f))
-        list.add(BarEntry(4f, 111f))
-        list.add(BarEntry(5f, 222f))
-        list.add(BarEntry(6f, 333f))
-        list.add(BarEntry(7f, 100f))
-        list.add(BarEntry(8f, 222f))
-        list.add(BarEntry(9f, 100f))
-        list.add(BarEntry(10f, 222f))
-        list.add(BarEntry(11f, 100f))
-        list.add(BarEntry(12f, 222f))
+
 
         var barDataSet = BarDataSet(list, "")
         barDataSet.color = (ContextCompat.getColor(this, R.color.colorPrimary))

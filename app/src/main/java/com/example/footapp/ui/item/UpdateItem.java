@@ -1,16 +1,14 @@
 package com.example.footapp.ui.item;
 
-import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.ArrayAdapter;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.example.footapp.R;
 import com.example.footapp.databinding.ActivityUpdateItemBinding;
 import com.example.footapp.model.Item;
+import com.example.footapp.presenter.ItemPresenter;
 import com.example.footapp.ui.BaseActivity;
 
 public class UpdateItem extends BaseActivity<ActivityUpdateItemBinding> {

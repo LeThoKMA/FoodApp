@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide;
 import com.example.footapp.R;
 import com.example.footapp.databinding.ActivityAddItemBinding;
 import com.example.footapp.model.Item;
+import com.example.footapp.presenter.ItemPresenter;
 
 public class AddItem extends AppCompatActivity {
 

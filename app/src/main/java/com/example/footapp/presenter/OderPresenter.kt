@@ -6,15 +6,11 @@ import androidx.lifecycle.MutableLiveData
 import com.example.footapp.DAO.DAO
 import com.example.footapp.model.DetailItemChoose
 import com.example.footapp.model.Item
-import com.example.footapp.MyPreference
 import com.example.footapp.ui.Oder.CartActivity
-import com.example.footapp.`interface`.OderInterface
-import com.example.footapp.model.User
+import com.example.footapp.interface1.OderInterface
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.ktx.getValue
 import java.text.SimpleDateFormat
 
 class OderPresenter(var callback: OderInterface, var context: Context, var activity: CartActivity) {
@@ -100,6 +96,8 @@ class OderPresenter(var callback: OderInterface, var context: Context, var activ
             override fun onCancelled(error: DatabaseError) {}
         })
     }
+
+
 
 
 }

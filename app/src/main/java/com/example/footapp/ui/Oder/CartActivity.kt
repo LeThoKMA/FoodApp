@@ -1,32 +1,41 @@
 package com.example.footapp.ui.Oder
 
 import android.annotation.SuppressLint
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
-import android.util.Log
+import android.content.IntentFilter
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.footapp.R
-import com.example.footapp.`interface`.OderInterface
+import com.example.footapp.interface1.OderInterface
 import com.example.footapp.databinding.ActivityCartBinding
 import com.example.footapp.model.DetailItemChoose
 import com.example.footapp.model.Item
 import com.example.footapp.presenter.OderPresenter
 import com.example.footapp.ui.BaseActivity
 import com.example.footapp.ui.pay.PayConfirmActivity
-import com.google.firebase.database.DatabaseReference
 
 class CartActivity : BaseActivity<ActivityCartBinding>(), OderInterface {
-    var tablePos=0
+    var tablePos = 0
     var listItem: ArrayList<Item?> = arrayListOf()
     lateinit var oderPresenter: OderPresenter
     lateinit var oderAdapter: OderAdapter
+    var broadcastReceiver= object :BroadcastReceiver(){
+        override fun onReceive(p0: Context?, p1: Intent?) {
+            finish()
+        }
+
+    }
     override fun getContentLayout(): Int {
         return R.layout.activity_cart
     }
 
     override fun initView() {
 
-        tablePos=intent.getIntExtra("pos_table",0)
+        var intentFilter=IntentFilter("table")
+        registerReceiver(broadcastReceiver,intentFilter)
+        tablePos = intent.getIntExtra("pos_table", 0)
         oderPresenter = OderPresenter(this, this, this@CartActivity)
         oderPresenter.getDataItem()
         loadingDialog?.show()
@@ -45,14 +54,11 @@ class CartActivity : BaseActivity<ActivityCartBinding>(), OderInterface {
         }
         oderPresenter.dataChange.observe(this)
         {
-            if(it!=null)
-            {
-                for(item in listItem)
-                {
-                    if(it.id==item?.id)
-                    {
-                        item?.amount=it.amount
-                        item?.price=it.price
+            if (it != null) {
+                for (item in listItem) {
+                    if (it.id == item?.id) {
+                        item?.amount = it.amount
+                        item?.price = it.price
                         break
                     }
                 }
@@ -69,7 +75,7 @@ class CartActivity : BaseActivity<ActivityCartBinding>(), OderInterface {
         binding.tvCreate.setOnClickListener {
             oderPresenter.payConfirm()
         }
-        binding.imvBack.setOnClickListener{
+        binding.imvBack.setOnClickListener {
             finish()
         }
     }
@@ -88,8 +94,13 @@ class CartActivity : BaseActivity<ActivityCartBinding>(), OderInterface {
         var intent = Intent(this, PayConfirmActivity::class.java)
         intent.putExtra("map", map)
         intent.putExtra("totalPrice", totalPrice)
-        intent.putExtra("pos_table",tablePos)
+        intent.putExtra("pos_table", tablePos)
         startActivity(intent)
+    }
+
+    override fun onDestroy() {
+        unregisterReceiver(broadcastReceiver)
+        super.onDestroy()
     }
 
 }

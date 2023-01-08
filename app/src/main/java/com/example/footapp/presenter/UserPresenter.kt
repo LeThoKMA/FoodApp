@@ -3,11 +3,9 @@ package com.example.footapp.presenter
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.example.footapp.DAO.DAO
-import com.example.footapp.`interface`.UserInterface
-import com.example.footapp.model.Item
+import com.example.footapp.interface1.UserInterface
 import com.example.footapp.model.User
 import com.google.firebase.database.*
-import com.google.firebase.database.ktx.getValue
 
 class UserPresenter(var callback: UserInterface) {
     private var dao = DAO()

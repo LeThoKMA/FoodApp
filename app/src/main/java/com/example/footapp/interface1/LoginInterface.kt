@@ -1,4 +1,4 @@
-package com.example.footapp.`interface`
+package com.example.footapp.interface1
 
 interface LoginInterface {
     fun messageLogin(message:String)

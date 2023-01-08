@@ -8,7 +8,7 @@ import com.example.footapp.model.DetailItemChoose
 import com.example.footapp.model.Item
 import com.example.footapp.model.ItemBill
 import com.example.footapp.MyPreference
-import com.example.footapp.`interface`.PayConfirmInterface
+import com.example.footapp.interface1.PayConfirmInterface
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -20,7 +20,7 @@ class PayConfirmPresenter(
     var callback: PayConfirmInterface,
     var context: Context,
 ) {
-    var simpleDateFormat = SimpleDateFormat("dd-MM-yyyy HH-mm")
+    var simpleDateFormat = SimpleDateFormat("dd-MM-yyyy HH:mm")
     private var myPreference = MyPreference().getInstance(context)
     private var items: List<Item?> = arrayListOf()
     private var dao = DAO()
@@ -43,7 +43,7 @@ class PayConfirmPresenter(
         var itemBills: ArrayList<ItemBill> = arrayListOf()
 
         for (item in map) {
-            itemBills.add(ItemBill(item.key, item.value.count))
+            itemBills.add(ItemBill(item.key, item.value.name.toString(),item.value.count,item.value.price))
         }
 
         for (item in items) {
@@ -64,8 +64,10 @@ class PayConfirmPresenter(
         var bill = Bill(
             size,
             myPreference?.getUser()?.id,
+            myPreference?.getUser()?.name,
             mapItemBill,
             totalPrice,
+
             simpleDateFormat.format(Calendar.getInstance().time)
         )
         dao.addBill(bill)

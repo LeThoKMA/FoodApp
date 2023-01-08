@@ -1,6 +1,4 @@
-package com.example.footapp.`interface`
-
-import com.example.footapp.model.User
+package com.example.footapp.interface1
 
 interface UserInterface {
     fun deleteUser(position:Int)

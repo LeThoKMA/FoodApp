@@ -17,5 +17,6 @@ data class Item(
     var amount:Int?=0,
     @SerializedName("imgUrl")
     var imgUrl:String ? ="",
-    var type:Int? = 0
+    var type:Int? = 0,
+
 ):java.io.Serializable
