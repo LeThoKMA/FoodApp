@@ -32,6 +32,7 @@ public class ItemPresenter implements ItemInterface {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference reference = firebaseDatabase.getReference("items").child(String.valueOf(item.getId()));
         reference.removeValue();
+        list.remove(list.get(pos));
     }
 
     @Override
@@ -96,57 +97,5 @@ public class ItemPresenter implements ItemInterface {
 
         });
     }
-    public void getListItem()
-    {
-        ArrayList<Item> list= new ArrayList<>();
-        ValueEventListener listener= new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                    for(Item item:  (List<Item>)snapshot.getValue(List.class))
-                    {
-                        if(item!=null)
-                        {
-                            list.add(item); }
-
-                    }
-                }
-               // dataItems.postValue(list)
-
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        };
-//            val list: ArrayList<Item?> = arrayListOf()
-//            val itemListener = object : ValueEventListener {
-//            override fun onDataChange(dataSnapshot: DataSnapshot) {
-//                // Get Post object and use the values to update the UI
-//
-//
-//                dataSnapshot.getValue<List<Item>>()?.let {
-//                    for(item in it)
-//                    {
-//                        if(item!=null)
-//                        {
-//                            list.add(item) }
-//
-//                    }
-//                }
-//                dataItems.postValue(list)
-//
-//
-//            }
-//
-//            override fun onCancelled(databaseError: DatabaseError) {
-//                // Getting Post failed, log a message
-//                Log.w("TAG", "loadPost:onCancelled", databaseError.toException())
-//                dataItems.postValue(null)
-//            }
-//        }
-//            dao.itemReference.addValueEventListener(itemListener)
-//
-//        }
-    }
 }

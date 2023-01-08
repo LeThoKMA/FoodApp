@@ -28,6 +28,9 @@ class UserDetailActivity : BaseActivity<ActivityUserDetailBinding>(), View.OnCli
       binding.edtName.isEnabled=false
         binding.edtSalary.isEnabled=false
 
+        binding.edtName.setText(user.name)
+        binding.edtSalary.setText(user.salary.toString())
+
 
     }
 
@@ -52,7 +55,9 @@ class UserDetailActivity : BaseActivity<ActivityUserDetailBinding>(), View.OnCli
     }
 
     private fun updateUser() {
-          userPresenter.updateUser(user,binding.edtName.text.toString(),binding.edtSalary.text.toString())
+        user.name=binding.edtName.text.toString()
+        user.salary=binding.edtSalary.text.toString().toInt()
+          userPresenter.updateUser(user)
 
     }
 

@@ -86,5 +86,6 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
     public void remove(int pos) {
         mListItem.remove(pos);
         notifyItemRemoved(pos);
+        notifyDataSetChanged();
     }
 }

@@ -65,7 +65,8 @@ class UserAdapter(
 
     fun deleteUser(position: Int) {
         list.removeAt(position)
-     //   notifyItemChanged(position)
+        notifyItemRemoved(position)
+
     }
 
 }

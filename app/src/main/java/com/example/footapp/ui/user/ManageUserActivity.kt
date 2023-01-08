@@ -37,17 +37,27 @@ class ManageUserActivity : BaseActivity<ActivityManageUserBinding>(), UserInterf
                 list.clear()
                 list.addAll(it)
                 adapter.notifyDataSetChanged()
+                size= list[list.lastIndex]?.id?.plus(1)?:0
                 loadingDialog?.dismiss()
             }
         }
-
-        userPresenter.size.observe(this@ManageUserActivity)
+        userPresenter.updateData.observe(this)
         {
             if(it!=null)
             {
-                size=it
+                for(user in list)
+                {
+                    if(it.id==user?.id)
+                    {
+                        user?.name=it.name
+                        user?.salary=it.salary
+                        break
+                    }
+                }
+                adapter.notifyDataSetChanged()
             }
         }
+
 
     }
 
@@ -65,7 +75,10 @@ class ManageUserActivity : BaseActivity<ActivityManageUserBinding>(), UserInterf
     }
 
     override fun deleteUser(position: Int) {
-        adapter.deleteUser(position)
+       adapter.deleteUser(position)
+        size= list[list.lastIndex]?.id?.plus(1)?:0
+
+
     }
 
 

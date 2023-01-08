@@ -9,6 +9,8 @@ import com.example.footapp.model.Item
 import com.example.footapp.MyPreference
 import com.example.footapp.ui.Oder.CartActivity
 import com.example.footapp.`interface`.OderInterface
+import com.example.footapp.model.User
+import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -18,8 +20,9 @@ import java.text.SimpleDateFormat
 class OderPresenter(var callback: OderInterface, var context: Context, var activity: CartActivity) {
     var simpleDateFormat = SimpleDateFormat("dd-MM-yyyy HH-mm")
     val dataItems= MutableLiveData<ArrayList<Item?>>()
+    var dataChange = MutableLiveData<Item>()
     var mapDetailItemChoose:HashMap<Int,DetailItemChoose> = hashMapOf()
-
+    var list: ArrayList<Item?> = arrayListOf()
     private var dao = DAO()
     var size = 0
     var totalPrice = 0
@@ -64,36 +67,38 @@ class OderPresenter(var callback: OderInterface, var context: Context, var activ
 
 
 
-    fun getItems()
-    {
-        val list: ArrayList<Item?> = arrayListOf()
-        val itemListener = object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                // Get Post object and use the values to update the UI
+    fun getDataItem() {
+        dao.itemReference.addChildEventListener(object : ChildEventListener {
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
 
 
-                dataSnapshot.getValue<List<Item>>()?.let {
-                    for(item in it)
-                    {
-                        if(item!=null)
-                        {
-                            list.add(item) }
+                val item = snapshot.getValue(
+                    Item::class.java
+                )
 
-                    }
-                    }
+                if (item != null) {
+                    list.add(item)
+                }
+                Log.e("aaaa", list.toString())
                 dataItems.postValue(list)
 
-
             }
 
-            override fun onCancelled(databaseError: DatabaseError) {
-                // Getting Post failed, log a message
-                Log.w("TAG", "loadPost:onCancelled", databaseError.toException())
-                dataItems.postValue(null)
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+                val item = snapshot.getValue(
+                    Item::class.java
+                )
+                if (item != null) {
+                    dataChange.postValue(item)
+                }
             }
-        }
-        dao.itemReference.addValueEventListener(itemListener)
 
+            override fun onChildRemoved(snapshot: DataSnapshot) {
+
+            }
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
+            override fun onCancelled(error: DatabaseError) {}
+        })
     }
 
 

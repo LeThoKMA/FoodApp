@@ -28,17 +28,36 @@ class CartActivity : BaseActivity<ActivityCartBinding>(), OderInterface {
 
         tablePos=intent.getIntExtra("pos_table",0)
         oderPresenter = OderPresenter(this, this, this@CartActivity)
-        oderPresenter.getItems()
+        oderPresenter.getDataItem()
         loadingDialog?.show()
-
+        oderAdapter = OderAdapter(listItem, oderPresenter)
+        binding.rvCategory.layoutManager = LinearLayoutManager(this)
+        binding.rvCategory.adapter = oderAdapter
 
         oderPresenter.dataItems.observe(this@CartActivity)
         {
             if (it != null) {
-                oderAdapter = OderAdapter(listItem, oderPresenter)
-                binding.rvCategory.layoutManager = LinearLayoutManager(this)
-                binding.rvCategory.adapter = oderAdapter
+                listItem.clear()
+                listItem.addAll(it)
+                oderAdapter.notifyDataSetChanged()
                 loadingDialog?.dismiss()
+            }
+        }
+        oderPresenter.dataChange.observe(this)
+        {
+            if(it!=null)
+            {
+                for(item in listItem)
+                {
+                    if(it.id==item?.id)
+                    {
+                        item?.amount=it.amount
+                        item?.price=it.price
+                        break
+                    }
+                }
+                oderAdapter.notifyDataSetChanged()
+
             }
         }
 
