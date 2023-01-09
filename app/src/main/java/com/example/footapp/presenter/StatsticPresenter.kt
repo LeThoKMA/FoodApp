@@ -1,4 +1,4 @@
-package com.example.footapp.ui.statistic
+package com.example.footapp.presenter
 
 import android.content.Context
 import android.util.Log
@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import com.example.footapp.DAO.DAO
 import com.example.footapp.MyPreference
 import com.example.footapp.model.Bill
-import com.example.footapp.model.Item
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -15,7 +14,6 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 
 class StatsticPresenter(var context: Context) {
-    var simpleDateFormat = SimpleDateFormat("dd-MM-yyyy HH-mm")
     var sdf=SimpleDateFormat("dd-MM-yyyy")
     private var myPreference = MyPreference().getInstance(context)
     val dataInMonth = MutableLiveData<HashMap<String, Int>>()
@@ -65,8 +63,8 @@ class StatsticPresenter(var context: Context) {
             } else {
                 map.put(time, item.totalPrice ?: 0)
             }
+            Log.e("TAG", map.toString(), )
         }
-        Log.e("TAG2222", map.toString())
         return map
     }
 

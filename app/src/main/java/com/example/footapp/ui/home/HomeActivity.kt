@@ -13,6 +13,8 @@ import com.example.footapp.MyPreference
 import com.example.footapp.model.Table
 import com.example.footapp.ui.manage.ManageActivity
 import com.example.footapp.ui.login.SignInActivity
+import com.example.footapp.utils.POS_BACK
+import com.example.footapp.utils.TABLE_ACTION
 
 
 class HomeActivity : BaseActivity<ActivityHomeBinding>() {
@@ -20,8 +22,8 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
     lateinit var adapter: HomeAdapter
     var broadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(p0: Context?, p1: Intent?) {
-            if (p1?.hasExtra("pos") == true) {
-                p1?.getIntExtra("pos", 0)?.let { adapter.updateView(it) }
+            if (p1?.hasExtra(POS_BACK) == true) {
+                p1?.getIntExtra(POS_BACK, 0)?.let { adapter.updateView(it) }
             }
         }
 
@@ -33,7 +35,9 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
 
     override fun initView() {
 
-        var intentFilter = IntentFilter("table")
+        setColorForStatusBar(R.color.colorPrimary)
+        setLightIconStatusBar(false)
+        var intentFilter = IntentFilter(TABLE_ACTION)
         registerReceiver(broadcastReceiver, intentFilter)
         for (i in 0 until 20) {
             var item = Table(i, false)
@@ -42,13 +46,6 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
         adapter = HomeAdapter(listTable)
         binding.rcView.layoutManager = GridLayoutManager(this, 2)
         binding.rcView.adapter = adapter
-
-
-
-        binding.imgEdit.visibility = View.VISIBLE
-
-
-
 
 
     }
@@ -60,7 +57,6 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
         }
 
     }
-
 
 
     override fun onDestroy() {

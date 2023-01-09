@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.footapp.R
 import com.example.footapp.interface1.LoginInterface
+import com.example.footapp.model.User
 import com.example.footapp.ui.home.HomeActivity
 import com.example.footapp.presenter.LoginPresenter
 
@@ -16,12 +17,21 @@ class SignInActivity : AppCompatActivity(), LoginInterface {
     private var edtEmail: EditText? = null
     private var edtPassword: EditText? = null
     private var btnSignIn: Button? = null
+    private var list:ArrayList<User> = arrayListOf()
     lateinit var presenter: LoginPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_in)
         presenter = LoginPresenter(this, this)
+        presenter.usersData.observe(this)
+        {
+            if(it!=null)
+            {
+                list.clear()
+                list.addAll(it)
+            }
+        }
         initUI()
         initListener()
     }
@@ -34,9 +44,10 @@ class SignInActivity : AppCompatActivity(), LoginInterface {
 
     private fun initListener() {
         btnSignIn!!.setOnClickListener {
-            presenter.signIn(
+            presenter.validUser(
                 edtEmail?.text.toString(),
-                edtPassword?.text.toString()
+                edtPassword?.text.toString(),
+                list
             )
         }
     }

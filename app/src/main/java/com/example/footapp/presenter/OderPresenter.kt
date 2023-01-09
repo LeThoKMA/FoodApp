@@ -14,7 +14,6 @@ import com.google.firebase.database.DatabaseError
 import java.text.SimpleDateFormat
 
 class OderPresenter(var callback: OderInterface, var context: Context, var activity: CartActivity) {
-    var simpleDateFormat = SimpleDateFormat("dd-MM-yyyy HH-mm")
     val dataItems= MutableLiveData<ArrayList<Item?>>()
     var dataChange = MutableLiveData<Item>()
     var mapDetailItemChoose:HashMap<Int,DetailItemChoose> = hashMapOf()
@@ -50,7 +49,15 @@ class OderPresenter(var callback: OderInterface, var context: Context, var activ
     {
         if(totalPrice>0)
         {
-            callback.confirm(this.mapDetailItemChoose,this.totalPrice)
+            var map:HashMap<Int,DetailItemChoose> = hashMapOf()
+            for(item in this.mapDetailItemChoose)
+            {
+                if(item.value.count!! >0)
+                {
+                    map.put(item.key,item.value)
+                }
+            }
+            callback.confirm(map,this.totalPrice)
         }
         else
         {
@@ -75,7 +82,6 @@ class OderPresenter(var callback: OderInterface, var context: Context, var activ
                 if (item != null) {
                     list.add(item)
                 }
-                Log.e("aaaa", list.toString())
                 dataItems.postValue(list)
 
             }

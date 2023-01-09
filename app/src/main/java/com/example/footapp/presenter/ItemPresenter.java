@@ -19,7 +19,6 @@ import java.util.List;
 
 public class ItemPresenter implements ItemInterface {
 
-    public MutableLiveData<Item> addItem= new MutableLiveData<>();
     public MutableLiveData<Item> updateItem= new MutableLiveData<>();
     public MutableLiveData<List<Item>> listItem= new MutableLiveData<>();
     private ArrayList<Item> list= new ArrayList<>();

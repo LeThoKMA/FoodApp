@@ -13,20 +13,23 @@ import com.example.footapp.R;
 import com.example.footapp.databinding.ActivityAddItemBinding;
 import com.example.footapp.model.Item;
 import com.example.footapp.presenter.ItemPresenter;
+import com.example.footapp.ui.BaseActivity;
 
-public class AddItem extends AppCompatActivity {
+public class AddItem extends BaseActivity<ActivityAddItemBinding> {
 
-    private ActivityAddItemBinding binding;
+
     private final ItemPresenter itemPresenter = new ItemPresenter();
 
 
+    @Override
+    public int getContentLayout() {
+        return R.layout.activity_add_item;
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        binding = ActivityAddItemBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-
+    public void initView() {
+        setColorForStatusBar(R.color.colorPrimary);
+        setLightIconStatusBar(false);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.type, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -49,7 +52,10 @@ public class AddItem extends AppCompatActivity {
                 binding.img.setVisibility(View.VISIBLE);
             }
         });
+    }
 
+    @Override
+    public void initListener() {
         binding.tvRegister.setOnClickListener(v -> {
             Item item = new Item();
             item.setId(Integer.parseInt(binding.edtId.getText().toString().trim()));

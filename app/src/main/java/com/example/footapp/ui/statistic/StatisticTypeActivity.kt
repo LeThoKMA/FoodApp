@@ -1,8 +1,6 @@
 package com.example.footapp.ui.statistic
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import com.example.footapp.R
 import com.example.footapp.databinding.ActivityStatisticTypeBinding
 import com.example.footapp.ui.BaseActivity
@@ -13,6 +11,8 @@ class StatisticTypeActivity : BaseActivity<ActivityStatisticTypeBinding>() {
     }
 
     override fun initView() {
+        setColorForStatusBar(R.color.colorPrimary)
+        setLightIconStatusBar(false)
     }
 
     override fun initListener() {

@@ -10,6 +10,7 @@ import com.example.footapp.interface1.UserInterface
 import com.example.footapp.databinding.ItemUserBinding
 import com.example.footapp.model.User
 import com.example.footapp.presenter.UserPresenter
+import com.example.footapp.utils.USER
 
 class UserAdapter(
     var list: ArrayList<User?>,
@@ -56,7 +57,7 @@ class UserAdapter(
             }
             binding.parent.setOnClickListener {
                 var intent = Intent(binding.root.context, UserDetailActivity::class.java)
-                intent.putExtra("user", user)
+                intent.putExtra(USER, user)
                 binding.root.context.startActivity(intent)
             }
         }

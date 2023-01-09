@@ -4,8 +4,8 @@ import android.content.Intent
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.footapp.R
-import com.example.footapp.interface1.UserInterface
 import com.example.footapp.databinding.ActivityManageUserBinding
+import com.example.footapp.interface1.UserInterface
 import com.example.footapp.model.User
 import com.example.footapp.presenter.UserPresenter
 import com.example.footapp.ui.BaseActivity
@@ -15,12 +15,13 @@ import com.google.firebase.database.DatabaseReference
 class ManageUserActivity : BaseActivity<ActivityManageUserBinding>(), UserInterface {
 
     lateinit var adapter: UserAdapter
-    lateinit var databaseReference: DatabaseReference
     lateinit var userPresenter: UserPresenter
     var list: ArrayList<User?> = arrayListOf()
     var size = 0
 
     override fun initView() {
+        setColorForStatusBar(R.color.colorPrimary)
+        setLightIconStatusBar(false)
         userPresenter = UserPresenter(this)
         loadingDialog?.show()
         adapter = UserAdapter(list, this, userPresenter)

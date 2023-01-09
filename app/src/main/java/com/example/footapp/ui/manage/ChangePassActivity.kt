@@ -1,7 +1,5 @@
 package com.example.footapp.ui.manage
 
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import android.widget.Toast
 import com.example.footapp.R
 import com.example.footapp.databinding.ActivityChangePassBinding
@@ -16,6 +14,8 @@ class ChangePassActivity : BaseActivity<ActivityChangePassBinding>(), ChangePass
     }
 
     override fun initView() {
+        setColorForStatusBar(R.color.colorPrimary)
+        setLightIconStatusBar(false)
         presenter = ChangePassPresenter(this, this)
     }
 

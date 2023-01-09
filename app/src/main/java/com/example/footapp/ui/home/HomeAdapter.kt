@@ -13,6 +13,7 @@ import com.example.footapp.databinding.ItemUserBinding
 import com.example.footapp.model.Table
 import com.example.footapp.model.User
 import com.example.footapp.ui.Oder.CartActivity
+import com.example.footapp.utils.TABLE_POSITION
 
 class HomeAdapter(var list: ArrayList<Table>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -48,7 +49,7 @@ class HomeAdapter(var list: ArrayList<Table>) : RecyclerView.Adapter<RecyclerVie
             binding.tbPos.text = position.plus(1).toString()
             binding.parent.setOnClickListener {
                 var intent = Intent(binding.root.context, CartActivity::class.java)
-                intent.putExtra("pos_table", position)
+                intent.putExtra(TABLE_POSITION, position)
                 binding.root.context.startActivity(intent)
             }
             if(item.status==true) {

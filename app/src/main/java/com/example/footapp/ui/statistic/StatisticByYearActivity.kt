@@ -1,27 +1,17 @@
 package com.example.footapp.ui.statistic
 
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.AdapterView
 import androidx.core.content.ContextCompat
 import com.example.footapp.R
 import com.example.footapp.databinding.ActivityStatisticByYearBinding
+import com.example.footapp.presenter.StatsticPresenter
 import com.example.footapp.ui.BaseActivity
-import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
-import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.LineData
-import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
-import com.github.mikephil.charting.formatter.ValueFormatter
-import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 class StatisticByYearActivity : BaseActivity<ActivityStatisticByYearBinding>() {
     lateinit var presenter: StatsticPresenter
@@ -33,6 +23,8 @@ class StatisticByYearActivity : BaseActivity<ActivityStatisticByYearBinding>() {
 
 
     override fun initView() {
+        setColorForStatusBar(R.color.colorPrimary)
+        setLightIconStatusBar(false)
         presenter = StatsticPresenter(this)
         loadingDialog?.show()
 

@@ -5,11 +5,12 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.footapp.MyPreference
 import com.example.footapp.R
-import com.example.footapp.interface1.PayConfirmInterface
 import com.example.footapp.databinding.ActivityPayConfirmBinding
+import com.example.footapp.interface1.PayConfirmInterface
 import com.example.footapp.model.DetailItemChoose
 import com.example.footapp.presenter.PayConfirmPresenter
 import com.example.footapp.ui.BaseActivity
+import com.example.footapp.utils.*
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -25,10 +26,12 @@ class PayConfirmActivity : BaseActivity<ActivityPayConfirmBinding>(), PayConfirm
     }
 
     override fun initView() {
-        tablePos = intent.getIntExtra("pos_table", 0)
+        setColorForStatusBar(R.color.colorPrimary)
+        setLightIconStatusBar(false)
+        tablePos = intent.getIntExtra(TABLE_POSITION, 0)
 
         presenter = PayConfirmPresenter(this, this)
-        map = intent.getSerializableExtra("map") as HashMap<Int, DetailItemChoose>
+        map = intent.getSerializableExtra(MAP) as HashMap<Int, DetailItemChoose>
         binding.tvName.text = MyPreference().getInstance(this)?.getUser()?.name
         binding.tvTime.text = simpleDateFormat.format(Calendar.getInstance().time)
 
@@ -36,7 +39,7 @@ class PayConfirmActivity : BaseActivity<ActivityPayConfirmBinding>(), PayConfirm
         adapter = ItemConfirmAdapter(items)
         binding.rcItem.layoutManager = LinearLayoutManager(this)
         binding.rcItem.adapter = adapter
-        binding.tvPrice.text = intent.getIntExtra("totalPrice", 0).toString() + " đ"
+        binding.tvPrice.text = intent.getIntExtra(TOTAL_PRICE, 0).toString() + " đ"
 
     }
 
@@ -50,7 +53,7 @@ class PayConfirmActivity : BaseActivity<ActivityPayConfirmBinding>(), PayConfirm
     fun showDialog() {
         var dialog = ConfirmDialog(object : ConfirmDialog.CallBack {
             override fun accept(passwd: String) {
-                presenter.payConfirm(map, passwd, intent.getIntExtra("totalPrice", 0))
+                presenter.payConfirm(map, passwd, intent.getIntExtra(TOTAL_PRICE, 0))
             }
 
         })
@@ -61,8 +64,8 @@ class PayConfirmActivity : BaseActivity<ActivityPayConfirmBinding>(), PayConfirm
     override fun complete(message: String, flag: Boolean) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
         if (flag) {
-            var intent = Intent("table")
-            intent.putExtra("pos",tablePos)
+            var intent = Intent(TABLE_ACTION)
+            intent.putExtra(POS_BACK,tablePos)
             sendBroadcast(intent)
             finish()
 

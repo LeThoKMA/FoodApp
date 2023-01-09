@@ -1,7 +1,5 @@
 package com.example.footapp.ui.history
 
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.footapp.R
 import com.example.footapp.databinding.ActivityHistoryBinding
@@ -18,6 +16,8 @@ class HistoryActivity :BaseActivity<ActivityHistoryBinding>() {
     }
 
     override fun initView() {
+        setColorForStatusBar(R.color.colorPrimary)
+        setLightIconStatusBar(false)
         loadingDialog?.show()
         adapter= HistoryAdapter(list)
         binding.rcBill.layoutManager=LinearLayoutManager(this)

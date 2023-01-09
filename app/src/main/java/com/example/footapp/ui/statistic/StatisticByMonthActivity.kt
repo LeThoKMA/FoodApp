@@ -1,21 +1,18 @@
 package com.example.footapp.ui.statistic
 
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import androidx.core.content.ContextCompat
 import com.example.footapp.R
 import com.example.footapp.databinding.ActivityStatisticBinding
+import com.example.footapp.presenter.StatsticPresenter
 import com.example.footapp.ui.BaseActivity
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
-import java.time.Month
-import java.util.Calendar
+import java.util.*
 
 class StatisticByMonthActivity : BaseActivity<ActivityStatisticBinding>() {
     lateinit var presenter: StatsticPresenter
@@ -27,6 +24,8 @@ class StatisticByMonthActivity : BaseActivity<ActivityStatisticBinding>() {
     }
 
     override fun initView() {
+        setColorForStatusBar(R.color.colorPrimary)
+        setLightIconStatusBar(false)
         presenter = StatsticPresenter(this)
         //  presenter.getBills()
         for (i in 1 until 13) {
@@ -75,8 +74,8 @@ class StatisticByMonthActivity : BaseActivity<ActivityStatisticBinding>() {
     fun setUpViewChart(map: HashMap<String, Int>) {
         var list: ArrayList<Entry> = arrayListOf()
         var i = 0
-        for (item in map) {
-            list.add(Entry(i.toFloat(), item.value.toFloat()))
+        for (item in map.values.reversed()) {
+            list.add(Entry(i.toFloat(), item.toFloat()))
             i++
         }
         var lineDataSet = LineDataSet(list,"")

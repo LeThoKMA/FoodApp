@@ -9,6 +9,7 @@ import com.example.footapp.model.Item
 import com.example.footapp.model.ItemBill
 import com.example.footapp.MyPreference
 import com.example.footapp.interface1.PayConfirmInterface
+import com.example.footapp.utils.SIMPLE_DATE_FORMAT
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -20,7 +21,7 @@ class PayConfirmPresenter(
     var callback: PayConfirmInterface,
     var context: Context,
 ) {
-    var simpleDateFormat = SimpleDateFormat("dd-MM-yyyy HH:mm")
+    var simpleDateFormat = SimpleDateFormat(SIMPLE_DATE_FORMAT)
     private var myPreference = MyPreference().getInstance(context)
     private var items: List<Item?> = arrayListOf()
     private var dao = DAO()

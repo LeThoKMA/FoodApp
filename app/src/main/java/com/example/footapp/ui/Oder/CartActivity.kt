@@ -8,13 +8,17 @@ import android.content.IntentFilter
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.footapp.R
-import com.example.footapp.interface1.OderInterface
 import com.example.footapp.databinding.ActivityCartBinding
+import com.example.footapp.interface1.OderInterface
 import com.example.footapp.model.DetailItemChoose
 import com.example.footapp.model.Item
 import com.example.footapp.presenter.OderPresenter
 import com.example.footapp.ui.BaseActivity
 import com.example.footapp.ui.pay.PayConfirmActivity
+import com.example.footapp.utils.MAP
+import com.example.footapp.utils.TABLE_ACTION
+import com.example.footapp.utils.TABLE_POSITION
+import com.example.footapp.utils.TOTAL_PRICE
 
 class CartActivity : BaseActivity<ActivityCartBinding>(), OderInterface {
     var tablePos = 0
@@ -32,10 +36,11 @@ class CartActivity : BaseActivity<ActivityCartBinding>(), OderInterface {
     }
 
     override fun initView() {
-
-        var intentFilter=IntentFilter("table")
+        setColorForStatusBar(R.color.colorPrimary)
+        setLightIconStatusBar(false)
+        var intentFilter=IntentFilter(TABLE_ACTION)
         registerReceiver(broadcastReceiver,intentFilter)
-        tablePos = intent.getIntExtra("pos_table", 0)
+        tablePos = intent.getIntExtra(TABLE_POSITION, 0)
         oderPresenter = OderPresenter(this, this, this@CartActivity)
         oderPresenter.getDataItem()
         loadingDialog?.show()
@@ -92,9 +97,9 @@ class CartActivity : BaseActivity<ActivityCartBinding>(), OderInterface {
     @SuppressLint("SuspiciousIndentation")
     override fun confirm(map: HashMap<Int, DetailItemChoose>, totalPrice: Int) {
         var intent = Intent(this, PayConfirmActivity::class.java)
-        intent.putExtra("map", map)
-        intent.putExtra("totalPrice", totalPrice)
-        intent.putExtra("pos_table", tablePos)
+        intent.putExtra(MAP, map)
+        intent.putExtra(TOTAL_PRICE, totalPrice)
+        intent.putExtra(TABLE_POSITION, tablePos)
         startActivity(intent)
     }
 

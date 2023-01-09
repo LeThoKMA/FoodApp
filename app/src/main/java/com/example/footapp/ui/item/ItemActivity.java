@@ -9,18 +9,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.footapp.R;
 import com.example.footapp.databinding.ActivityItemBinding;
 import com.example.footapp.interface1.ItemInterface;
 import com.example.footapp.model.Item;
 import com.example.footapp.presenter.ItemPresenter;
+import com.example.footapp.ui.BaseActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class ItemActivity extends AppCompatActivity {
+public class ItemActivity extends BaseActivity<ActivityItemBinding> {
 
-    private ActivityItemBinding binding;
+
     private final List<Item> mListItem = new ArrayList<>();
     private ItemAdapter itemAdapter;
     private ItemPresenter itemPresenter;
@@ -28,24 +30,14 @@ public class ItemActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
 
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        binding = ActivityItemBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-        initUI();
-        initView();
-        initListener();
-        getListItem();
-    }
 
-    private void initUI() {
+
+    public void initView() {
+        setColorForStatusBar(R.color.colorPrimary);
+        setLightIconStatusBar(false);
+
         itemPresenter = new ItemPresenter();
         progressDialog = new ProgressDialog(this);
-    }
-
-
-    private void initView() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         binding.rcView.setLayoutManager(linearLayoutManager);
         DividerItemDecoration decoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
@@ -69,15 +61,7 @@ public class ItemActivity extends AppCompatActivity {
             }
         });
 
-        binding.imgPlus.setOnClickListener(v -> {
-            Intent intent = new Intent(ItemActivity.this, AddItem.class);
-            startActivity(intent);
-        });
-
-        binding.rcView.setAdapter(itemAdapter);
-        binding.imvBack.setOnClickListener(v->{
-            finish();
-        });
+        getListItem();
     }
 
 
@@ -112,5 +96,19 @@ public class ItemActivity extends AppCompatActivity {
 
     public void initListener() {
         binding.imvBack.setOnClickListener(v -> finish());
+        binding.imgPlus.setOnClickListener(v -> {
+            Intent intent = new Intent(ItemActivity.this, AddItem.class);
+            startActivity(intent);
+        });
+
+        binding.rcView.setAdapter(itemAdapter);
+        binding.imvBack.setOnClickListener(v->{
+            finish();
+        });
+    }
+
+    @Override
+    public int getContentLayout() {
+        return R.layout.activity_item;
     }
 }

@@ -56,6 +56,8 @@ public class UpdateItem extends BaseActivity<ActivityUpdateItemBinding> {
 
     @Override
     public void initView() {
+        setColorForStatusBar(R.color.colorPrimary);
+        setLightIconStatusBar(false);
         adapter = ArrayAdapter.createFromResource(this,
                 R.array.type, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

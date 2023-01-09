@@ -25,17 +25,14 @@ import com.example.footapp.R
 import com.google.android.material.snackbar.Snackbar
 
 
-
 abstract class BaseActivity<BINDING : ViewDataBinding> :
     AppCompatActivity() {
 
 
     lateinit var binding: BINDING
-    lateinit var dao:DAO
     var loadingDialog: AlertDialog? = null
 
     private var mLastClickTime: Long = 0
-
 
 
     @SuppressLint("SourceLockedOrientationActivity")
@@ -46,7 +43,6 @@ abstract class BaseActivity<BINDING : ViewDataBinding> :
         setContentView(binding.root)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         loadingDialog = setupProgressDialog()
-        dao=DAO()
         initView()
         initListener()
 
@@ -59,7 +55,6 @@ abstract class BaseActivity<BINDING : ViewDataBinding> :
     abstract fun initListener()
 
 
-
     open fun isDoubleClick(): Boolean {
         if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
             return true
@@ -67,7 +62,6 @@ abstract class BaseActivity<BINDING : ViewDataBinding> :
         mLastClickTime = SystemClock.elapsedRealtime()
         return false
     }
-
 
 
     private fun showError(errorMessage: String) {
@@ -83,7 +77,7 @@ abstract class BaseActivity<BINDING : ViewDataBinding> :
         errorSnackbar.show()
     }
 
-    private fun setupProgressDialog() : AlertDialog? {
+    private fun setupProgressDialog(): AlertDialog? {
         val builder: AlertDialog.Builder = AlertDialog.Builder(this, R.style.CustomDialog)
         builder.setCancelable(false)
 

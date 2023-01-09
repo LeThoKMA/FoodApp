@@ -4,11 +4,12 @@ import android.os.Build
 import android.view.View
 import android.widget.Toast
 import com.example.footapp.R
-import com.example.footapp.interface1.UserInterface
 import com.example.footapp.databinding.ActivityUserDetailBinding
+import com.example.footapp.interface1.UserInterface
 import com.example.footapp.model.User
 import com.example.footapp.presenter.UserPresenter
 import com.example.footapp.ui.BaseActivity
+import com.example.footapp.utils.USER
 
 class UserDetailActivity : BaseActivity<ActivityUserDetailBinding>(), View.OnClickListener,
     UserInterface {
@@ -19,11 +20,13 @@ class UserDetailActivity : BaseActivity<ActivityUserDetailBinding>(), View.OnCli
     }
 
     override fun initView() {
+        setColorForStatusBar(R.color.colorPrimary)
+        setLightIconStatusBar(false)
         userPresenter = UserPresenter(this)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            user = intent.getSerializableExtra("user", User::class.java) ?: User()
+            user = intent.getSerializableExtra(USER, User::class.java) ?: User()
         } else {
-            user = intent.getSerializableExtra("user") as User
+            user = intent.getSerializableExtra(USER) as User
         }
       binding.edtName.isEnabled=false
         binding.edtSalary.isEnabled=false
