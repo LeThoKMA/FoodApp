@@ -1,18 +1,19 @@
 package com.example.footapp.ui.Oder
 
-import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.footapp.R
+import com.example.footapp.ViewModelFactory
 import com.example.footapp.databinding.ActivityCartBinding
-import com.example.footapp.interface1.OderInterface
+import com.example.footapp.interface1.OrderInterface
 import com.example.footapp.model.DetailItemChoose
 import com.example.footapp.model.Item
-import com.example.footapp.presenter.OderPresenter
+import com.example.footapp.presenter.OrderViewModel
 import com.example.footapp.ui.BaseActivity
 import com.example.footapp.ui.pay.PayConfirmActivity
 import com.example.footapp.utils.MAP
@@ -20,17 +21,16 @@ import com.example.footapp.utils.TABLE_ACTION
 import com.example.footapp.utils.TABLE_POSITION
 import com.example.footapp.utils.TOTAL_PRICE
 
-class CartActivity : BaseActivity<ActivityCartBinding>(), OderInterface {
+class CartActivity : BaseActivity<ActivityCartBinding, OrderViewModel>(), OrderInterface {
     var tablePos = 0
     var listItem: ArrayList<Item?> = arrayListOf()
-    lateinit var oderPresenter: OderPresenter
     lateinit var oderAdapter: OderAdapter
-    var broadcastReceiver= object :BroadcastReceiver(){
+    var broadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(p0: Context?, p1: Intent?) {
             finish()
         }
-
     }
+
     override fun getContentLayout(): Int {
         return R.layout.activity_cart
     }
@@ -38,18 +38,36 @@ class CartActivity : BaseActivity<ActivityCartBinding>(), OderInterface {
     override fun initView() {
         setColorForStatusBar(R.color.colorPrimary)
         setLightIconStatusBar(false)
-        var intentFilter=IntentFilter(TABLE_ACTION)
-        registerReceiver(broadcastReceiver,intentFilter)
+        var intentFilter = IntentFilter(TABLE_ACTION)
+        registerReceiver(broadcastReceiver, intentFilter)
         tablePos = intent.getIntExtra(TABLE_POSITION, 0)
-        oderPresenter = OderPresenter(this, this, this@CartActivity)
-        oderPresenter.getDataItem()
+        viewModel.getDataItem()
         loadingDialog?.show()
-        oderAdapter = OderAdapter(listItem, oderPresenter)
+        oderAdapter = OderAdapter(listItem, this)
         binding.rvCategory.layoutManager = LinearLayoutManager(this)
         binding.rvCategory.adapter = oderAdapter
+    }
 
-        oderPresenter.dataItems.observe(this@CartActivity)
-        {
+    override fun initListener() {
+        binding.tvCreate.setOnClickListener {
+            viewModel.payConfirm()
+        }
+        binding.imvBack.setOnClickListener {
+            finish()
+        }
+    }
+
+    override fun addItemToBill(item: DetailItemChoose) {
+        viewModel.addItemToBill(item)
+    }
+
+    override fun onDestroy() {
+        unregisterReceiver(broadcastReceiver)
+        super.onDestroy()
+    }
+
+    override fun observerData() {
+        viewModel.dataItems.observe(this@CartActivity) {
             if (it != null) {
                 listItem.clear()
                 listItem.addAll(it)
@@ -57,8 +75,7 @@ class CartActivity : BaseActivity<ActivityCartBinding>(), OderInterface {
                 loadingDialog?.dismiss()
             }
         }
-        oderPresenter.dataChange.observe(this)
-        {
+        viewModel.dataChange.observe(this) {
             if (it != null) {
                 for (item in listItem) {
                     if (it.id == item?.id) {
@@ -68,44 +85,24 @@ class CartActivity : BaseActivity<ActivityCartBinding>(), OderInterface {
                     }
                 }
                 oderAdapter.notifyDataSetChanged()
-
             }
         }
-
-
-    }
-
-
-    override fun initListener() {
-        binding.tvCreate.setOnClickListener {
-            oderPresenter.payConfirm()
+        viewModel.price.observe(this) {
+            binding.tvPrice.text = it.toString() + "đ"
         }
-        binding.imvBack.setOnClickListener {
-            finish()
+        viewModel.message.observe(this) {
+            Toast.makeText(this, it, Toast.LENGTH_LONG).show()
+        }
+        viewModel.confirm.observe(this) {
+            val intent = Intent(this, PayConfirmActivity::class.java)
+            intent.putExtra(MAP, it.first)
+            intent.putExtra(TOTAL_PRICE, it.second)
+            intent.putExtra(TABLE_POSITION, tablePos)
+            startActivity(intent)
         }
     }
 
-    override fun price(priceItem: Int) {
-        binding.tvPrice.text = priceItem.toString() + "đ"
+    override fun initViewModel() {
+        viewModel = ViewModelProvider(this, ViewModelFactory(this))[OrderViewModel::class.java]
     }
-
-
-    override fun complete(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-    }
-
-    @SuppressLint("SuspiciousIndentation")
-    override fun confirm(map: HashMap<Int, DetailItemChoose>, totalPrice: Int) {
-        var intent = Intent(this, PayConfirmActivity::class.java)
-        intent.putExtra(MAP, map)
-        intent.putExtra(TOTAL_PRICE, totalPrice)
-        intent.putExtra(TABLE_POSITION, tablePos)
-        startActivity(intent)
-    }
-
-    override fun onDestroy() {
-        unregisterReceiver(broadcastReceiver)
-        super.onDestroy()
-    }
-
 }

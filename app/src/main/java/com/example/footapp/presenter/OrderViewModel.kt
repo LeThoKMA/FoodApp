@@ -1,22 +1,31 @@
 package com.example.footapp.presenter
 
 import android.content.Context
-import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.footapp.BaseViewModel
 import com.example.footapp.DAO.DAO
 import com.example.footapp.model.DetailItemChoose
 import com.example.footapp.model.Item
-import com.example.footapp.ui.Oder.CartActivity
-import com.example.footapp.interface1.OderInterface
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
-import java.text.SimpleDateFormat
 
-class OderPresenter(var callback: OderInterface, var context: Context, var activity: CartActivity) {
-    val dataItems= MutableLiveData<ArrayList<Item?>>()
+class OrderViewModel(
+    val context: Context,
+) : BaseViewModel() {
+    val dataItems = MutableLiveData<ArrayList<Item?>>()
     var dataChange = MutableLiveData<Item>()
-    var mapDetailItemChoose:HashMap<Int,DetailItemChoose> = hashMapOf()
+
+    private val _price = MutableLiveData<Int>()
+    val price: LiveData<Int> = _price
+
+    private val _confirm = MutableLiveData<Pair<HashMap<Int, DetailItemChoose>, Int>>()
+    val confirm: LiveData<Pair<HashMap<Int, DetailItemChoose>, Int>> = _confirm
+
+    val message = MutableLiveData<String>()
+
+    var mapDetailItemChoose: HashMap<Int, DetailItemChoose> = hashMapOf()
     var list: ArrayList<Item?> = arrayListOf()
     private var dao = DAO()
     var size = 0
@@ -24,71 +33,51 @@ class OderPresenter(var callback: OderInterface, var context: Context, var activ
 
     init {
 
-
         dao.getBills()
-        dao.bills.observe(activity) {
-            if (it != null) {
-                size = it.size
-            }
-        }
-
     }
 
-
-
-    fun addItemToBill(item:DetailItemChoose) {
-        mapDetailItemChoose.put(item.id?:0, item)
+    fun addItemToBill(item: DetailItemChoose) {
+        mapDetailItemChoose.put(item.id ?: 0, item)
         var total = 0
         for (item in mapDetailItemChoose) {
-            total += item.value.totalPrice?:0
+            total += item.value.totalPrice ?: 0
         }
         this.totalPrice = total
-        callback.price(total)
+        _price.postValue(total)
+        // callback.price(total)
     }
-    fun payConfirm()
-    {
-        if(totalPrice>0)
-        {
-            var map:HashMap<Int,DetailItemChoose> = hashMapOf()
-            for(item in this.mapDetailItemChoose)
-            {
-                if(item.value.count!! >0)
-                {
-                    map.put(item.key,item.value)
+
+    fun payConfirm() {
+        if (totalPrice > 0) {
+            var map: HashMap<Int, DetailItemChoose> = hashMapOf()
+            for (item in this.mapDetailItemChoose) {
+                if (item.value.count!! > 0) {
+                    map.put(item.key, item.value)
                 }
             }
-            callback.confirm(map,this.totalPrice)
-        }
-        else
-        {
-
-            callback.complete("Vui lòng chọn đồ uống trước")
-
+            _confirm.postValue(Pair(map, this.totalPrice))
+        } else {
+            message.postValue("Vui lòng chọn đồ uống trước")
+            //   callback.complete("Vui lòng chọn đồ uống trước")
         }
     }
-
-
-
 
     fun getDataItem() {
         dao.itemReference.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-
-
                 val item = snapshot.getValue(
-                    Item::class.java
+                    Item::class.java,
                 )
 
                 if (item != null) {
                     list.add(item)
                 }
                 dataItems.postValue(list)
-
             }
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
                 val item = snapshot.getValue(
-                    Item::class.java
+                    Item::class.java,
                 )
                 if (item != null) {
                     dataChange.postValue(item)
@@ -96,14 +85,10 @@ class OderPresenter(var callback: OderInterface, var context: Context, var activ
             }
 
             override fun onChildRemoved(snapshot: DataSnapshot) {
-
             }
+
             override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
             override fun onCancelled(error: DatabaseError) {}
         })
     }
-
-
-
-
 }

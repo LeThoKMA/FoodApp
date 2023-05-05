@@ -1,67 +1,32 @@
 package com.example.footapp.ui.login
 
-import android.content.Intent
-import android.os.Bundle
-import android.widget.Button
-import android.widget.EditText
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.example.footapp.R
-import com.example.footapp.interface1.LoginInterface
-import com.example.footapp.model.User
-import com.example.footapp.ui.home.HomeActivity
-import com.example.footapp.presenter.LoginPresenter
+import com.example.footapp.ViewModelFactory
+import com.example.footapp.databinding.ActivitySignInBinding
+import com.example.footapp.presenter.LoginViewModel
+import com.example.footapp.ui.BaseActivity
 
-class SignInActivity : AppCompatActivity(), LoginInterface {
+class SignInActivity : BaseActivity<ActivitySignInBinding, LoginViewModel>() {
 
-    private var edtEmail: EditText? = null
-    private var edtPassword: EditText? = null
-    private var btnSignIn: Button? = null
-    private var list:ArrayList<User> = arrayListOf()
-    lateinit var presenter: LoginPresenter
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_sign_in)
-        presenter = LoginPresenter(this, this)
-        presenter.usersData.observe(this)
-        {
-            if(it!=null)
-            {
-                list.clear()
-                list.addAll(it)
-            }
-        }
-        initUI()
-        initListener()
-    }
-
-    private fun initUI() {
-        edtEmail = findViewById(R.id.edt_email_sign_in)
-        edtPassword = findViewById(R.id.edt_password_sign_in)
-        btnSignIn = findViewById(R.id.btn_sign_in)
-    }
-
-    private fun initListener() {
-        btnSignIn!!.setOnClickListener {
-            presenter.validUser(
-                edtEmail?.text.toString(),
-                edtPassword?.text.toString(),
-                list
-            )
+    override fun initListener() {
+        binding.btnSignIn.setOnClickListener {
         }
     }
 
-    override fun messageLogin(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+    override fun getContentLayout(): Int {
+        return R.layout.activity_sign_in
     }
 
-    override fun loginSuccess() {
-             var intent=Intent(this,HomeActivity::class.java)
-
-        startActivity(intent)
-        finishAffinity()
+    override fun initView() {
     }
 
+    override fun initViewModel() {
+        viewModel = ViewModelProvider(this, ViewModelFactory(this))[LoginViewModel::class.java]
+    }
 
+    override fun observerData() {
+        viewModel.doLogin.observe(this) {
+        }
+    }
 }

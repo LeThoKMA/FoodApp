@@ -1,14 +1,12 @@
 package com.example.footapp.ui
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.pm.ActivityInfo
 import android.content.res.Resources
 import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
 import android.view.*
-import android.view.LayoutInflater
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.annotation.StringRes
@@ -20,20 +18,18 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import com.example.footapp.DAO.DAO
+import com.example.footapp.BaseViewModel
 import com.example.footapp.R
 import com.google.android.material.snackbar.Snackbar
 
-
-abstract class BaseActivity<BINDING : ViewDataBinding> :
+abstract class BaseActivity<BINDING : ViewDataBinding, VM : BaseViewModel> :
     AppCompatActivity() {
 
-
     lateinit var binding: BINDING
+    lateinit var viewModel: VM
     var loadingDialog: AlertDialog? = null
 
     private var mLastClickTime: Long = 0
-
 
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,10 +39,14 @@ abstract class BaseActivity<BINDING : ViewDataBinding> :
         setContentView(binding.root)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         loadingDialog = setupProgressDialog()
+        initViewModel()
+        observerDefaultLiveData()
         initView()
         initListener()
-
+        observerData()
     }
+
+    abstract fun observerData()
 
     abstract fun getContentLayout(): Int
 
@@ -54,6 +54,7 @@ abstract class BaseActivity<BINDING : ViewDataBinding> :
 
     abstract fun initListener()
 
+    abstract fun initViewModel()
 
     open fun isDoubleClick(): Boolean {
         if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
@@ -63,6 +64,25 @@ abstract class BaseActivity<BINDING : ViewDataBinding> :
         return false
     }
 
+    private fun observerDefaultLiveData() {
+        viewModel.apply {
+            isLoading.observe(this@BaseActivity) {
+                if (it) {
+                    loadingDialog?.show()
+                } else {
+                    loadingDialog?.dismiss()
+                }
+            }
+            errorMessage.observe(this@BaseActivity) {
+                if (it != null) {
+                    showError(it.toInt())
+                }
+            }
+            responseMessage.observe(this@BaseActivity) {
+                showError(it.toString())
+            }
+        }
+    }
 
     private fun showError(errorMessage: String) {
         Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
@@ -116,12 +136,12 @@ abstract class BaseActivity<BINDING : ViewDataBinding> :
             if (isLight) {
                 window.decorView.windowInsetsController?.setSystemBarsAppearance(
                     0,
-                    WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
+                    WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS,
                 )
             } else {
                 window.decorView.windowInsetsController?.setSystemBarsAppearance(
                     WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS,
-                    WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
+                    WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS,
                 )
             }
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
