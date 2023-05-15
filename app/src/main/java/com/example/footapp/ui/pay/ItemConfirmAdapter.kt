@@ -8,11 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.footapp.R
 import com.example.footapp.databinding.ItemChooseBinding
-
 import com.example.footapp.model.DetailItemChoose
-import com.example.footapp.model.Item
 
-class ItemConfirmAdapter(var list: ArrayList<DetailItemChoose>) :
+class ItemConfirmAdapter(val list: MutableList<DetailItemChoose>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -20,7 +18,7 @@ class ItemConfirmAdapter(var list: ArrayList<DetailItemChoose>) :
             layoutInflater,
             R.layout.item_choose,
             parent,
-            false
+            false,
         ) as ItemChooseBinding
         return ViewHolder(binding)
     }
@@ -38,11 +36,11 @@ class ItemConfirmAdapter(var list: ArrayList<DetailItemChoose>) :
             Glide.with(binding.root.context).load(item?.imgUrl).into(binding.ivProduct)
             binding.tvNameProduct.text = item?.name
             binding.amount.text = item?.totalPrice.toString()
-            binding.tvPrice.text=item?.price.toString()
-            binding.edtNumber.text = "x"+item?.count.toString()
-            binding.ivUp.visibility= View.GONE
-            binding.ivDown.visibility= View.GONE
-            binding.ivCheck.visibility= View.GONE
+            binding.tvPrice.text = item?.price.toString()
+            binding.edtNumber.text = "x" + item?.count.toString()
+            binding.ivUp.visibility = View.GONE
+            binding.ivDown.visibility = View.GONE
+            binding.ivCheck.visibility = View.GONE
         }
     }
 }

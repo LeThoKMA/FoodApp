@@ -5,9 +5,12 @@ import com.example.footapp.R
 import com.example.footapp.databinding.ActivityChangePassBinding
 import com.example.footapp.interface1.ChangePassInterface
 import com.example.footapp.presenter.ChangePassPresenter
+import com.example.footapp.presenter.OrderViewModel
 import com.example.footapp.ui.BaseActivity
 
-class ChangePassActivity : BaseActivity<ActivityChangePassBinding>(), ChangePassInterface {
+class ChangePassActivity :
+    BaseActivity<ActivityChangePassBinding, OrderViewModel>(),
+    ChangePassInterface {
     lateinit var presenter: ChangePassPresenter
     override fun getContentLayout(): Int {
         return R.layout.activity_change_pass
@@ -24,7 +27,7 @@ class ChangePassActivity : BaseActivity<ActivityChangePassBinding>(), ChangePass
             presenter.changePass(
                 binding.edtPassOld.text.toString(),
                 binding.editPassNew.text.toString(),
-                binding.edtPassRepeat.text.toString()
+                binding.edtPassRepeat.text.toString(),
             )
         }
         binding.imvBack.setOnClickListener { finish() }
@@ -39,4 +42,9 @@ class ChangePassActivity : BaseActivity<ActivityChangePassBinding>(), ChangePass
         finish()
     }
 
+    override fun observerData() {
+    }
+
+    override fun initViewModel() {
+    }
 }

@@ -1,18 +1,13 @@
 package com.example.footapp.DAO
 
-
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import com.example.footapp.model.Bill
 import com.example.footapp.model.Item
-import com.example.footapp.model.ItemBill
 import com.example.footapp.model.User
 import com.example.footapp.utils.API_DATABASE
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.getValue
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 
 class DAO {
     private var database: DatabaseReference
@@ -25,17 +20,14 @@ class DAO {
     val reference: DatabaseReference
         get() {
             return FirebaseDatabase.getInstance(API_DATABASE).reference
-
         }
     val userReference: DatabaseReference
         get() {
             return FirebaseDatabase.getInstance(API_DATABASE).reference.child("users")
-
         }
     val itemReference: DatabaseReference
         get() {
             return FirebaseDatabase.getInstance(API_DATABASE).reference.child("items")
-
         }
 
     val billReference: DatabaseReference
@@ -65,7 +57,6 @@ class DAO {
         }
     }
 
-
     fun addItem(item: Item): Boolean {
         return try {
             database.child("items").child(item.id.toString()).setValue(item)
@@ -79,13 +70,10 @@ class DAO {
     fun updateItem(item: Item, map: HashMap<String, Any>?) {
         try {
             map?.let { database.child("items").child(item.id.toString()).updateChildren(it) }
-
         } catch (e: Exception) {
             Log.e("Exception", e.toString())
-
         }
     }
-
 
     fun addBill(bill: Bill): Boolean {
         return try {
@@ -109,7 +97,6 @@ class DAO {
             }
         }
             .addOnFailureListener { }
-
     }
 
     fun deleteUser(pos: Int) {

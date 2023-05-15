@@ -6,11 +6,10 @@ import android.text.TextUtils
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.footapp.di.App
-import com.example.footapp.di.DaggerViewModelInjector
-import com.example.footapp.di.NetworkModule
-import com.example.footapp.di.ViewModelInjector
+import com.example.footapp.di.*
+import com.example.footapp.presenter.CustomerViewModel
 import com.example.footapp.presenter.LoginViewModel
+import com.example.footapp.presenter.OrderViewModel
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -25,13 +24,23 @@ abstract class BaseViewModel : ViewModel() {
     var isLoading: MutableLiveData<Boolean> = MutableLiveData()
     val errorMessage: MutableLiveData<Int?> = MutableLiveData()
     val responseMessage: MutableLiveData<String?> = MutableLiveData()
-    val injector: ViewModelInjector =
+    private val injector: ViewModelInjector =
         DaggerViewModelInjector.builder().networkModule(NetworkModule).applicationComponent(
             App.appComponent,
-        ).build()
+        ).repositoryComponent(RepositoryModule).build()
+
     init {
-        if(this is LoginViewModel)injector.inject(this)
+        inject()
     }
+
+    private fun inject() {
+        when (this) {
+            is LoginViewModel -> injector.inject(this)
+            is OrderViewModel -> injector.inject(this)
+            is CustomerViewModel -> injector.inject(this)
+        }
+    }
+
     protected fun onRetrievePostListStart() {
         isLoading.postValue(true)
         errorMessage.postValue(null)
@@ -80,7 +89,6 @@ abstract class BaseViewModel : ViewModel() {
 
     fun toMultipartBody(name: String, file: File): MultipartBody.Part {
         val reqFile = file.asRequestBody("image/*".toMediaTypeOrNull())
-
         return MultipartBody.Part.createFormData(name, file.name, reqFile)
     }
 

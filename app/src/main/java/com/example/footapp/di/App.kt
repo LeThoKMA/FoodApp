@@ -9,6 +9,7 @@ class App : Application() {
         appComponent = DaggerApplicationComponent.builder().appModule(AppModule(this)).build()
         appComponent.inject(this)
     }
+
     companion object {
         lateinit var appComponent: ApplicationComponent
     }

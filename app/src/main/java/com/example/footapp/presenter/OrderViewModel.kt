@@ -1,27 +1,40 @@
 package com.example.footapp.presenter
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.example.footapp.BaseViewModel
 import com.example.footapp.DAO.DAO
+import com.example.footapp.model.BillResponse
 import com.example.footapp.model.DetailItemChoose
 import com.example.footapp.model.Item
-import com.google.firebase.database.ChildEventListener
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
+import com.example.footapp.model.ItemBillRequest
+import com.example.footapp.network.ApiService
+import com.example.footapp.repository.CustomerRepository
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 class OrderViewModel(
     val context: Context,
 ) : BaseViewModel() {
-    val dataItems = MutableLiveData<ArrayList<Item?>>()
-    var dataChange = MutableLiveData<Item>()
+    @Inject
+    lateinit var apiService: ApiService
+
+    @Inject
+    lateinit var repository: CustomerRepository
+    val dataItems = MutableLiveData<ArrayList<Item>>()
 
     private val _price = MutableLiveData<Int>()
     val price: LiveData<Int> = _price
 
-    private val _confirm = MutableLiveData<Pair<HashMap<Int, DetailItemChoose>, Int>>()
-    val confirm: LiveData<Pair<HashMap<Int, DetailItemChoose>, Int>> = _confirm
+    private val _confirm = MutableLiveData<BillResponse?>()
+    val confirm: MutableLiveData<BillResponse?> = _confirm
 
     val message = MutableLiveData<String>()
 
@@ -32,12 +45,16 @@ class OrderViewModel(
     var totalPrice = 0
 
     init {
-
-        dao.getBills()
+        fetchItems()
     }
 
     fun addItemToBill(item: DetailItemChoose) {
-        mapDetailItemChoose.put(item.id ?: 0, item)
+        if (!item.flag!!) {
+            val itemRemove = DetailItemChoose(item.id, item.name, 0, 0, 0, null, false)
+            mapDetailItemChoose.put(itemRemove.id ?: 0, itemRemove)
+        } else {
+            mapDetailItemChoose.put(item.id ?: 0, item)
+        }
         var total = 0
         for (item in mapDetailItemChoose) {
             total += item.value.totalPrice ?: 0
@@ -47,48 +64,36 @@ class OrderViewModel(
         // callback.price(total)
     }
 
-    fun payConfirm() {
+    fun payConfirm(list: List<DetailItemChoose>) {
         if (totalPrice > 0) {
-            var map: HashMap<Int, DetailItemChoose> = hashMapOf()
-            for (item in this.mapDetailItemChoose) {
-                if (item.value.count!! > 0) {
-                    map.put(item.key, item.value)
-                }
+            viewModelScope.launch {
+                val bilLRequest: MutableList<ItemBillRequest> = mutableListOf()
+                list.forEach { bilLRequest.add(ItemBillRequest(it.id, it.count, it.totalPrice)) }
+                flow { emit(apiService.makeBill(bilLRequest)) }.onStart { onRetrievePostListStart() }
+                    .onCompletion { onRetrievePostListFinish() }
+                    .catch { Log.e("TAG", it.toString()) }
+                    .collect {
+                        if (it.data != null) {
+                            _confirm.postValue(it.data)
+                        }
+                    }
             }
-            _confirm.postValue(Pair(map, this.totalPrice))
         } else {
             message.postValue("Vui lòng chọn đồ uống trước")
-            //   callback.complete("Vui lòng chọn đồ uống trước")
         }
     }
 
-    fun getDataItem() {
-        dao.itemReference.addChildEventListener(object : ChildEventListener {
-            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                val item = snapshot.getValue(
-                    Item::class.java,
-                )
-
-                if (item != null) {
-                    list.add(item)
+    fun fetchItems() {
+        viewModelScope.launch {
+            flow {
+                emit(apiService.getItems())
+            }.onStart { onRetrievePostListStart() }
+                .onCompletion { onRetrievePostListFinish() }
+                .collect {
+                    if (it.data != null) {
+                        dataItems.postValue(it.data as ArrayList<Item>?)
+                    }
                 }
-                dataItems.postValue(list)
-            }
-
-            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-                val item = snapshot.getValue(
-                    Item::class.java,
-                )
-                if (item != null) {
-                    dataChange.postValue(item)
-                }
-            }
-
-            override fun onChildRemoved(snapshot: DataSnapshot) {
-            }
-
-            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
-            override fun onCancelled(error: DatabaseError) {}
-        })
+        }
     }
 }

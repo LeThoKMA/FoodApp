@@ -4,13 +4,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.footapp.R
 import com.example.footapp.databinding.ActivityHistoryBinding
 import com.example.footapp.model.Bill
+import com.example.footapp.presenter.OrderViewModel
 import com.example.footapp.ui.BaseActivity
 
-class HistoryActivity :BaseActivity<ActivityHistoryBinding>() {
+class HistoryActivity : BaseActivity<ActivityHistoryBinding, OrderViewModel>() {
 
     lateinit var adapter: HistoryAdapter
-    var list:ArrayList<Bill> = arrayListOf()
-    var presenter=HistoryPresenter()
+    var list: ArrayList<Bill> = arrayListOf()
+    var presenter = HistoryPresenter()
     override fun getContentLayout(): Int {
         return R.layout.activity_history
     }
@@ -19,13 +20,11 @@ class HistoryActivity :BaseActivity<ActivityHistoryBinding>() {
         setColorForStatusBar(R.color.colorPrimary)
         setLightIconStatusBar(false)
         loadingDialog?.show()
-        adapter= HistoryAdapter(list)
-        binding.rcBill.layoutManager=LinearLayoutManager(this)
-        binding.rcBill.adapter=adapter
-        presenter.bill.observe(this)
-        {
-            if(it!=null)
-            {
+        adapter = HistoryAdapter(list)
+        binding.rcBill.layoutManager = LinearLayoutManager(this)
+        binding.rcBill.adapter = adapter
+        presenter.bill.observe(this) {
+            if (it != null) {
                 list.clear()
                 list.addAll(it)
                 adapter.notifyDataSetChanged()
@@ -36,5 +35,13 @@ class HistoryActivity :BaseActivity<ActivityHistoryBinding>() {
 
     override fun initListener() {
         binding.imvBack.setOnClickListener { finish() }
+    }
+
+    override fun observerData() {
+        TODO("Not yet implemented")
+    }
+
+    override fun initViewModel() {
+        TODO("Not yet implemented")
     }
 }

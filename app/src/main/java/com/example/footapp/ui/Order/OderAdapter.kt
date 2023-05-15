@@ -1,4 +1,4 @@
-package com.example.footapp.ui.Oder
+package com.example.footapp.ui.Order
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -54,7 +54,10 @@ class OderAdapter(var list: ArrayList<Item?>, val callback: OrderInterface) :
             listCount: HashMap<Int, Int>,
 
         ) {
-            Glide.with(binding.root.context).load(item?.imgUrl).into(binding.ivProduct)
+            if (item?.imgUrl?.isNotEmpty() == true) {
+                Glide.with(binding.root.context)
+                    .load(item.imgUrl?.get(0)).into(binding.ivProduct)
+            }
             binding.tvNameProduct.text = item?.name
             binding.amount.text = item?.amount.toString()
             binding.tvPrice.text = item?.price.toString()
@@ -62,7 +65,7 @@ class OderAdapter(var list: ArrayList<Item?>, val callback: OrderInterface) :
             if (listCount.containsKey(position)) {
                 binding.edtNumber.text = listCount[position].toString()
             } else {
-                binding.edtNumber.text = "0"
+                binding.edtNumber.text = "1"
             }
             if (listState.containsKey(item?.id.toString())) {
                 binding.ivCheck.isChecked = listState[item?.id.toString()] == true
@@ -95,10 +98,16 @@ class OderAdapter(var list: ArrayList<Item?>, val callback: OrderInterface) :
                         if (count.toInt() > item?.amount!!) {
                             binding.edtNumber.text = item.amount.toString()
                         } else {
-                            binding.edtNumber.text = count
+                            if (count.toInt() == 0) {
+                                binding.edtNumber.text = "1"
+                            } else {
+                                binding.edtNumber.text = count
+                            }
                         }
                         listCount.put(position, binding.edtNumber.text.toString().toInt())
-                        check(position, callback, item, listState)
+                        if (binding.ivCheck.isChecked) {
+                            check(position, callback, item, listState)
+                        }
                     }
                 })
                 dialog.show((binding.root.context as AppCompatActivity).supportFragmentManager, "")
@@ -106,10 +115,10 @@ class OderAdapter(var list: ArrayList<Item?>, val callback: OrderInterface) :
 
             binding.ivDown.setOnClickListener {
                 val count = binding.edtNumber.text.toString().toInt()
-                if (binding.edtNumber.text.toString().toInt() > 0) {
+                if (binding.edtNumber.text.toString().toInt() > 1) {
                     binding.edtNumber.text = count.minus(1).toString()
                 } else {
-                    binding.edtNumber.text = "0"
+                    binding.edtNumber.text = "1"
                 }
                 listCount.put(position, binding.edtNumber.text.toString().toInt())
                 //   listCount.set(position, binding.edtNumber.text.toString().toInt())
@@ -124,23 +133,22 @@ class OderAdapter(var list: ArrayList<Item?>, val callback: OrderInterface) :
             item: Item,
             listState: HashMap<String, Boolean>,
         ) {
-            if (listState[item.id.toString()] == true) {
-                val priceItem = binding.edtNumber.text.toString().toInt() * (item.price ?: 0)
+            // if (listState[item.id.toString()] == true) {
+            val priceItem = binding.edtNumber.text.toString().toInt() * (item.price ?: 0)
 
-                val detailBill = DetailItemChoose(
-                    item.id,
-                    item.name,
-                    binding.edtNumber.text.toString().toInt(),
-                    priceItem,
-                    item.price,
-                    item.imgUrl,
-                )
-                callback.addItemToBill(detailBill)
-            } else {
-                val detailBill = DetailItemChoose(item.id, item.name, 0, 0)
-
-                callback.addItemToBill(detailBill)
-            }
+            val detailBill = DetailItemChoose(
+                item.id,
+                item.name,
+                binding.edtNumber.text.toString().toInt(),
+                priceItem,
+                item.price,
+                item.imgUrl,
+                flag = listState[item.id.toString()],
+            )
+            callback.addItemToBill(detailBill)
+            // } else {
+            //     callback.removeItem(item.id!!)
+            // }
         }
     }
 }

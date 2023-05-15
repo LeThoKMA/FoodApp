@@ -7,11 +7,14 @@ import com.example.footapp.R
 import com.example.footapp.databinding.ActivityUserDetailBinding
 import com.example.footapp.interface1.UserInterface
 import com.example.footapp.model.User
+import com.example.footapp.presenter.OrderViewModel
 import com.example.footapp.presenter.UserPresenter
 import com.example.footapp.ui.BaseActivity
 import com.example.footapp.utils.USER
 
-class UserDetailActivity : BaseActivity<ActivityUserDetailBinding>(), View.OnClickListener,
+class UserDetailActivity :
+    BaseActivity<ActivityUserDetailBinding, OrderViewModel>(),
+    View.OnClickListener,
     UserInterface {
     var user = User()
     lateinit var userPresenter: UserPresenter
@@ -28,13 +31,11 @@ class UserDetailActivity : BaseActivity<ActivityUserDetailBinding>(), View.OnCli
         } else {
             user = intent.getSerializableExtra(USER) as User
         }
-      binding.edtName.isEnabled=false
-        binding.edtSalary.isEnabled=false
+        binding.edtName.isEnabled = false
+        binding.edtSalary.isEnabled = false
 
         binding.edtName.setText(user.name)
         binding.edtSalary.setText(user.salary.toString())
-
-
     }
 
     override fun initListener() {
@@ -44,41 +45,38 @@ class UserDetailActivity : BaseActivity<ActivityUserDetailBinding>(), View.OnCli
     }
 
     override fun onClick(p0: View?) {
-        if(p0?.id?.equals(binding.imgEdit.id)==true)
-        {
-            binding.edtName.isEnabled=true
-            binding.edtSalary.isEnabled=true
-            binding.tvRegister.visibility=View.VISIBLE
-
+        if (p0?.id?.equals(binding.imgEdit.id) == true) {
+            binding.edtName.isEnabled = true
+            binding.edtSalary.isEnabled = true
+            binding.tvRegister.visibility = View.VISIBLE
         }
-        if(p0?.id?.equals(binding.tvRegister.id)==true)
-        {
-
+        if (p0?.id?.equals(binding.tvRegister.id) == true) {
             updateUser()
         }
     }
 
     private fun updateUser() {
-        user.name=binding.edtName.text.toString()
-        user.salary=binding.edtSalary.text.toString().toInt()
-          userPresenter.updateUser(user)
-
+        user.name = binding.edtName.text.toString()
+        user.salary = binding.edtSalary.text.toString().toInt()
+        userPresenter.updateUser(user)
     }
-
 
     override fun deleteUser(position: Int) {
-
     }
-
 
     override fun notify(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-
     }
 
     override fun complete() {
         finish()
     }
 
+    override fun observerData() {
+        TODO("Not yet implemented")
+    }
 
+    override fun initViewModel() {
+        TODO("Not yet implemented")
+    }
 }

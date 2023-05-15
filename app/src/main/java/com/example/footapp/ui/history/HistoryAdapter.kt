@@ -6,9 +6,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.footapp.R
 import com.example.footapp.databinding.ItemBillBinding
-import com.example.footapp.databinding.ItemCatgoryBinding
 import com.example.footapp.model.Bill
-import com.example.footapp.ui.Oder.OderAdapter
 
 class HistoryAdapter(var list:ArrayList<Bill>):RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {

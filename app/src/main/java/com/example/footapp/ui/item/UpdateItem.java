@@ -9,9 +9,10 @@ import com.example.footapp.R;
 import com.example.footapp.databinding.ActivityUpdateItemBinding;
 import com.example.footapp.model.Item;
 import com.example.footapp.presenter.ItemPresenter;
+import com.example.footapp.presenter.OrderViewModel;
 import com.example.footapp.ui.BaseActivity;
 
-public class UpdateItem extends BaseActivity<ActivityUpdateItemBinding> {
+public class UpdateItem extends BaseActivity<ActivityUpdateItemBinding, OrderViewModel> {
 
     private ArrayAdapter<CharSequence> adapter;
     private Item item;
@@ -25,23 +26,23 @@ public class UpdateItem extends BaseActivity<ActivityUpdateItemBinding> {
         }
         binding.edtName.setText(item.getName());
         Glide.with(UpdateItem.this).load(item.getImgUrl()).error(R.mipmap.ic_launcher).into(binding.img);
-        binding.edtImgUrl.setText(item.getImgUrl());
+     //   binding.edtImgUrl.setText(item.getImgUrl());
         binding.edtPrice.setText(String.valueOf(item.getPrice()));
         binding.edtAmount.setText(String.valueOf(item.getAmount()));
-        switch (item.getType()) {
-            case 0:
-                type = "Coffee";
-                break;
-            case 1:
-                type = "Tea";
-                break;
-            case 2:
-                type = "Juice";
-                break;
-            case 3:
-                type = "Smoothie";
-                break;
-        }
+//        switch (item.getType()) {
+//            case 0:
+//                type = "Coffee";
+//                break;
+//            case 1:
+//                type = "Tea";
+//                break;
+//            case 2:
+//                type = "Juice";
+//                break;
+//            case 3:
+//                type = "Smoothie";
+//                break;
+//        }
         binding.spinner.setSelection(adapter.getPosition(type));
         binding.imvBack.setOnClickListener(v->{
             finish();
@@ -90,10 +91,10 @@ public class UpdateItem extends BaseActivity<ActivityUpdateItemBinding> {
 
         binding.tvRegister.setOnClickListener(v -> {
             item.setName(binding.edtName.getText().toString().trim());
-            item.setImgUrl(binding.edtImgUrl.getText().toString().trim());
+            //item.setImgUrl(binding.edtImgUrl.getText().toString().trim());
             item.setPrice(Integer.parseInt(binding.edtPrice.getText().toString().trim()));
             item.setAmount(Integer.parseInt(binding.edtAmount.getText().toString().trim()));
-            item.setType(binding.spinner.getSelectedItemPosition());
+           // item.setType(binding.spinner.getSelectedItemPosition());
             itemPresenter.updateItem(item);
             finish();
         });
@@ -101,6 +102,16 @@ public class UpdateItem extends BaseActivity<ActivityUpdateItemBinding> {
         binding.imvBack.setOnClickListener(v -> {
             finish();
         });
+
+    }
+
+    @Override
+    public void observerData() {
+
+    }
+
+    @Override
+    public void initViewModel() {
 
     }
 }

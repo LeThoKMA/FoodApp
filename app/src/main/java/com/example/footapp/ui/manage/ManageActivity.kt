@@ -5,6 +5,7 @@ import android.view.View
 import com.example.footapp.MyPreference
 import com.example.footapp.R
 import com.example.footapp.databinding.ActivityManageBinding
+import com.example.footapp.presenter.OrderViewModel
 import com.example.footapp.ui.BaseActivity
 import com.example.footapp.ui.history.HistoryActivity
 import com.example.footapp.ui.home.ConfirmDialog
@@ -13,8 +14,7 @@ import com.example.footapp.ui.login.SignInActivity
 import com.example.footapp.ui.statistic.StatisticTypeActivity
 import com.example.footapp.ui.user.ManageUserActivity
 
-class ManageActivity : BaseActivity<ActivityManageBinding>() {
-
+class ManageActivity : BaseActivity<ActivityManageBinding, OrderViewModel>() {
 
     fun showDialog() {
         var dialog = ConfirmDialog(object : ConfirmDialog.CallBack {
@@ -24,7 +24,6 @@ class ManageActivity : BaseActivity<ActivityManageBinding>() {
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 startActivity(intent)
             }
-
         })
         dialog.show(supportFragmentManager, "")
     }
@@ -55,36 +54,37 @@ class ManageActivity : BaseActivity<ActivityManageBinding>() {
             startActivity(Intent(this, ItemActivity::class.java))
         }
         binding.tvStatistic.setOnClickListener {
-
             startActivity(
                 Intent(
                     this,
-                    StatisticTypeActivity::class.java
-                )
+                    StatisticTypeActivity::class.java,
+                ),
             )
-
         }
         binding.tvBills.setOnClickListener {
             startActivity(
                 Intent(
                     this,
-                    HistoryActivity::class.java
-                )
+                    HistoryActivity::class.java,
+                ),
             )
         }
         binding.tvLogout.setOnClickListener {
             showDialog()
-
         }
         binding.tvChangePass.setOnClickListener {
             startActivity(
                 Intent(
                     this,
-                    ChangePassActivity::class.java
-                )
+                    ChangePassActivity::class.java,
+                ),
             )
         }
     }
 
+    override fun observerData() {
+    }
 
+    override fun initViewModel() {
+    }
 }

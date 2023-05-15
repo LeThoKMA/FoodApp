@@ -58,7 +58,7 @@ object NetworkModule {
             val request = chain.request().newBuilder()
                 .addHeader("Content-Type", "application/json")
                 .addHeader("Accept", "*/*")
-               // .addHeader("Authorization", "Bearer $mToken")
+                .addHeader("Authorization", "Bearer $mToken")
                 .addHeader("Accept-Language", mLanguage)
                 .build()
             chain.proceed(request)
@@ -69,7 +69,7 @@ object NetworkModule {
         httpClient.addInterceptor(logging) // <-- this is the important line!
 
         return Retrofit.Builder()
-            .baseUrl("http://3765-116-104-66-84.ngrok.io/")
+            .baseUrl("http://79c8-59-153-220-121.ngrok.io/")
             .addConverterFactory(GsonConverterFactory.create())
             .client(httpClient.build())
             .build()

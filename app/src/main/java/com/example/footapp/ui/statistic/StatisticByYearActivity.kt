@@ -5,6 +5,7 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import com.example.footapp.R
 import com.example.footapp.databinding.ActivityStatisticByYearBinding
+import com.example.footapp.presenter.OrderViewModel
 import com.example.footapp.presenter.StatsticPresenter
 import com.example.footapp.ui.BaseActivity
 import com.github.mikephil.charting.components.XAxis
@@ -13,14 +14,13 @@ import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 
-class StatisticByYearActivity : BaseActivity<ActivityStatisticByYearBinding>() {
+class StatisticByYearActivity : BaseActivity<ActivityStatisticByYearBinding, OrderViewModel>() {
     lateinit var presenter: StatsticPresenter
-     var total=0
+    var total = 0
 
     override fun getContentLayout(): Int {
         return R.layout.activity_statistic_by_year
     }
-
 
     override fun initView() {
         setColorForStatusBar(R.color.colorPrimary)
@@ -28,21 +28,17 @@ class StatisticByYearActivity : BaseActivity<ActivityStatisticByYearBinding>() {
         presenter = StatsticPresenter(this)
         loadingDialog?.show()
 
-        presenter.dataCheck.observe(this)
-        {
+        presenter.dataCheck.observe(this) {
             if (it) {
                 presenter.getDataInYear()
             }
         }
 
-
-        presenter.dataInYear.observe(this)
-        {
+        presenter.dataInYear.observe(this) {
             if (it != null) {
-
                 Log.e("TAG", it.toString())
-                binding.barchart.visibility=View.VISIBLE
-                binding.textView4.visibility=View.VISIBLE
+                binding.barchart.visibility = View.VISIBLE
+                binding.textView4.visibility = View.VISIBLE
                 setUpViewChart(it)
                 loadingDialog?.dismiss()
             }
@@ -59,14 +55,12 @@ class StatisticByYearActivity : BaseActivity<ActivityStatisticByYearBinding>() {
         var i = 1
         months.add("")
         for (item in map) {
-
-               list.add(BarEntry(i.toFloat(), item.value.toFloat()))
-            total+=item.value
+            list.add(BarEntry(i.toFloat(), item.value.toFloat()))
+            total += item.value
 
             i++
             months.add("T" + item.key)
         }
-
 
         var barDataSet = BarDataSet(list, "")
         barDataSet.color = (ContextCompat.getColor(this, R.color.colorPrimary))
@@ -98,14 +92,20 @@ class StatisticByYearActivity : BaseActivity<ActivityStatisticByYearBinding>() {
         binding.barchart.axisRight.setDrawAxisLine(false)
         binding.barchart.xAxis.axisMinimum = 0f
 
-
         // binding.barchart.xAxis.axisMaximum= (list.size).toFloat()
-        //binding.barchart.xAxis.setCenterAxisLabels(true)
-        binding.barchart.xAxis.setDrawGridLines(false);
+        // binding.barchart.xAxis.setCenterAxisLabels(true)
+        binding.barchart.xAxis.setDrawGridLines(false)
         binding.barchart.setMaxVisibleValueCount(5)
         binding.barchart.invalidate()
 
-        binding.tvTotal.text=total.toString()+" đồng"
+        binding.tvTotal.text = total.toString() + " đồng"
     }
 
+    override fun observerData() {
+        TODO("Not yet implemented")
+    }
+
+    override fun initViewModel() {
+        TODO("Not yet implemented")
+    }
 }

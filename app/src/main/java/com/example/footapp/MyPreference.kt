@@ -37,15 +37,14 @@ class MyPreference {
                 pref?.getString("username", ""),
                 pref?.getString("passwd", ""),
                 pref?.getString("salary", "")?.toInt(),
-                pref?.getInt("admin", 0)
+                pref?.getInt("admin", 0),
             )
         }
 
         return user
     }
 
-    fun logout()
-    {
+    fun logout() {
         editor = pref?.edit()
         editor?.remove("id")
         editor?.remove("username")
@@ -54,5 +53,4 @@ class MyPreference {
         editor?.remove("admin")
         editor?.apply()
     }
-
 }

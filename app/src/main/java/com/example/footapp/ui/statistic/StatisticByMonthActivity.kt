@@ -6,6 +6,7 @@ import android.widget.AdapterView.OnItemSelectedListener
 import androidx.core.content.ContextCompat
 import com.example.footapp.R
 import com.example.footapp.databinding.ActivityStatisticBinding
+import com.example.footapp.presenter.OrderViewModel
 import com.example.footapp.presenter.StatsticPresenter
 import com.example.footapp.ui.BaseActivity
 import com.github.mikephil.charting.components.Legend
@@ -14,7 +15,7 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import java.util.*
 
-class StatisticByMonthActivity : BaseActivity<ActivityStatisticBinding>() {
+class StatisticByMonthActivity : BaseActivity<ActivityStatisticBinding, OrderViewModel>() {
     lateinit var presenter: StatsticPresenter
     var types: ArrayList<String> = arrayListOf()
     lateinit var adapter: SpinnerAdapter
@@ -35,12 +36,10 @@ class StatisticByMonthActivity : BaseActivity<ActivityStatisticBinding>() {
         binding.spinner.adapter = adapter
         binding.spinner.setSelection(Calendar.getInstance().get(Calendar.MONTH))
 
-        presenter.dataInMonth.observe(this@StatisticByMonthActivity)
-        {
+        presenter.dataInMonth.observe(this@StatisticByMonthActivity) {
             if (it != null) {
-
-                binding.chart.visibility=View.VISIBLE
-                binding.tvLabel.visibility=View.VISIBLE
+                binding.chart.visibility = View.VISIBLE
+                binding.tvLabel.visibility = View.VISIBLE
                 setUpViewChart(it)
                 loadingDialog?.dismiss()
             }
@@ -50,23 +49,18 @@ class StatisticByMonthActivity : BaseActivity<ActivityStatisticBinding>() {
     override fun initListener() {
         binding.spinner.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-
-                presenter.dataCheck.observe(this@StatisticByMonthActivity)
-                {
+                presenter.dataCheck.observe(this@StatisticByMonthActivity) {
                     if (it) {
                         loadingDialog?.show()
-                        var year= Calendar.getInstance().get(Calendar.YEAR)
+                        var year = Calendar.getInstance().get(Calendar.YEAR)
 
                         presenter.getDataInMonth("${p2.plus(1)}-$year")
-
                     }
                 }
-
             }
 
             override fun onNothingSelected(p0: AdapterView<*>?) {
             }
-
         }
         binding.imvBack.setOnClickListener { finish() }
     }
@@ -78,7 +72,7 @@ class StatisticByMonthActivity : BaseActivity<ActivityStatisticBinding>() {
             list.add(Entry(i.toFloat(), item.toFloat()))
             i++
         }
-        var lineDataSet = LineDataSet(list,"")
+        var lineDataSet = LineDataSet(list, "")
         lineDataSet.color = (ContextCompat.getColor(this, R.color.colorPrimary))
 
         var lineData = LineData(lineDataSet)
@@ -88,9 +82,17 @@ class StatisticByMonthActivity : BaseActivity<ActivityStatisticBinding>() {
         binding.chart.description.text = ""
         binding.chart.legend.horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT
 
-        //chart.xAxis.valueFormatter=IndexAxisValueFormatter()
-        binding.chart.legend.isEnabled=false
+        // chart.xAxis.valueFormatter=IndexAxisValueFormatter()
+        binding.chart.legend.isEnabled = false
         binding.chart.data = lineData
         binding.chart.invalidate()
+    }
+
+    override fun observerData() {
+        TODO("Not yet implemented")
+    }
+
+    override fun initViewModel() {
+        TODO("Not yet implemented")
     }
 }

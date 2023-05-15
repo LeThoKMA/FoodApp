@@ -7,10 +7,8 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.example.footapp.MyPreference
 import com.example.footapp.R
-import com.example.footapp.di.App
 import com.example.footapp.model.User
-import com.example.footapp.ui.home.HomeActivity
-import javax.inject.Inject
+import com.example.footapp.ui.Order.CartActivity
 
 class SplashScreen : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,7 +24,7 @@ class SplashScreen : AppCompatActivity() {
         val intent: Intent = if (user == User()) {
             Intent(this, SignInActivity::class.java)
         } else {
-            Intent(this, HomeActivity::class.java)
+            Intent(this, CartActivity::class.java)
         }
         startActivity(intent)
         finishAffinity()

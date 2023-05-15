@@ -25,7 +25,7 @@
             android:layout_height="76dp"
             android:layout_marginStart="8dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/avatar_default"
+            android:src="@drawable/ic_picture_nodata"
             app:layout_constraintStart_toEndOf="@+id/iv_check"
             app:layout_constraintTop_toTopOf="parent" />
 

@@ -14,13 +14,14 @@ import com.example.footapp.databinding.ActivityItemBinding;
 import com.example.footapp.interface1.ItemInterface;
 import com.example.footapp.model.Item;
 import com.example.footapp.presenter.ItemPresenter;
+import com.example.footapp.presenter.OrderViewModel;
 import com.example.footapp.ui.BaseActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class ItemActivity extends BaseActivity<ActivityItemBinding> {
+public class ItemActivity extends BaseActivity<ActivityItemBinding, OrderViewModel> {
 
 
     private final List<Item> mListItem = new ArrayList<>();
@@ -110,5 +111,15 @@ public class ItemActivity extends BaseActivity<ActivityItemBinding> {
     @Override
     public int getContentLayout() {
         return R.layout.activity_item;
+    }
+
+    @Override
+    public void observerData() {
+
+    }
+
+    @Override
+    public void initViewModel() {
+
     }
 }

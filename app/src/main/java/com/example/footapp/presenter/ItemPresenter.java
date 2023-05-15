@@ -42,7 +42,6 @@ public class ItemPresenter implements ItemInterface {
         result.put("imgUrl", item.getImgUrl());
         result.put("price", item.getPrice());
         result.put("amount", item.getAmount());
-        result.put("type", item.getType());
 
         reference.child(String.valueOf(item.getId())).updateChildren(result);
     }
