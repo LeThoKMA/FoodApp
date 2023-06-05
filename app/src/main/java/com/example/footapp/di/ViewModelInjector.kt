@@ -1,8 +1,12 @@
 package com.example.footapp.di
 
-import com.example.footapp.presenter.CustomerViewModel
-import com.example.footapp.presenter.LoginViewModel
-import com.example.footapp.presenter.OrderViewModel
+import com.example.footapp.presenter.PayConfirmViewModel
+import com.example.footapp.ui.Order.OrderViewModel
+import com.example.footapp.ui.customer.CustomerViewModel
+import com.example.footapp.ui.login.LoginViewModel
+import com.example.footapp.ui.manage.AccountViewModel
+import com.example.footapp.ui.orderlist.OrderListViewModel
+import com.example.footapp.ui.statistic.StatisticViewModel
 import dagger.Component
 
 @Component(
@@ -14,6 +18,10 @@ interface ViewModelInjector {
     fun inject(viewModel: LoginViewModel)
     fun inject(viewModel: OrderViewModel)
     fun inject(viewModel: CustomerViewModel)
+    fun inject(viewModel: PayConfirmViewModel)
+    fun inject(viewModel: OrderListViewModel)
+    fun inject(viewModel: AccountViewModel)
+    fun inject(viewModel: StatisticViewModel)
 
     @Component.Builder
     interface Builder {

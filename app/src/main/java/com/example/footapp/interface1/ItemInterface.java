@@ -1,9 +1,0 @@
-package com.example.footapp.interface1;
-
-import com.example.footapp.model.Item;
-
-public interface ItemInterface {
-    void deleteItem(int pos, Item item);
-    void updateItem(Item item);
-    void addItem(Item item);
-}

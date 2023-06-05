@@ -49,15 +49,15 @@ class UserAdapter(
 
     class ViewHolder(var binding: ItemUserBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(user: User, callback: UserInterface, position: Int, presenter: UserPresenter) {
-            binding.tvName.text = user.name
-            binding.tvSalary.text = user.salary.toString()
+            binding.tvName.text = user.username
+            //binding.tvSalary.text = user.salary.toString()
             binding.imvDel.setOnClickListener {
                 presenter.deleteUser(position,user)
                 callback.notify("Đã xóa")
             }
             binding.parent.setOnClickListener {
                 var intent = Intent(binding.root.context, UserDetailActivity::class.java)
-                intent.putExtra(USER, user)
+               // intent.putExtra(USER, user)
                 binding.root.context.startActivity(intent)
             }
         }

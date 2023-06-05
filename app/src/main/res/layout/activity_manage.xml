@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.manage.ManageActivity">
+    tools:context=".ui.manage.AccountFragment">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -21,6 +21,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
+                android:visibility="gone"
                 android:id="@+id/imv_back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -35,7 +36,8 @@
                 android:id="@+id/tv_toolbar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tùy chọn"
+                android:text="Tài khoản"
+                android:padding="16dp"
                 android:textColor="@color/white"
                 android:textSize="20sp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -58,7 +60,7 @@
 
             <TextView
                 android:id="@+id/tv_manage_user"
-
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="23dp"
@@ -74,6 +76,7 @@
 
             <TextView
                 android:id="@+id/tv_item"
+                android:visibility="gone"
 
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -88,6 +91,7 @@
                 app:drawableRightCompat="@drawable/ic_next" />
             <TextView
                 android:id="@+id/tv_bills"
+                android:visibility="gone"
 
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -102,7 +106,7 @@
                 app:drawableRightCompat="@drawable/ic_next" />
             <TextView
                 android:id="@+id/tv_statistic"
-
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="23dp"

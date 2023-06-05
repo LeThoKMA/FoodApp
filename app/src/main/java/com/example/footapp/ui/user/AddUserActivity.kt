@@ -6,10 +6,9 @@ import com.example.footapp.R
 import com.example.footapp.databinding.ActivityAddUserBinding
 import com.example.footapp.interface1.UserInterface
 import com.example.footapp.model.User
-import com.example.footapp.presenter.OrderViewModel
 import com.example.footapp.presenter.UserPresenter
-import com.example.footapp.ui.BaseActivity
-import com.example.footapp.utils.TOTAL_USER
+import com.example.footapp.base.BaseActivity
+import com.example.footapp.ui.Order.OrderViewModel
 
 class AddUserActivity :
     BaseActivity<ActivityAddUserBinding, OrderViewModel>(),
@@ -34,25 +33,25 @@ class AddUserActivity :
 
     override fun onClick(p0: View?) {
         if (p0?.id?.equals(binding.tvRegister.id) == true) {
-            addUser()
+            //  addUser()
         }
     }
 
-    private fun addUser() {
-        var id = intent.getIntExtra(TOTAL_USER, -1)
-
-        var user = User(
-            id,
-            binding.edtName.text.toString(),
-            binding.edtPasswd.text.toString(),
-            binding.edtSalary.text.toString().toInt(),
-        )
-        userPresenter.addUser(
-            user,
-            binding.edtPasswd.text.toString(),
-            binding.edtConfirmPasswd.text.toString(),
-        )
-    }
+//    private fun addUser() {
+//        var id = intent.getIntExtra(TOTAL_USER, -1)
+//
+//        var user = User(
+//            id,
+//            binding.edtName.text.toString(),
+//            binding.edtPasswd.text.toString(),
+//            binding.edtSalary.text.toString().toInt(),
+//        )
+//        userPresenter.addUser(
+//            user,
+//            binding.edtPasswd.text.toString(),
+//            binding.edtConfirmPasswd.text.toString(),
+//        )
+//    }
 
     override fun deleteUser(position: Int) {
     }

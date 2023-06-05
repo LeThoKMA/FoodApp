@@ -1,5 +1,9 @@
 package com.example.footapp.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class DetailItemChoose(
     var id: Int? = 0,
     var name: String? = "",
@@ -8,4 +12,4 @@ data class DetailItemChoose(
     var price: Int? = 0,
     var imgUrl: List<String>? = listOf(),
     var flag: Boolean? = false,
-) : java.io.Serializable
+) : Parcelable

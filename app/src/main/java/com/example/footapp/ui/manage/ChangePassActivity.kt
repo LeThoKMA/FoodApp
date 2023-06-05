@@ -5,8 +5,8 @@ import com.example.footapp.R
 import com.example.footapp.databinding.ActivityChangePassBinding
 import com.example.footapp.interface1.ChangePassInterface
 import com.example.footapp.presenter.ChangePassPresenter
-import com.example.footapp.presenter.OrderViewModel
-import com.example.footapp.ui.BaseActivity
+import com.example.footapp.ui.Order.OrderViewModel
+import com.example.footapp.base.BaseActivity
 
 class ChangePassActivity :
     BaseActivity<ActivityChangePassBinding, OrderViewModel>(),
@@ -24,11 +24,11 @@ class ChangePassActivity :
 
     override fun initListener() {
         binding.tvSave.setOnClickListener {
-            presenter.changePass(
-                binding.edtPassOld.text.toString(),
-                binding.editPassNew.text.toString(),
-                binding.edtPassRepeat.text.toString(),
-            )
+//            presenter.changePass(
+//                binding.edtPassOld.text.toString(),
+//                binding.editPassNew.text.toString(),
+//                binding.edtPassRepeat.text.toString(),
+//            )
         }
         binding.imvBack.setOnClickListener { finish() }
     }

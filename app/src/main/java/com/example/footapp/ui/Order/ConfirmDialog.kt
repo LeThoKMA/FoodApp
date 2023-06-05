@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.View
 import com.example.footapp.R
 import com.example.footapp.databinding.CountDialogBinding
-import com.example.footapp.ui.BaseDialog
+import com.example.footapp.base.BaseDialog
 
 open class ConfirmDialog(var callback: CallBack) :
     BaseDialog<CountDialogBinding>() {

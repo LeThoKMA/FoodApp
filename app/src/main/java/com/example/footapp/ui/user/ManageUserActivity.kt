@@ -7,9 +7,9 @@ import com.example.footapp.R
 import com.example.footapp.databinding.ActivityManageUserBinding
 import com.example.footapp.interface1.UserInterface
 import com.example.footapp.model.User
-import com.example.footapp.presenter.OrderViewModel
+import com.example.footapp.ui.Order.OrderViewModel
 import com.example.footapp.presenter.UserPresenter
-import com.example.footapp.ui.BaseActivity
+import com.example.footapp.base.BaseActivity
 import com.example.footapp.utils.TOTAL_USER
 
 class ManageUserActivity :
@@ -39,18 +39,18 @@ class ManageUserActivity :
                 loadingDialog?.dismiss()
             }
         }
-        userPresenter.updateData.observe(this) {
-            if (it != null) {
-                for (user in list) {
-                    if (it.id == user?.id) {
-                        user?.name = it.name
-                        user?.salary = it.salary
-                        break
-                    }
-                }
-                adapter.notifyDataSetChanged()
-            }
-        }
+//        userPresenter.updateData.observe(this) {
+//            if (it != null) {
+//                for (user in list) {
+//                    if (it.id == user?.id) {
+//                        user?.name = it.name
+//                        user?.salary = it.salary
+//                        break
+//                    }
+//                }
+//                adapter.notifyDataSetChanged()
+//            }
+//        }
     }
 
     override fun getContentLayout(): Int {

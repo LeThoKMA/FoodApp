@@ -19,13 +19,13 @@ class MyPreference {
         return accountUtil
     }
 
-    fun saveUser(id: String, username: String, passwd: String, salary: String, isAdmin: Int) {
+    fun saveUser(user: User, password: String) {
         editor = pref?.edit()
-        editor?.putString("id", id)
-        editor?.putString("username", username)
-        editor?.putString("passwd", passwd)
-        editor?.putString("salary", salary)
-        editor?.putInt("admin", isAdmin)
+        editor?.putString("id", user.id.toString())
+        editor?.putString("username", user.username)
+        editor?.putString("passwd", password)
+        editor?.putBoolean("admin", user.role ?: false)
+        editor?.putString("fullname", user.fullname)
         editor?.apply()
     }
 
@@ -33,11 +33,10 @@ class MyPreference {
         var user = User()
         if (pref?.getString("id", "")?.isNotBlank() == true) {
             user = User(
-                pref?.getString("id", "")?.toInt(),
-                pref?.getString("username", ""),
-                pref?.getString("passwd", ""),
-                pref?.getString("salary", "")?.toInt(),
-                pref?.getInt("admin", 0),
+                id = pref?.getString("id", "")?.toInt(),
+                username = pref?.getString("username", ""),
+                role = pref?.getBoolean("admin", false),
+                fullname = pref?.getString("fullname", ""),
             )
         }
 

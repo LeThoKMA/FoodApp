@@ -10,3 +10,14 @@ const val TABLE_ACTION = "table"
 const val POS_BACK = "pos"
 const val SIMPLE_DATE_FORMAT = "dd-MM-yyyy HH:mm"
 const val ITEMS_PICKED = "ITEMS_PICKED"
+const val HOME_FRAGMENT_TAG = "HOME_FRAGMENT_TAG"
+const val ORDER_LIST_FRAGMENT = "ORDER_LIST_FRAGMENT"
+const val PAY_CONFIRM_FRAGMENT = "PAY_CONFIRM_FRAGMENT"
+const val ACCOUNT_FRAGMENT = "ACCOUNT_FRAGMENT"
+const val STATISTIC_FRAGMENT = "STATISTIC_FRAGMENT"
+
+const val ANDROID = "android"
+const val DIMEN = "dimen"
+const val STATUS_BAR_HEIGHT = "status_bar_height"
+
+

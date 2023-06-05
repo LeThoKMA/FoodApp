@@ -1,20 +1,17 @@
 package com.example.footapp.ui.item;
 
-import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.ArrayAdapter;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.example.footapp.R;
 import com.example.footapp.databinding.ActivityAddItemBinding;
 import com.example.footapp.model.Item;
 import com.example.footapp.presenter.ItemPresenter;
-import com.example.footapp.presenter.OrderViewModel;
-import com.example.footapp.ui.BaseActivity;
+import com.example.footapp.ui.Order.OrderViewModel;
+import com.example.footapp.base.BaseActivity;
 
 public class AddItem extends BaseActivity<ActivityAddItemBinding, OrderViewModel> {
 

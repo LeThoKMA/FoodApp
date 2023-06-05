@@ -151,4 +151,8 @@ class OderAdapter(var list: ArrayList<Item?>, val callback: OrderInterface) :
             // }
         }
     }
+    fun resetData() {
+        listState.clear()
+        notifyDataSetChanged()
+    }
 }

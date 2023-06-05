@@ -33,7 +33,10 @@ class ItemConfirmAdapter(val list: MutableList<DetailItemChoose>) :
 
     class ViewHolder(var binding: ItemChooseBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(position: Int, item: DetailItemChoose?) {
-            Glide.with(binding.root.context).load(item?.imgUrl).into(binding.ivProduct)
+            if (item?.imgUrl?.isNotEmpty() == true) {
+                Glide.with(binding.root.context)
+                    .load(item.imgUrl?.get(0)).into(binding.ivProduct)
+            }
             binding.tvNameProduct.text = item?.name
             binding.amount.text = item?.totalPrice.toString()
             binding.tvPrice.text = item?.price.toString()

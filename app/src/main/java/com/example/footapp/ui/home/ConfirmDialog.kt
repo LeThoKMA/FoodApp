@@ -2,9 +2,8 @@ package com.example.footapp.ui.home
 
 import android.os.Bundle
 import android.view.View
-import com.example.footapp.ui.BaseDialog
+import com.example.footapp.base.BaseDialog
 import com.example.footapp.R
-import com.example.footapp.databinding.FilterDialogBinding
 import com.example.footapp.databinding.LogoutDialogBinding
 
 open class ConfirmDialog(var callback: CallBack) :

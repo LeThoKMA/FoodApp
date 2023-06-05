@@ -4,12 +4,11 @@ import android.app.ActivityOptions
 import android.content.Intent
 import android.hardware.display.DisplayManager
 import androidx.lifecycle.ViewModelProvider
+import com.example.footapp.MainActivity
 import com.example.footapp.R
 import com.example.footapp.ViewModelFactory
 import com.example.footapp.databinding.ActivitySignInBinding
-import com.example.footapp.presenter.LoginViewModel
-import com.example.footapp.ui.BaseActivity
-import com.example.footapp.ui.Order.CartActivity
+import com.example.footapp.base.BaseActivity
 import com.example.footapp.ui.customer.CustomerActivity
 
 class SignInActivity : BaseActivity<ActivitySignInBinding, LoginViewModel>() {
@@ -38,7 +37,7 @@ class SignInActivity : BaseActivity<ActivitySignInBinding, LoginViewModel>() {
     override fun observerData() {
         viewModel.doLogin.observe(this) {
             if (it) {
-                startActivity(Intent(this, CartActivity::class.java))
+                startActivity(Intent(this, MainActivity::class.java))
                 finishAffinity()
             }
         }

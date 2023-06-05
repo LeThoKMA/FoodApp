@@ -2,21 +2,51 @@ package com.example.footapp.ui.customer
 
 import android.util.Log
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.footapp.R
 import com.example.footapp.ViewModelFactory
+import com.example.footapp.base.BaseActivity
 import com.example.footapp.databinding.ActivityCustomerBinding
 import com.example.footapp.model.DetailItemChoose
-import com.example.footapp.presenter.CustomerViewModel
-import com.example.footapp.ui.BaseActivity
 import com.example.footapp.ui.Order.ItemChooseAdapter
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 
 class CustomerActivity : BaseActivity<ActivityCustomerBinding, CustomerViewModel>() {
     lateinit var itemChooseAdapter: ItemChooseAdapter
     private val itemList: MutableList<DetailItemChoose> = mutableListOf()
+    lateinit var bannerFragmentStateAdapter: BannerFragmentStateAdapter
+
     override fun observerData() {
         viewModel.repository.data.observe(this) {
             receiveData(it)
+        }
+        viewModel.repository.billResponse.observe(this) {
+            val priceDiscount = (it.promotion.div(100f)).times(it.totalPrice!!).toInt()
+            binding.tvPromotionDiscount.text = priceDiscount.toString() + "đ"
+            binding.tvPrice.text = it.totalPrice!!.minus(priceDiscount).toString() + " đ"
+        }
+        viewModel.repository.resetData.observe(this) {
+            if (it) {
+                itemList.clear()
+                itemChooseAdapter.notifyDataSetChanged()
+                binding.tvPromotionDiscount.text = ""
+                binding.tvPrice.text = ""
+            }
+        }
+        viewModel.data.observe(this) {
+            bannerFragmentStateAdapter = BannerFragmentStateAdapter(it as ArrayList, this)
+            binding.viewPager.adapter = bannerFragmentStateAdapter
+            var position = 0
+            lifecycleScope.launch {
+                while (isActive) {
+                    binding.viewPager.setCurrentItem(position % (it.size), true)
+                    position++
+                    delay(4000)
+                }
+            }
         }
     }
 
@@ -56,5 +86,9 @@ class CustomerActivity : BaseActivity<ActivityCustomerBinding, CustomerViewModel
             itemList.removeAt(index)
             itemChooseAdapter.notifyItemRemoved(index)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
     }
 }

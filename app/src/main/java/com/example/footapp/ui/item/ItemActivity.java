@@ -2,10 +2,8 @@ package com.example.footapp.ui.item;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.Bundle;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -14,8 +12,8 @@ import com.example.footapp.databinding.ActivityItemBinding;
 import com.example.footapp.interface1.ItemInterface;
 import com.example.footapp.model.Item;
 import com.example.footapp.presenter.ItemPresenter;
-import com.example.footapp.presenter.OrderViewModel;
-import com.example.footapp.ui.BaseActivity;
+import com.example.footapp.ui.Order.OrderViewModel;
+import com.example.footapp.base.BaseActivity;
 
 import java.util.ArrayList;
 import java.util.List;

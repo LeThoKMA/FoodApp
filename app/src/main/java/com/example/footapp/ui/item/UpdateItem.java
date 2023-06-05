@@ -9,8 +9,8 @@ import com.example.footapp.R;
 import com.example.footapp.databinding.ActivityUpdateItemBinding;
 import com.example.footapp.model.Item;
 import com.example.footapp.presenter.ItemPresenter;
-import com.example.footapp.presenter.OrderViewModel;
-import com.example.footapp.ui.BaseActivity;
+import com.example.footapp.ui.Order.OrderViewModel;
+import com.example.footapp.base.BaseActivity;
 
 public class UpdateItem extends BaseActivity<ActivityUpdateItemBinding, OrderViewModel> {
 

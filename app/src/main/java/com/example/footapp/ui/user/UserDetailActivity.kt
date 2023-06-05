@@ -7,9 +7,9 @@ import com.example.footapp.R
 import com.example.footapp.databinding.ActivityUserDetailBinding
 import com.example.footapp.interface1.UserInterface
 import com.example.footapp.model.User
-import com.example.footapp.presenter.OrderViewModel
 import com.example.footapp.presenter.UserPresenter
-import com.example.footapp.ui.BaseActivity
+import com.example.footapp.base.BaseActivity
+import com.example.footapp.ui.Order.OrderViewModel
 import com.example.footapp.utils.USER
 
 class UserDetailActivity :
@@ -34,8 +34,8 @@ class UserDetailActivity :
         binding.edtName.isEnabled = false
         binding.edtSalary.isEnabled = false
 
-        binding.edtName.setText(user.name)
-        binding.edtSalary.setText(user.salary.toString())
+        binding.edtName.setText(user.username)
+        //binding.edtSalary.setText(user.salary.toString())
     }
 
     override fun initListener() {
@@ -51,15 +51,15 @@ class UserDetailActivity :
             binding.tvRegister.visibility = View.VISIBLE
         }
         if (p0?.id?.equals(binding.tvRegister.id) == true) {
-            updateUser()
+          //  updateUser()
         }
     }
 
-    private fun updateUser() {
-        user.name = binding.edtName.text.toString()
-        user.salary = binding.edtSalary.text.toString().toInt()
-        userPresenter.updateUser(user)
-    }
+//    private fun updateUser() {
+//        user.name = binding.edtName.text.toString()
+//        user.salary = binding.edtSalary.text.toString().toInt()
+//        userPresenter.updateUser(user)
+//    }
 
     override fun deleteUser(position: Int) {
     }
