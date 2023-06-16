@@ -1,14 +1,12 @@
 package com.example.footapp.base
 
-import android.os.Handler
-import android.os.Looper
 import android.text.TextUtils
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.footapp.R
 import com.example.footapp.di.*
-import com.example.footapp.presenter.PayConfirmViewModel
+import com.example.footapp.ui.pay.PayConfirmViewModel
 import com.example.footapp.ui.Order.OrderViewModel
 import com.example.footapp.ui.customer.CustomerViewModel
 import com.example.footapp.ui.login.LoginViewModel

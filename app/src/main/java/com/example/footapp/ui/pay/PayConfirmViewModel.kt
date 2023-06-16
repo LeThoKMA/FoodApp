@@ -1,4 +1,4 @@
-package com.example.footapp.presenter
+package com.example.footapp.ui.pay
 
 import android.content.Context
 import androidx.lifecycle.LiveData

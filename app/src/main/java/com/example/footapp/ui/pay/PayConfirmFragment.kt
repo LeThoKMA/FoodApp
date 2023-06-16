@@ -8,7 +8,6 @@ import com.example.footapp.Response.BillResponse
 import com.example.footapp.base.BaseFragment
 import com.example.footapp.databinding.ActivityPayConfirmBinding
 import com.example.footapp.model.DetailItemChoose
-import com.example.footapp.presenter.PayConfirmViewModel
 import com.example.footapp.utils.*
 import com.google.gson.Gson
 import java.text.SimpleDateFormat

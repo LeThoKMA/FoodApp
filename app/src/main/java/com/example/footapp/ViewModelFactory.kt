@@ -3,7 +3,7 @@ package com.example.footapp
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.footapp.presenter.PayConfirmViewModel
+import com.example.footapp.ui.pay.PayConfirmViewModel
 import com.example.footapp.ui.customer.CustomerViewModel
 import com.example.footapp.ui.login.LoginViewModel
 import com.example.footapp.ui.Order.OrderViewModel

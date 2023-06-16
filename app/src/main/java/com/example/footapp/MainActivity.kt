@@ -115,8 +115,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, OrderViewModel>() {
 
     private fun showPayConfirmFragment(bundle: Bundle) {
         currentFragment =
-                supportFragmentManager.fragments.firstOrNull { !it.isHidden } ?: homeFragment
-            //showFragment(currentFragment, targetFragment)
+            supportFragmentManager.fragments.firstOrNull { !it.isHidden } ?: homeFragment
+        // showFragment(currentFragment, targetFragment)
         payConfirmFragment.arguments = bundle
         showFragment(currentFragment, payConfirmFragment)
     }

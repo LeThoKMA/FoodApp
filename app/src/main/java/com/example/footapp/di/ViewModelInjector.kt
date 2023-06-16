@@ -1,6 +1,6 @@
 package com.example.footapp.di
 
-import com.example.footapp.presenter.PayConfirmViewModel
+import com.example.footapp.ui.pay.PayConfirmViewModel
 import com.example.footapp.ui.Order.OrderViewModel
 import com.example.footapp.ui.customer.CustomerViewModel
 import com.example.footapp.ui.login.LoginViewModel
