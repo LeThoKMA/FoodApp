@@ -95,10 +95,27 @@
                 android:text="Xác nhận"
                 android:textSize="20sp"
                 android:textStyle="bold"
+                android:layout_marginEnd="100dp"
                 android:paddingVertical="8dp"
                 android:paddingHorizontal="16dp"
                 android:layout_marginBottom="60dp"
                 app:layout_constraintEnd_toEndOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_cancel"
+                android:textColor="@color/white"
+                android:background="@drawable/bg_button_gray"
+                android:text="Hủy"
+                android:layout_marginStart="50dp"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:paddingVertical="8dp"
+                android:paddingHorizontal="16dp"
+                android:layout_marginBottom="60dp"
+
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

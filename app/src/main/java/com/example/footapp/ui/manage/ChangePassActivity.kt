@@ -2,16 +2,14 @@ package com.example.footapp.ui.manage
 
 import android.widget.Toast
 import com.example.footapp.R
+import com.example.footapp.base.BaseActivity
 import com.example.footapp.databinding.ActivityChangePassBinding
 import com.example.footapp.interface1.ChangePassInterface
-import com.example.footapp.presenter.ChangePassPresenter
 import com.example.footapp.ui.Order.OrderViewModel
-import com.example.footapp.base.BaseActivity
 
 class ChangePassActivity :
     BaseActivity<ActivityChangePassBinding, OrderViewModel>(),
     ChangePassInterface {
-    lateinit var presenter: ChangePassPresenter
     override fun getContentLayout(): Int {
         return R.layout.activity_change_pass
     }
@@ -19,7 +17,6 @@ class ChangePassActivity :
     override fun initView() {
         setColorForStatusBar(R.color.colorPrimary)
         setLightIconStatusBar(false)
-        presenter = ChangePassPresenter(this, this)
     }
 
     override fun initListener() {

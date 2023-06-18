@@ -37,14 +37,15 @@ class OrderListAdapter(var list: MutableList<OrderItem>, val onClick: (Int) -> U
             binding.dateTime.text = item.time
             binding.orderPrice.text = item.totalPrice.toString()
             binding.orderStatus.text = when (item.status) {
-                OrderStatus.PAID.value -> OrderStatus.PAID.name
-                OrderStatus.CANCELLED.value -> OrderStatus.CANCELLED.name
+                OrderStatus.COMPLETED.ordinal -> OrderStatus.COMPLETED.name
+                OrderStatus.CANCELLED.ordinal -> OrderStatus.CANCELLED.name
+                OrderStatus.PREPAID.ordinal -> OrderStatus.PREPAID.name
                 else -> OrderStatus.PENDING.name
             }
             binding.orderStatus.setTextColor(
                 when (item.status) {
-                    OrderStatus.PAID.value -> Color.GREEN
-                    OrderStatus.CANCELLED.value -> Color.RED
+                    OrderStatus.COMPLETED.ordinal -> Color.GREEN
+                    OrderStatus.CANCELLED.ordinal -> Color.RED
                     else -> Color.YELLOW
                 },
             )

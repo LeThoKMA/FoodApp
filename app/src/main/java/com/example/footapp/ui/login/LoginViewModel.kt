@@ -22,10 +22,6 @@ class LoginViewModel(val context: Context) : BaseViewModel() {
     val doLogin: LiveData<Boolean> = _doLogin
     private var myPreference: MyPreference = MyPreference().getInstance(context)!!
 
-    init {
-        signIn("u1", "pw1")
-    }
-
     fun signIn(email: String, password: String) {
         viewModelScope.launch {
             flow { emit(apiService.login(Test(email, password))) }.flowOn(Dispatchers.IO)

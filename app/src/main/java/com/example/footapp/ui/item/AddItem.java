@@ -9,14 +9,10 @@ import com.bumptech.glide.Glide;
 import com.example.footapp.R;
 import com.example.footapp.databinding.ActivityAddItemBinding;
 import com.example.footapp.model.Item;
-import com.example.footapp.presenter.ItemPresenter;
 import com.example.footapp.ui.Order.OrderViewModel;
 import com.example.footapp.base.BaseActivity;
 
 public class AddItem extends BaseActivity<ActivityAddItemBinding, OrderViewModel> {
-
-
-    private final ItemPresenter itemPresenter = new ItemPresenter();
 
 
     @Override
@@ -59,11 +55,10 @@ public class AddItem extends BaseActivity<ActivityAddItemBinding, OrderViewModel
             item.setId(Integer.parseInt(binding.edtId.getText().toString().trim()));
             item.setPrice(Integer.parseInt(binding.edtPrice.getText().toString().trim()));
             item.setAmount(Integer.parseInt(binding.edtAmount.getText().toString().trim()));
-           // item.setImgUrl(binding.edtImgUrl.getText().toString().trim());
+            // item.setImgUrl(binding.edtImgUrl.getText().toString().trim());
             item.setName(binding.edtName.getText().toString().trim());
             //item.setType(binding.spinner.getSelectedItemPosition());
 
-            itemPresenter.addItem(item);
             finish();
         });
 

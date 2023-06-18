@@ -26,7 +26,11 @@ interface ApiService {
     suspend fun confirmBill(@Body request: ConfirmBillRequest): BaseResponseNoBody
 
     @GET("bill/all")
-    suspend fun getOrderList(@Query("page") page: Int): BaseResponse<List<OrderItem>?>
+    suspend fun getOrderList(
+        @Query("page") page: Int,
+        @Query("time") time: String?,
+        @Query("status") status: Int?,
+    ): BaseResponse<List<OrderItem>?>
 
     @GET("bill/detail/{id}")
     suspend fun getOrderDetail(@Path("id") id: Int): BaseResponse<BillDetailResponse>

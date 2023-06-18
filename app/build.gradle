@@ -87,4 +87,7 @@ dependencies {
     // LiveData
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.5.1"
 
+    implementation('io.socket:socket.io-client:1.0.1') {
+        exclude group: 'org.json', module: 'json'
+    }
 }

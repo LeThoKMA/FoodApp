@@ -1,7 +1,9 @@
 package com.example.footapp
 
-enum class OrderStatus(val value: Int) {
-    PENDING(1),
-    PAID(2),
-    CANCELLED(3),
+enum class OrderStatus {
+    ALL,
+    PENDING,
+    COMPLETED,
+    CANCELLED,
+    PREPAID,
 }

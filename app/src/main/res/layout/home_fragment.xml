@@ -10,7 +10,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout5"
             android:layout_width="match_parent"
-            android:background="@color/colorPrimary"
+            android:background="@drawable/bg_toolbar"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent">
 

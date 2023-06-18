@@ -9,10 +9,10 @@
         tools:context=".MainActivity">
 
         <LinearLayout
-            android:background="@drawable/bg_radius4"
             android:id="@+id/title_bar"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:background="@drawable/bg_radius4"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -61,13 +61,31 @@
                 app:layout_constraintTop_toBottomOf="@+id/viewBackgroundTicket"
                 tools:ignore="UseCompoundDrawables">
 
-                <ImageView
-                    android:id="@+id/img_order"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:contentDescription="@null"
-                    android:padding="12dp"
-                    android:src="@drawable/ic_order" />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/order_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="2dp"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/img_order"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:contentDescription="@null"
+                        android:padding="12dp"
+                        android:src="@drawable/ic_order"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <TextView
                     android:id="@+id/text_order"

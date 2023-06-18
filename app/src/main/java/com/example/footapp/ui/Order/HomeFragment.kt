@@ -111,7 +111,6 @@ class HomeFragment(val onChangeFragment: (Bundle) -> Unit) :
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
         if (!hidden) {
-            viewModel.fetchItems()
             listItemChoose.clear()
             itemChooseAdapter.notifyDataSetChanged()
         }

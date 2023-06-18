@@ -3,11 +3,10 @@ package com.example.footapp.ui.user
 import android.view.View
 import android.widget.Toast
 import com.example.footapp.R
+import com.example.footapp.base.BaseActivity
 import com.example.footapp.databinding.ActivityAddUserBinding
 import com.example.footapp.interface1.UserInterface
 import com.example.footapp.model.User
-import com.example.footapp.presenter.UserPresenter
-import com.example.footapp.base.BaseActivity
 import com.example.footapp.ui.Order.OrderViewModel
 
 class AddUserActivity :
@@ -15,7 +14,6 @@ class AddUserActivity :
     View.OnClickListener,
     UserInterface {
     var user = User()
-    lateinit var userPresenter: UserPresenter
     override fun getContentLayout(): Int {
         return R.layout.activity_add_user
     }
@@ -23,7 +21,6 @@ class AddUserActivity :
     override fun initView() {
         setColorForStatusBar(R.color.colorPrimary)
         setLightIconStatusBar(false)
-        userPresenter = UserPresenter(this)
     }
 
     override fun initListener() {

@@ -46,15 +46,15 @@ class PayConfirmFragment(val onSuccess: () -> Unit) :
             val priceDiscount =
                 (billResponse.promotion.div(100f)).times(billResponse.totalPrice!!).toInt()
             viewModel.confirmBill(
-                billResponse.id?:0,
-                OrderStatus.PAID.value,
+                billResponse.id ?: 0,
+                OrderStatus.COMPLETED.ordinal,
                 billResponse.totalPrice!!.minus(priceDiscount),
             )
         }
         binding.tvCancel.setOnClickListener {
             viewModel.confirmBill(
-                billResponse.id?:0,
-                OrderStatus.CANCELLED.value,
+                billResponse.id ?: 0,
+                OrderStatus.CANCELLED.ordinal,
                 billResponse.totalPrice!!,
             )
         }
@@ -64,7 +64,7 @@ class PayConfirmFragment(val onSuccess: () -> Unit) :
         viewModel.message.observe(this) {
             viewModel.repository.resetData()
             Toast.makeText(binding.root.context, it, Toast.LENGTH_LONG).show()
-           // loadingDialog?.hide()
+            // loadingDialog?.hide()
             onSuccess.invoke()
         }
     }

@@ -6,16 +6,13 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.footapp.R
-import com.example.footapp.interface1.UserInterface
 import com.example.footapp.databinding.ItemUserBinding
+import com.example.footapp.interface1.UserInterface
 import com.example.footapp.model.User
-import com.example.footapp.presenter.UserPresenter
-import com.example.footapp.utils.USER
 
 class UserAdapter(
     var list: ArrayList<User?>,
     var callback: UserInterface?,
-    var userPresenter: UserPresenter
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -23,7 +20,7 @@ class UserAdapter(
             layoutInflater,
             R.layout.item_user,
             parent,
-            false
+            false,
         ) as ItemUserBinding
         return ViewHolder(binding)
     }
@@ -35,11 +32,9 @@ class UserAdapter(
                     list[position]!!,
                     it,
                     position,
-                    userPresenter
                 )
             }
         } else {
-
         }
     }
 
@@ -48,26 +43,22 @@ class UserAdapter(
     }
 
     class ViewHolder(var binding: ItemUserBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(user: User, callback: UserInterface, position: Int, presenter: UserPresenter) {
+        fun bind(user: User, callback: UserInterface, position: Int) {
             binding.tvName.text = user.username
-            //binding.tvSalary.text = user.salary.toString()
+            // binding.tvSalary.text = user.salary.toString()
             binding.imvDel.setOnClickListener {
-                presenter.deleteUser(position,user)
                 callback.notify("Đã xóa")
             }
             binding.parent.setOnClickListener {
                 var intent = Intent(binding.root.context, UserDetailActivity::class.java)
-               // intent.putExtra(USER, user)
+                // intent.putExtra(USER, user)
                 binding.root.context.startActivity(intent)
             }
         }
-
     }
 
     fun deleteUser(position: Int) {
         list.removeAt(position)
         notifyItemRemoved(position)
-
     }
-
 }

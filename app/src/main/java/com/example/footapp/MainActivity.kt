@@ -1,17 +1,25 @@
 package com.example.footapp
 
+import android.app.ActivityOptions
+import android.content.Intent
+import android.hardware.display.DisplayManager
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.example.footapp.base.BaseActivity
 import com.example.footapp.databinding.ActivityMainBinding
+import com.example.footapp.network.SocketIoManage
 import com.example.footapp.ui.Order.HomeFragment
 import com.example.footapp.ui.Order.OrderViewModel
+import com.example.footapp.ui.customer.CustomerActivity
 import com.example.footapp.ui.manage.AccountFragment
 import com.example.footapp.ui.orderlist.OrderListFragment
 import com.example.footapp.ui.pay.PayConfirmFragment
 import com.example.footapp.ui.statistic.StatisticFragment
 import com.example.footapp.utils.*
+import kotlinx.coroutines.launch
 
 class MainActivity : BaseActivity<ActivityMainBinding, OrderViewModel>() {
 
@@ -30,6 +38,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, OrderViewModel>() {
     private val payConfirmFragment by lazy { initializeFragment(PAY_CONFIRM_FRAGMENT) { PayConfirmFragment { onSuccessInPayConfirmFragment() } } }
     private val accountFragment by lazy { initializeFragment(ACCOUNT_FRAGMENT) { AccountFragment() } }
     private val statisticFragment by lazy { initializeFragment(STATISTIC_FRAGMENT) { StatisticFragment() } }
+    private var countOrder = 0
 
     override fun observerData() {
     }
@@ -41,28 +50,31 @@ class MainActivity : BaseActivity<ActivityMainBinding, OrderViewModel>() {
     override fun initView() {
         setColorForStatusBar(R.color.colorPrimary)
         setLightIconStatusBar(true)
+        showScreenCustomer()
         supportFragmentManager
             .beginTransaction()
             .show(homeFragment)
             .commit()
+
+        SocketIoManage.subcribe()
+        SocketIoManage.mSocket?.on("bill") { args ->
+            viewModel.viewModelScope.launch {
+                countOrder++
+                binding.orderCount.text = countOrder.toString()
+            }
+        }
     }
 
     override fun initListener() {
         binding.viewOrder.setOnClickListener {
-//            targetFragment = orderListFragment
-//            currentFragment =
-//                supportFragmentManager.fragments.firstOrNull { !it.isHidden } ?: homeFragment
-//            showFragment(currentFragment, targetFragment)
+            countOrder = 0
+            binding.orderCount.text = countOrder.toString()
             supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.fragmentContainer, orderListFragment)
                 .commit()
         }
         binding.viewHome.setOnClickListener {
-//            targetFragment = homeFragment
-//            currentFragment =
-//                supportFragmentManager.fragments.firstOrNull { !it.isHidden } ?: homeFragment
-//            showFragment(currentFragment, targetFragment)
             supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.fragmentContainer, homeFragment)
@@ -122,8 +134,27 @@ class MainActivity : BaseActivity<ActivityMainBinding, OrderViewModel>() {
     }
 
     private fun onSuccessInPayConfirmFragment() {
+        (homeFragment as HomeFragment).onHiddenChanged(false)
         currentFragment =
             supportFragmentManager.fragments.firstOrNull { !it.isHidden } ?: homeFragment
         showFragment(currentFragment, homeFragment)
+    }
+    private fun showScreenCustomer() {
+        val displayManager = getSystemService(DISPLAY_SERVICE) as DisplayManager
+        val displays = displayManager.displays
+        if (displays.size > 1) {
+            // Activity options are used to select the display screen.
+            val options = ActivityOptions.makeBasic()
+
+            // Select the display screen that you want to show the second activity
+            options.launchDisplayId = displays[1].displayId
+            // To display on the second screen that your intent must be set flag to make
+            // single task (combine FLAG_ACTIVITY_CLEAR_TOP and FLAG_ACTIVITY_NEW_TASK)
+            // or you also set it in the manifest (see more at the manifest file)
+            startActivity(
+                Intent(this, CustomerActivity::class.java),
+                options.toBundle(),
+            )
+        }
     }
 }

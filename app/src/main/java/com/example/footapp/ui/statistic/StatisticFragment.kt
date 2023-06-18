@@ -1,5 +1,6 @@
 package com.example.footapp.ui.statistic
 
+import android.animation.ValueAnimator
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
@@ -107,8 +108,17 @@ class StatisticFragment : BaseFragment<ActivityStatisticByYearBinding, Statistic
             spinnerAdapter = SpinnerAdapter(years, binding.root.context)
             binding.spinner.adapter = spinnerAdapter
         }
-        viewModel.dataInDay.observe(this){
-            binding.tvToday.text = it.revenue.toString() + "đ"
+        viewModel.dataInDay.observe(this) {
+//            it?.let {
+//                val animator = ValueAnimator.ofInt(it.revenue?.div(2) ?: 0, it.revenue!!)
+//                animator.duration = 2500
+//                animator.addUpdateListener(object : ValueAnimator.AnimatorUpdateListener {
+//                    override fun onAnimationUpdate(p0: ValueAnimator) {
+                        binding.tvToday.text = it.revenue.toString()
+//                    }
+//                })
+//                animator.start()
+//            }
         }
     }
 

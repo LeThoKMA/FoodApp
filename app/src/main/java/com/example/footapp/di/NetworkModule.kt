@@ -3,6 +3,7 @@ package com.example.footapp.di
 import android.content.Context
 import android.preference.PreferenceManager
 import com.example.footapp.network.ApiService
+import com.example.footapp.utils.API_URL
 import dagger.Module
 import dagger.Provides
 import dagger.Reusable
@@ -69,7 +70,7 @@ object NetworkModule {
         httpClient.addInterceptor(logging) // <-- this is the important line!
 
         return Retrofit.Builder()
-            .baseUrl("https://8196-42-118-176-212.ngrok-free.app/api/")
+            .baseUrl("https://e43f-183-91-2-166.ngrok-free.app/api/")
             .addConverterFactory(GsonConverterFactory.create())
             .client(httpClient.build())
             .build()

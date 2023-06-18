@@ -10,7 +10,10 @@ import com.example.footapp.Response.BillDetailResponse
 import com.example.footapp.base.BaseDialog
 import com.example.footapp.databinding.DetailOrderDialogBinding
 
-class DetailOrderDialog() : BaseDialog<DetailOrderDialogBinding>() {
+class DetailOrderDialog(
+    val onConfirm: (BillDetailResponse) -> Unit,
+    val onCancel: (BillDetailResponse) -> Unit,
+) : BaseDialog<DetailOrderDialogBinding>() {
     lateinit var adapter: ItemAdapter
     override fun getLayoutResource(): Int {
         return R.layout.detail_order_dialog
@@ -30,13 +33,25 @@ class DetailOrderDialog() : BaseDialog<DetailOrderDialogBinding>() {
         binding.rcItem.layoutManager = LinearLayoutManager(binding.root.context)
         binding.rcItem.adapter = adapter
         binding.tvPrice.text = orderDetail?.totalPrice.toString() + " đ"
+        binding.tvUsername.text = orderDetail?.user?.fullname
         val priceDiscount = (orderDetail?.usedPromotion?.percentage?.div(100f))?.times(
             orderDetail.totalPrice
                 ?: 0,
         )?.toInt()
         binding.tvPromotionDiscount.text = "-$priceDiscount đ"
-        if (orderDetail?.status == OrderStatus.PAID.value) {
+        if (orderDetail?.status == OrderStatus.COMPLETED.ordinal || orderDetail?.status == OrderStatus.CANCELLED.ordinal) {
             binding.tvAccept.visibility = View.GONE
+            binding.tvCancel.visibility = View.GONE
+        }
+        binding.tvAccept.setOnClickListener {
+            orderDetail?.let { it1 -> onConfirm.invoke(it1) }
+            dismiss()
+        }
+        binding.tvCancel.setOnClickListener {
+            orderDetail?.let { it1 ->
+                onCancel.invoke(it1)
+                dismiss()
+            }
         }
     }
 

@@ -11,7 +11,6 @@ import com.example.footapp.R;
 import com.example.footapp.databinding.ActivityItemBinding;
 import com.example.footapp.interface1.ItemInterface;
 import com.example.footapp.model.Item;
-import com.example.footapp.presenter.ItemPresenter;
 import com.example.footapp.ui.Order.OrderViewModel;
 import com.example.footapp.base.BaseActivity;
 
@@ -24,7 +23,6 @@ public class ItemActivity extends BaseActivity<ActivityItemBinding, OrderViewMod
 
     private final List<Item> mListItem = new ArrayList<>();
     private ItemAdapter itemAdapter;
-    private ItemPresenter itemPresenter;
 
     private ProgressDialog progressDialog;
 
@@ -35,7 +33,6 @@ public class ItemActivity extends BaseActivity<ActivityItemBinding, OrderViewMod
         setColorForStatusBar(R.color.colorPrimary);
         setLightIconStatusBar(false);
 
-        itemPresenter = new ItemPresenter();
         progressDialog = new ProgressDialog(this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         binding.rcView.setLayoutManager(linearLayoutManager);
@@ -45,7 +42,6 @@ public class ItemActivity extends BaseActivity<ActivityItemBinding, OrderViewMod
             @Override
             public void deleteItem(int pos, Item item) {
                 itemAdapter.remove(pos);
-                itemPresenter.deleteItem(pos, item);
                 Toast.makeText(getApplicationContext(), "" + pos, Toast.LENGTH_SHORT).show();
             }
 
@@ -66,30 +62,12 @@ public class ItemActivity extends BaseActivity<ActivityItemBinding, OrderViewMod
 
     private void getListItem() {
         progressDialog.show();
-        itemPresenter.getDataItem();
 
 //        itemPresenter.addItem.observe(this, item -> {
 //            mListItem.add(item);
 //            itemAdapter.notifyDataSetChanged();
 //            progressDialog.dismiss();
 //        });
-
-        itemPresenter.listItem.observe(this,items -> {
-            mListItem.clear();
-            mListItem.addAll(items);
-            itemAdapter.notifyDataSetChanged();
-            progressDialog.dismiss();
-        });
-
-        itemPresenter.updateItem.observe(this, item -> {
-            for (int i = 0; i < mListItem.size(); i++) {
-                if (Objects.equals(item.getId(), mListItem.get(i).getId())) {
-                    mListItem.set(i, item);
-                }
-            }
-            itemAdapter.notifyDataSetChanged();
-        });
-
 
     }
 

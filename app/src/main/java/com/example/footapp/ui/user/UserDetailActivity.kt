@@ -7,7 +7,6 @@ import com.example.footapp.R
 import com.example.footapp.databinding.ActivityUserDetailBinding
 import com.example.footapp.interface1.UserInterface
 import com.example.footapp.model.User
-import com.example.footapp.presenter.UserPresenter
 import com.example.footapp.base.BaseActivity
 import com.example.footapp.ui.Order.OrderViewModel
 import com.example.footapp.utils.USER
@@ -17,7 +16,6 @@ class UserDetailActivity :
     View.OnClickListener,
     UserInterface {
     var user = User()
-    lateinit var userPresenter: UserPresenter
     override fun getContentLayout(): Int {
         return R.layout.activity_user_detail
     }
@@ -25,7 +23,6 @@ class UserDetailActivity :
     override fun initView() {
         setColorForStatusBar(R.color.colorPrimary)
         setLightIconStatusBar(false)
-        userPresenter = UserPresenter(this)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             user = intent.getSerializableExtra(USER, User::class.java) ?: User()
         } else {
