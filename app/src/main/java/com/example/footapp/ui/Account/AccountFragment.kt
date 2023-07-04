@@ -1,26 +1,17 @@
-package com.example.footapp.ui.manage
+package com.example.footapp.ui.Account
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import com.example.footapp.MyPreference
 import com.example.footapp.R
 import com.example.footapp.ViewModelFactory
 import com.example.footapp.base.BaseFragment
 import com.example.footapp.databinding.ActivityManageBinding
-import com.example.footapp.ui.home.ConfirmDialog
 
 class AccountFragment : BaseFragment<ActivityManageBinding, AccountViewModel>() {
-
-    fun showDialog() {
-        var dialog = ConfirmDialog(object : ConfirmDialog.CallBack {
-            override fun accept() {
-                MyPreference().getInstance(binding.root.context)?.logout()
-            }
-        })
-        dialog.show(parentFragmentManager, "")
-    }
-
     override fun getContentLayout(): Int {
         return R.layout.activity_manage
     }
@@ -58,5 +49,29 @@ class AccountFragment : BaseFragment<ActivityManageBinding, AccountViewModel>() 
     }
 
     override fun observerLiveData() {
+    }
+
+    fun showDialog() {
+        val alertDialog: AlertDialog = this.let {
+            val builder = AlertDialog.Builder(binding.root.context)
+            builder.apply {
+                setMessage("Bạn có muốn đăng xuất")
+                setPositiveButton(
+                    "Đồng ý",
+                    DialogInterface.OnClickListener { dialog, id ->
+                        viewModel.logout()
+                        dialog.dismiss()
+                    },
+                )
+                setNegativeButton(
+                    "Hủy",
+                    DialogInterface.OnClickListener { dialog, id ->
+                        dialog.dismiss()
+                    },
+                )
+            }
+            builder.create()
+        }
+        alertDialog.show()
     }
 }

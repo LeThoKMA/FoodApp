@@ -22,4 +22,5 @@ data class BillDetailResponse(
     @SerializedName("usedPromotion")
     var usedPromotion: PromotionModel? = PromotionModel(),
     val user: User? = User(),
+    val staffName: String?
 ) : Parcelable

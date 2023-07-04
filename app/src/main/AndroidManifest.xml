@@ -30,7 +30,7 @@
             android:value="true" />
 
         <activity
-            android:name=".ui.manage.ChangePassActivity"
+            android:name=".ui.Account.ChangePassActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -45,41 +45,6 @@
         </activity>
         <activity
             android:name=".ui.statistic.StatisticFragment"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".ui.item.AddItem"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-<!--        <activity-->
-<!--            android:name=".ui.statistic.StatisticTypeActivity"-->
-<!--            android:exported="false">-->
-<!--            <meta-data-->
-<!--                android:name="android.app.lib_name"-->
-<!--                android:value="" />-->
-<!--        </activity>-->
-        <activity
-            android:name=".ui.item.UpdateItem"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-<!--        <activity-->
-<!--            android:name=".ui.statistic.StatisticByMonthActivity"-->
-<!--            android:exported="false">-->
-<!--            <meta-data-->
-<!--                android:name="android.app.lib_name"-->
-<!--                android:value="" />-->
-<!--        </activity>-->
-        <activity
-            android:name=".ui.item.ItemActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -121,7 +86,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.manage.AccountFragment"
+            android:name=".ui.Account.AccountFragment"
             android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
@@ -133,11 +98,6 @@
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".MainActivity"
@@ -152,6 +112,11 @@
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 

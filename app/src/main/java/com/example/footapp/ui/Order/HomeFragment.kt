@@ -5,15 +5,15 @@ import android.os.Parcelable
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.footapp.base.BaseFragment
 import com.example.footapp.R
 import com.example.footapp.ViewModelFactory
+import com.example.footapp.base.BaseFragment
 import com.example.footapp.databinding.HomeFragmentBinding
-import com.example.footapp.interface1.OrderInterface
 import com.example.footapp.model.DetailItemChoose
 import com.example.footapp.model.Item
 import com.example.footapp.utils.BILL_RESPONSE
 import com.example.footapp.utils.ITEMS_PICKED
+import com.example.footapp.utils.formatToPrice
 import com.google.gson.Gson
 
 class HomeFragment(val onChangeFragment: (Bundle) -> Unit) :
@@ -88,7 +88,7 @@ class HomeFragment(val onChangeFragment: (Bundle) -> Unit) :
             }
         }
         viewModel.price.observe(viewLifecycleOwner) {
-            binding.tvPrice.text = it.toString() + "đ"
+            binding.tvPrice.text = it.formatToPrice()
         }
         viewModel.message.observe(viewLifecycleOwner) {
             Toast.makeText(binding.root.context, it, Toast.LENGTH_LONG).show()
@@ -102,7 +102,7 @@ class HomeFragment(val onChangeFragment: (Bundle) -> Unit) :
                     ITEMS_PICKED,
                     listItemChoose as java.util.ArrayList<out Parcelable>,
                 )
-               // viewModel.isLoading.value = false
+                // viewModel.isLoading.value = false
                 onChangeFragment.invoke(bundle)
             }
         }

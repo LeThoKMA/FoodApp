@@ -2,19 +2,16 @@ package com.example.footapp.ui.user
 
 import android.os.Build
 import android.view.View
-import android.widget.Toast
 import com.example.footapp.R
-import com.example.footapp.databinding.ActivityUserDetailBinding
-import com.example.footapp.interface1.UserInterface
-import com.example.footapp.model.User
 import com.example.footapp.base.BaseActivity
+import com.example.footapp.databinding.ActivityUserDetailBinding
+import com.example.footapp.model.User
 import com.example.footapp.ui.Order.OrderViewModel
 import com.example.footapp.utils.USER
 
 class UserDetailActivity :
     BaseActivity<ActivityUserDetailBinding, OrderViewModel>(),
-    View.OnClickListener,
-    UserInterface {
+    View.OnClickListener {
     var user = User()
     override fun getContentLayout(): Int {
         return R.layout.activity_user_detail
@@ -32,7 +29,7 @@ class UserDetailActivity :
         binding.edtSalary.isEnabled = false
 
         binding.edtName.setText(user.username)
-        //binding.edtSalary.setText(user.salary.toString())
+        // binding.edtSalary.setText(user.salary.toString())
     }
 
     override fun initListener() {
@@ -48,7 +45,7 @@ class UserDetailActivity :
             binding.tvRegister.visibility = View.VISIBLE
         }
         if (p0?.id?.equals(binding.tvRegister.id) == true) {
-          //  updateUser()
+            //  updateUser()
         }
     }
 
@@ -57,17 +54,6 @@ class UserDetailActivity :
 //        user.salary = binding.edtSalary.text.toString().toInt()
 //        userPresenter.updateUser(user)
 //    }
-
-    override fun deleteUser(position: Int) {
-    }
-
-    override fun notify(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-    }
-
-    override fun complete() {
-        finish()
-    }
 
     override fun observerData() {
         TODO("Not yet implemented")

@@ -12,6 +12,7 @@ import com.example.footapp.ViewModelFactory
 import com.example.footapp.base.BaseFragment
 import com.example.footapp.databinding.ActivityStatisticByYearBinding
 import com.example.footapp.model.ItemStatistic
+import com.example.footapp.utils.formatToPrice
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
@@ -91,7 +92,7 @@ class StatisticFragment : BaseFragment<ActivityStatisticByYearBinding, Statistic
         binding.barchart.setMaxVisibleValueCount(5)
         binding.barchart.invalidate()
 
-        binding.tvTotal.text = total.toString() + " đồng"
+        binding.tvTotal.text = total.formatToPrice()
     }
 
     override fun observerLiveData() {
@@ -109,16 +110,16 @@ class StatisticFragment : BaseFragment<ActivityStatisticByYearBinding, Statistic
             binding.spinner.adapter = spinnerAdapter
         }
         viewModel.dataInDay.observe(this) {
-//            it?.let {
-//                val animator = ValueAnimator.ofInt(it.revenue?.div(2) ?: 0, it.revenue!!)
-//                animator.duration = 2500
-//                animator.addUpdateListener(object : ValueAnimator.AnimatorUpdateListener {
-//                    override fun onAnimationUpdate(p0: ValueAnimator) {
-                        binding.tvToday.text = it.revenue.toString()
-//                    }
-//                })
-//                animator.start()
-//            }
+            it?.let {
+                val animator = ValueAnimator.ofInt(it.revenue?.div(2) ?: 0, it.revenue!!)
+                animator.duration = 4000
+                animator.addUpdateListener(object : ValueAnimator.AnimatorUpdateListener {
+                    override fun onAnimationUpdate(p0: ValueAnimator) {
+                        binding.tvToday.text = (p0.animatedValue as Int).formatToPrice()
+                    }
+                })
+                animator.start()
+            }
         }
     }
 

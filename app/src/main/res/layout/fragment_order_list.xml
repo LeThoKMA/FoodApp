@@ -1,132 +1,142 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.orderlist.OrderListFragment">
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout5"
-        android:layout_width="match_parent"
-        android:background="@drawable/bg_toolbar"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-        <TextView
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:layout_width="match_parent"
+        android:id="@+id/refresh_layout"
+        android:layout_height="match_parent">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.orderlist.OrderListFragment">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_toolbar"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:text="Danh sách đơn hàng"
+                android:textColor="@color/white"
+                android:textSize="25sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <Spinner
+            android:id="@+id/spinner_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Danh sách đơn hàng"
-            android:textColor="@color/white"
-            android:padding="16dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="100dp"
             android:textSize="18sp"
+            android:background="@drawable/bg_spinner"
+            android:paddingVertical="4dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="30dp"
+            app:layout_constraintEnd_toStartOf="@id/spinner_status"
+            app:layout_constraintTop_toBottomOf="@id/constraintLayout5" />
+
+        <Spinner
+            android:id="@+id/spinner_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="100dp"
+            android:textSize="18sp"
+            android:background="@drawable/bg_spinner"
+            android:paddingVertical="4dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="30dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/constraintLayout5" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_blue_4rd"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/spinner_time">
+
+            <TextView
+                android:id="@+id/order_id"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:text="ID"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/date_time"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:text="Thời gian"
+
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/order_price"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:padding="8dp"
+
+                android:text="Giá"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/order_status"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="8dp"
+                android:layout_weight="0.5"
+                android:padding="8dp"
+                android:text="Trạng thái"
+
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rc_orders"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:padding="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toStartOf="@+id/linearLayout2"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <Spinner
-        android:id="@+id/spinner_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:paddingVertical="4dp"
-        android:paddingEnd="30dp"
-        android:paddingStart="10dp"
-        android:layout_marginEnd="100dp"
-        android:background="@drawable/bg_spinner"
-        app:layout_constraintEnd_toStartOf="@id/spinner_status"
-        app:layout_constraintTop_toBottomOf="@id/constraintLayout5" />
-
-    <Spinner
-        android:id="@+id/spinner_status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:paddingVertical="4dp"
-        android:paddingEnd="30dp"
-        android:paddingStart="10dp"
-        android:layout_marginEnd="100dp"
-        android:background="@drawable/bg_spinner"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/constraintLayout5" />
-
-    <LinearLayout
-        android:id="@+id/linearLayout2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/bg_blue_4rd"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/spinner_time">
-
-        <TextView
-            android:id="@+id/order_id"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_weight="1"
-            android:padding="8dp"
-            android:text="ID"
-            android:textColor="@color/black"
-            android:layout_gravity="center"
-            android:textAlignment="center"
-            android:textSize="18sp" />
-
-        <TextView
-            android:id="@+id/date_time"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_weight="1"
-            android:padding="8dp"
-            android:text="Thời gian"
-            android:textColor="@color/black"
-
-            android:layout_gravity="center"
-            android:textAlignment="center"
-            android:textSize="18sp" />
-
-        <TextView
-            android:id="@+id/order_price"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_weight="1"
-            android:padding="8dp"
-            android:textColor="@color/black"
-
-            android:text="Giá"
-            android:layout_gravity="center"
-            android:textAlignment="center"
-            android:textSize="18sp" />
-
-        <TextView
-            android:id="@+id/order_status"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_weight="1"
-            android:padding="8dp"
-            android:text="Trạng thái"
-            android:textColor="@color/black"
-
-            android:layout_gravity="center"
-            android:textAlignment="center"
-            android:textSize="18sp" />
-    </LinearLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rc_orders"
-        android:padding="8dp"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/linearLayout2"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

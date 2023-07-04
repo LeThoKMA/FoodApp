@@ -34,11 +34,11 @@ class PayConfirmFragment(val onSuccess: () -> Unit) :
         val priceDiscount =
             (billResponse.promotion.div(100f)).times(billResponse.totalPrice!!).toInt()
         binding.tvPriceDiscount.text =
-            priceDiscount.toString() + " đ"
+            priceDiscount.formatToPrice()
         adapter = ItemConfirmAdapter(items)
         binding.rcItem.layoutManager = LinearLayoutManager(binding.root.context)
         binding.rcItem.adapter = adapter
-        binding.tvPrice.text = billResponse.totalPrice!!.minus(priceDiscount).toString() + " đ"
+        binding.tvPrice.text = billResponse.totalPrice!!.minus(priceDiscount).formatToPrice()
     }
 
     override fun initListener() {

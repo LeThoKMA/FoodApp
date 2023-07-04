@@ -10,6 +10,7 @@ import com.example.footapp.base.BaseActivity
 import com.example.footapp.databinding.ActivityCustomerBinding
 import com.example.footapp.model.DetailItemChoose
 import com.example.footapp.ui.Order.ItemChooseAdapter
+import com.example.footapp.utils.formatToPrice
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -25,8 +26,8 @@ class CustomerActivity : BaseActivity<ActivityCustomerBinding, CustomerViewModel
         }
         viewModel.repository.billResponse.observe(this) {
             val priceDiscount = (it.promotion.div(100f)).times(it.totalPrice!!).toInt()
-            binding.tvPromotionDiscount.text = priceDiscount.toString() + "đ"
-            binding.tvPrice.text = it.totalPrice!!.minus(priceDiscount).toString() + " đ"
+            binding.tvPromotionDiscount.text = priceDiscount.formatToPrice()
+            binding.tvPrice.text = it.totalPrice.minus(priceDiscount).formatToPrice()
         }
         viewModel.repository.resetData.observe(this) {
             if (it) {

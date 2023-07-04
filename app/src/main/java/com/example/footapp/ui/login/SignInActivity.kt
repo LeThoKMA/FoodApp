@@ -16,8 +16,8 @@ class SignInActivity : BaseActivity<ActivitySignInBinding, LoginViewModel>() {
     override fun initListener() {
         binding.btnSignIn.setOnClickListener {
             viewModel.signIn(
-                binding.edtEmailSignIn.text.toString(),
-                binding.edtPasswordSignIn.text.toString(),
+                binding.edtName.text.toString(),
+                binding.edtPasswd.text.toString(),
             )
         }
     }

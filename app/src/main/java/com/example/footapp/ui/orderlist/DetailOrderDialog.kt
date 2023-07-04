@@ -9,6 +9,7 @@ import com.example.footapp.R
 import com.example.footapp.Response.BillDetailResponse
 import com.example.footapp.base.BaseDialog
 import com.example.footapp.databinding.DetailOrderDialogBinding
+import com.example.footapp.utils.formatToPrice
 
 class DetailOrderDialog(
     val onConfirm: (BillDetailResponse) -> Unit,
@@ -32,13 +33,15 @@ class DetailOrderDialog(
         )
         binding.rcItem.layoutManager = LinearLayoutManager(binding.root.context)
         binding.rcItem.adapter = adapter
-        binding.tvPrice.text = orderDetail?.totalPrice.toString() + " đ"
-        binding.tvUsername.text = orderDetail?.user?.fullname
+        binding.tvPrice.text = orderDetail?.totalPrice.formatToPrice()
+        binding.tvUsername.text = orderDetail?.user?.fullname ?: "-"
+        binding.tvPhone.text = orderDetail?.user?.username ?: "-"
+        binding.tvStaff.text = orderDetail?.staffName ?: "-"
         val priceDiscount = (orderDetail?.usedPromotion?.percentage?.div(100f))?.times(
             orderDetail.totalPrice
                 ?: 0,
         )?.toInt()
-        binding.tvPromotionDiscount.text = "-$priceDiscount đ"
+        binding.tvPromotionDiscount.text = priceDiscount.formatToPrice()
         if (orderDetail?.status == OrderStatus.COMPLETED.ordinal || orderDetail?.status == OrderStatus.CANCELLED.ordinal) {
             binding.tvAccept.visibility = View.GONE
             binding.tvCancel.visibility = View.GONE

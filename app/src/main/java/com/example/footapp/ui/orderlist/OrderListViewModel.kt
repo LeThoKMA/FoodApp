@@ -31,14 +31,15 @@ class OrderListViewModel(val context: Context) : BaseViewModel() {
     val messageCancel: LiveData<String> = _messageCancel
 
     init {
-        fetchOrderList(1, null, null)
+        fetchOrderList(1, "latest", null)
     }
 
     fun fetchOrderList(page: Int, time: String?, status: Int?) {
         viewModelScope.launch {
             flow { emit(apiService.getOrderList(page, time, status)) }
-                .onStart { }
+                .onStart { onRetrievePostListStart() }
                 .onCompletion {
+                    onRetrievePostListFinish()
                 }
                 .catch { handleApiError(it) }
                 .collect {
@@ -70,7 +71,7 @@ class OrderListViewModel(val context: Context) : BaseViewModel() {
                 .onCompletion { onRetrievePostListFinish() }
                 .catch { }
                 .collect {
-                    _messageConfirm.postValue(it.message)
+                    _messageConfirm.postValue(it.message.toString())
                 }
         }
     }
@@ -85,7 +86,7 @@ class OrderListViewModel(val context: Context) : BaseViewModel() {
                 .onCompletion { onRetrievePostListFinish() }
                 .catch { }
                 .collect {
-                    _messageCancel.postValue(it.message)
+                    _messageCancel.postValue(it.message.toString())
                 }
         }
     }

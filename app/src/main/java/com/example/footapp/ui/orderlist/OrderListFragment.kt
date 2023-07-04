@@ -1,9 +1,14 @@
 package com.example.footapp.ui.orderlist
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.TypedValue
+import android.view.Gravity
 import android.view.View
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
+import android.widget.FrameLayout
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -17,19 +22,22 @@ import com.example.footapp.databinding.FragmentOrderListBinding
 import com.example.footapp.model.OrderItem
 import com.example.footapp.ui.history.OrderListAdapter
 import com.example.footapp.utils.toast
+import com.google.android.material.snackbar.Snackbar
 
 /**
  * A simple [Fragment] subclass.
  * Use the [OrderListFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class OrderListFragment : BaseFragment<FragmentOrderListBinding, OrderListViewModel>() {
+class OrderListFragment(val onRefreshData: () -> Unit) :
+    BaseFragment<FragmentOrderListBinding, OrderListViewModel>() {
     lateinit var orderListAdapter: OrderListAdapter
     val list = mutableListOf<OrderItem>()
     var page = 1
     var time: String? = null
     var status: Int? = null
     var orderId: Int? = null
+    var snackBar: Snackbar? = null
     lateinit var timerSpinnerAdapter: TimerSpinnerAdapter
     lateinit var statusSpinnerAdapter: StatusSpinnerAdapter
     override fun getContentLayout(): Int {
@@ -105,6 +113,13 @@ class OrderListFragment : BaseFragment<FragmentOrderListBinding, OrderListViewMo
             override fun onNothingSelected(p0: AdapterView<*>?) {
             }
         }
+
+        binding.refreshLayout.setOnRefreshListener {
+            viewModel.fetchOrderList(1, null, null)
+            snackBar?.dismiss()
+            onRefreshData.invoke()
+            binding.refreshLayout.isRefreshing = false
+        }
     }
 
     override fun observerLiveData() {
@@ -150,5 +165,26 @@ class OrderListFragment : BaseFragment<FragmentOrderListBinding, OrderListViewMo
             list.forEach { if (it.id == orderId) it.status = OrderStatus.CANCELLED.ordinal }
             orderListAdapter.notifyDataSetChanged()
         }
+    }
+
+    @SuppressLint("ResourceAsColor")
+    fun showSnackBar() {
+        snackBar =
+            Snackbar.make(
+                binding.root,
+                "Trượt xuống để xem đơn hàng mới nhất !!!",
+                Snackbar.LENGTH_INDEFINITE,
+            )
+        val snackbarText = snackBar!!.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+
+        val textSizeInSp = 18f // Kích thước chữ mong muốn (theo sp)
+
+        val layoutParams = snackBar!!.view.layoutParams as FrameLayout.LayoutParams
+        layoutParams.gravity = Gravity.CENTER_HORIZONTAL
+        layoutParams.topMargin = 75
+        snackBar!!.view.layoutParams = layoutParams
+        snackBar!!.view.setBackgroundColor(R.color.white)
+        snackbarText.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSizeInSp)
+        snackBar?.show()
     }
 }

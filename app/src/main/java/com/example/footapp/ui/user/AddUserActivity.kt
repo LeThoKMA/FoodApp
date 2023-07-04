@@ -1,18 +1,15 @@
 package com.example.footapp.ui.user
 
 import android.view.View
-import android.widget.Toast
 import com.example.footapp.R
 import com.example.footapp.base.BaseActivity
 import com.example.footapp.databinding.ActivityAddUserBinding
-import com.example.footapp.interface1.UserInterface
 import com.example.footapp.model.User
 import com.example.footapp.ui.Order.OrderViewModel
 
 class AddUserActivity :
     BaseActivity<ActivityAddUserBinding, OrderViewModel>(),
-    View.OnClickListener,
-    UserInterface {
+    View.OnClickListener {
     var user = User()
     override fun getContentLayout(): Int {
         return R.layout.activity_add_user
@@ -49,17 +46,6 @@ class AddUserActivity :
 //            binding.edtConfirmPasswd.text.toString(),
 //        )
 //    }
-
-    override fun deleteUser(position: Int) {
-    }
-
-    override fun notify(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-    }
-
-    override fun complete() {
-        finish()
-    }
 
     override fun observerData() {
         TODO("Not yet implemented")

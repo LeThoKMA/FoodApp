@@ -1,13 +1,10 @@
 package com.example.footapp.network
 
+import com.example.footapp.Request.ChangePassRequest
 import com.example.footapp.Request.ConfirmBillRequest
 import com.example.footapp.Response.*
 import com.example.footapp.model.*
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface ApiService {
     @POST("login")
@@ -46,4 +43,11 @@ interface ApiService {
 
     @GET("banner")
     suspend fun getBannerList(): BaseResponse<List<String>>
+
+    @GET("logout")
+    suspend fun logout(): BaseResponseNoBody
+
+    @PUT("user/password")
+    suspend fun changePass(@Body request: ChangePassRequest): BaseResponseNoBody
+
 }

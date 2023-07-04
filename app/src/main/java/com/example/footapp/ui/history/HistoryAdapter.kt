@@ -8,14 +8,14 @@ import com.example.footapp.R
 import com.example.footapp.databinding.ItemBillBinding
 import com.example.footapp.model.Bill
 
-class HistoryAdapter(var list:ArrayList<Bill>):RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class HistoryAdapter(var list: ArrayList<Bill>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding = DataBindingUtil.inflate(
             layoutInflater,
             R.layout.item_bill,
             parent,
-            false
+            false,
         ) as ItemBillBinding
         return ViewHolder(binding)
     }
@@ -27,17 +27,16 @@ class HistoryAdapter(var list:ArrayList<Bill>):RecyclerView.Adapter<RecyclerView
     override fun getItemCount(): Int {
         return list.size
     }
-    class ViewHolder(var binding:ItemBillBinding):RecyclerView.ViewHolder(binding.root)
-    {
-        fun bind(item:Bill)
-        {
-            binding.tvName.text=item.username
-            binding.tvTime.text=item.dateTime
-            var detail=""
-           item.items?.values?.forEach { it.forEach { detail+=it.name+"-"+it.count+"-"+it.price +"\n" } }
-            binding.tvDetail.text=detail
-            binding.tvTotal.text=item.totalPrice.toString()
-            binding.root.setOnClickListener {  }
+
+    class ViewHolder(var binding: ItemBillBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(item: Bill) {
+            binding.tvName.text = item.username
+            binding.tvTime.text = item.dateTime
+            var detail = ""
+            item.items?.values?.forEach { it.forEach { detail += it.name + "-" + it.count + "-" + it.price + "\n" } }
+            binding.tvDetail.text = detail
+            binding.tvTotal.text = item.totalPrice.toString()
+            binding.root.setOnClickListener { }
         }
     }
 }

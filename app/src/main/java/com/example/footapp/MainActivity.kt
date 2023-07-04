@@ -4,17 +4,17 @@ import android.app.ActivityOptions
 import android.content.Intent
 import android.hardware.display.DisplayManager
 import android.os.Bundle
-import android.util.Log
+import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.footapp.base.BaseActivity
 import com.example.footapp.databinding.ActivityMainBinding
 import com.example.footapp.network.SocketIoManage
+import com.example.footapp.ui.Account.AccountFragment
 import com.example.footapp.ui.Order.HomeFragment
 import com.example.footapp.ui.Order.OrderViewModel
 import com.example.footapp.ui.customer.CustomerActivity
-import com.example.footapp.ui.manage.AccountFragment
 import com.example.footapp.ui.orderlist.OrderListFragment
 import com.example.footapp.ui.pay.PayConfirmFragment
 import com.example.footapp.ui.statistic.StatisticFragment
@@ -34,7 +34,11 @@ class MainActivity : BaseActivity<ActivityMainBinding, OrderViewModel>() {
             }
         }
     }
-    private val orderListFragment by lazy { initializeFragment(ORDER_LIST_FRAGMENT) { OrderListFragment() } }
+    private val orderListFragment by lazy {
+        initializeFragment(ORDER_LIST_FRAGMENT) {
+            OrderListFragment(onRefreshData = { onRefreshDataInOrderList() })
+        }
+    }
     private val payConfirmFragment by lazy { initializeFragment(PAY_CONFIRM_FRAGMENT) { PayConfirmFragment { onSuccessInPayConfirmFragment() } } }
     private val accountFragment by lazy { initializeFragment(ACCOUNT_FRAGMENT) { AccountFragment() } }
     private val statisticFragment by lazy { initializeFragment(STATISTIC_FRAGMENT) { StatisticFragment() } }
@@ -61,6 +65,11 @@ class MainActivity : BaseActivity<ActivityMainBinding, OrderViewModel>() {
             viewModel.viewModelScope.launch {
                 countOrder++
                 binding.orderCount.text = countOrder.toString()
+                binding.orderCount.visibility = View.VISIBLE
+                val fragment = supportFragmentManager.findFragmentByTag(ORDER_LIST_FRAGMENT)
+                if (fragment is OrderListFragment) {
+                    fragment.showSnackBar()
+                }
             }
         }
     }
@@ -68,7 +77,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, OrderViewModel>() {
     override fun initListener() {
         binding.viewOrder.setOnClickListener {
             countOrder = 0
-            binding.orderCount.text = countOrder.toString()
+            binding.orderCount.visibility = View.GONE
             supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.fragmentContainer, orderListFragment)
@@ -139,6 +148,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, OrderViewModel>() {
             supportFragmentManager.fragments.firstOrNull { !it.isHidden } ?: homeFragment
         showFragment(currentFragment, homeFragment)
     }
+
     private fun showScreenCustomer() {
         val displayManager = getSystemService(DISPLAY_SERVICE) as DisplayManager
         val displays = displayManager.displays
@@ -156,5 +166,10 @@ class MainActivity : BaseActivity<ActivityMainBinding, OrderViewModel>() {
                 options.toBundle(),
             )
         }
+    }
+
+    fun onRefreshDataInOrderList() {
+        countOrder = 0
+        binding.orderCount.visibility = View.GONE
     }
 }

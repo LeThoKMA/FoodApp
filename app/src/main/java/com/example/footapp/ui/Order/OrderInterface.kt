@@ -1,4 +1,4 @@
-package com.example.footapp.interface1
+package com.example.footapp.ui.Order
 
 import com.example.footapp.model.DetailItemChoose
 

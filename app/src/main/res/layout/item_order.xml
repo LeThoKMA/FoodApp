@@ -18,7 +18,7 @@
             android:text="ID"
             android:textAlignment="center"
             android:textColor="@color/black"
-            android:textSize="16sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/date_time"
@@ -31,7 +31,7 @@
             android:text="Thời gian"
             android:textAlignment="center"
             android:textColor="@color/black"
-            android:textSize="16sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/order_price"
@@ -44,20 +44,21 @@
             android:text="Giá"
             android:textAlignment="center"
             android:textColor="@color/black"
-            android:textSize="16sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/order_status"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:background="@drawable/bg_text_radius4"
             android:layout_marginStart="8dp"
-            android:layout_weight="1"
+            android:layout_weight="0.5"
             android:padding="8dp"
             android:textStyle="bold"
             android:text="Trạng thái"
             android:textAlignment="center"
             android:textColor="@color/black"
-            android:textSize="16sp" />
+            android:textSize="18sp" />
     </LinearLayout>
 </layout>

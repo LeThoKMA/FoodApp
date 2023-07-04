@@ -4,7 +4,7 @@ import com.example.footapp.ui.pay.PayConfirmViewModel
 import com.example.footapp.ui.Order.OrderViewModel
 import com.example.footapp.ui.customer.CustomerViewModel
 import com.example.footapp.ui.login.LoginViewModel
-import com.example.footapp.ui.manage.AccountViewModel
+import com.example.footapp.ui.Account.AccountViewModel
 import com.example.footapp.ui.orderlist.OrderListViewModel
 import com.example.footapp.ui.statistic.StatisticViewModel
 import dagger.Component

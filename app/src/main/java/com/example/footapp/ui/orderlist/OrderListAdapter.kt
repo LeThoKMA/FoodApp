@@ -1,14 +1,16 @@
 package com.example.footapp.ui.history
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.footapp.OrderStatus
 import com.example.footapp.R
 import com.example.footapp.databinding.ItemOrderBinding
 import com.example.footapp.model.OrderItem
+import com.example.footapp.utils.formatToPrice
+import com.example.footapp.utils.padZero
 
 class OrderListAdapter(var list: MutableList<OrderItem>, val onClick: (Int) -> Unit) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -33,9 +35,9 @@ class OrderListAdapter(var list: MutableList<OrderItem>, val onClick: (Int) -> U
 
     class ViewHolder(var binding: ItemOrderBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: OrderItem, onClick: (Int) -> Unit) {
-            binding.orderId.text = item.id.toString()
+            binding.orderId.text = item.id.padZero()
             binding.dateTime.text = item.time
-            binding.orderPrice.text = item.totalPrice.toString()
+            binding.orderPrice.text = item.totalPrice.formatToPrice()
             binding.orderStatus.text = when (item.status) {
                 OrderStatus.COMPLETED.ordinal -> OrderStatus.COMPLETED.name
                 OrderStatus.CANCELLED.ordinal -> OrderStatus.CANCELLED.name
@@ -44,9 +46,34 @@ class OrderListAdapter(var list: MutableList<OrderItem>, val onClick: (Int) -> U
             }
             binding.orderStatus.setTextColor(
                 when (item.status) {
-                    OrderStatus.COMPLETED.ordinal -> Color.GREEN
-                    OrderStatus.CANCELLED.ordinal -> Color.RED
-                    else -> Color.YELLOW
+                    OrderStatus.COMPLETED.ordinal -> ContextCompat.getColor(
+                        binding.root.context,
+                        R.color.blue174BDD,
+                    )
+                    OrderStatus.CANCELLED.ordinal -> ContextCompat.getColor(
+                        binding.root.context,
+                        R.color.statusPendingInOrderText,
+                    )
+                    else -> ContextCompat.getColor(
+                        binding.root.context,
+                        R.color.statusActiveText,
+                    )
+                },
+            )
+            binding.orderStatus.setBackgroundColor(
+                when (item.status) {
+                    OrderStatus.COMPLETED.ordinal -> ContextCompat.getColor(
+                        binding.root.context,
+                        R.color.blue,
+                    )
+                    OrderStatus.CANCELLED.ordinal -> ContextCompat.getColor(
+                        binding.root.context,
+                        R.color.statusPending,
+                    )
+                    else -> ContextCompat.getColor(
+                        binding.root.context,
+                        R.color.statusActive,
+                    )
                 },
             )
             binding.root.setOnClickListener {

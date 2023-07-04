@@ -10,6 +10,7 @@ import com.bumptech.glide.Glide
 import com.example.footapp.R
 import com.example.footapp.databinding.ItemCatgoryBinding
 import com.example.footapp.model.DetailItemChoose
+import com.example.footapp.utils.formatToPrice
 
 class ItemChooseAdapter(val context: Context, var list: MutableList<DetailItemChoose>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -42,7 +43,7 @@ class ItemChooseAdapter(val context: Context, var list: MutableList<DetailItemCh
             }
             binding.tvNameProduct.text = item.name
             binding.amount.text = item.count.toString()
-            binding.tvPrice.text = item.price.toString()
+            binding.tvPrice.text = item.price.formatToPrice()
             binding.ivUp.visibility = View.INVISIBLE
             binding.ivDown.visibility = View.INVISIBLE
             binding.ivCheck.visibility = View.INVISIBLE

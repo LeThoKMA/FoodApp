@@ -6,14 +6,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.footapp.R
 import com.example.footapp.base.BaseActivity
 import com.example.footapp.databinding.ActivityManageUserBinding
-import com.example.footapp.interface1.UserInterface
 import com.example.footapp.model.User
 import com.example.footapp.ui.Order.OrderViewModel
 import com.example.footapp.utils.TOTAL_USER
 
 class ManageUserActivity :
-    BaseActivity<ActivityManageUserBinding, OrderViewModel>(),
-    UserInterface {
+    BaseActivity<ActivityManageUserBinding, OrderViewModel>(){
 
     lateinit var adapter: UserAdapter
     var list: ArrayList<User?> = arrayListOf()
@@ -51,20 +49,6 @@ class ManageUserActivity :
             startActivity(intent)
         }
     }
-
-    override fun deleteUser(position: Int) {
-        adapter.deleteUser(position)
-        size = list[list.lastIndex]?.id?.plus(1) ?: 0
-    }
-
-    override fun notify(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-    }
-
-    override fun complete() {
-        finish()
-    }
-
     override fun observerData() {
         TODO("Not yet implemented")
     }

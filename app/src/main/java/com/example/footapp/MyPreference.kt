@@ -29,6 +29,10 @@ class MyPreference {
         editor?.apply()
     }
 
+    fun getPasswd(): String {
+        return pref?.getString("passwd", "").toString()
+    }
+
     fun getUser(): User {
         var user = User()
         if (pref?.getString("id", "")?.isNotBlank() == true) {

@@ -1,32 +1,49 @@
 package com.example.footapp.ui.login
 
 import android.content.Intent
-import android.os.Bundle
-import android.os.Handler
-import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
+import com.example.footapp.MainActivity
 import com.example.footapp.MyPreference
 import com.example.footapp.R
+import com.example.footapp.ViewModelFactory
+import com.example.footapp.base.BaseActivity
+import com.example.footapp.databinding.ActivitySplashScreenBinding
 import com.example.footapp.model.User
-import com.example.footapp.ui.Order.HomeFragment
 
-class SplashScreen : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_splash_screen)
-        val handler = Handler()
-        handler.postDelayed({ nextActivity() }, 2000)
+class SplashScreen : BaseActivity<ActivitySplashScreenBinding, LoginViewModel>() {
+    override fun observerData() {
+        viewModel.doLogin.observe(this) {
+            if (it) {
+                startActivity(Intent(this, MainActivity::class.java))
+                finishAffinity()
+            } else {
+                startActivity(Intent(this, SignInActivity::class.java))
+                finishAffinity()
+            }
+        }
     }
 
-    private fun nextActivity() {
-        var user = MyPreference().getInstance(this)?.getUser()
-        Log.e("TAG", user.toString())
-        val intent: Intent = if (user == User()) {
-            Intent(this, SignInActivity::class.java)
+    override fun getContentLayout(): Int {
+        return R.layout.activity_splash_screen
+    }
+
+    override fun initView() {
+        val preference = MyPreference().getInstance(this)
+        if (preference?.getUser() == User()) {
+            startActivity(Intent(this, SignInActivity::class.java))
+            finishAffinity()
         } else {
-            Intent(this, HomeFragment::class.java)
+            viewModel.signIn(
+                preference?.getUser()?.username.toString(),
+                preference?.getPasswd().toString(),
+            )
         }
-        startActivity(intent)
-        finishAffinity()
+    }
+
+    override fun initListener() {
+    }
+
+    override fun initViewModel() {
+        viewModel = ViewModelProvider(this, ViewModelFactory(this))[LoginViewModel::class.java]
     }
 }

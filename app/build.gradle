@@ -90,4 +90,5 @@ dependencies {
     implementation('io.socket:socket.io-client:1.0.1') {
         exclude group: 'org.json', module: 'json'
     }
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
 }

@@ -49,23 +49,9 @@
             android:textSize="50sp"
             android:textStyle="bold"
             android:textColor="@color/black"
-            android:text="1000000"
             app:layout_constraintStart_toEndOf="@id/tv_today_title"
             app:layout_constraintTop_toTopOf="@id/tv_today_title"
             app:layout_constraintBottom_toBottomOf="@id/tv_today_title"/>
-
-        <TextView
-            android:id="@+id/tv_d"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:textSize="50sp"
-            android:textStyle="bold"
-            android:textColor="@color/black"
-            android:text="đ"
-            app:layout_constraintStart_toEndOf="@id/tv_today"
-            app:layout_constraintTop_toTopOf="@id/tv_today"
-            app:layout_constraintBottom_toBottomOf="@id/tv_today"/>
 
         <Spinner
             android:id="@+id/spinner"
@@ -74,6 +60,7 @@
             android:layout_marginTop="30dp"
             android:paddingVertical="4dp"
             android:paddingEnd="30dp"
+            android:textSize="20sp"
             android:paddingStart="10dp"
             android:layout_marginEnd="150dp"
             android:background="@drawable/bg_spinner"
@@ -85,6 +72,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginEnd="8dp"
+            android:textSize="18sp"
             android:layout_marginStart="700dp"
             android:layout_marginTop="100dp"
             android:layout_marginBottom="200dp"
@@ -99,8 +87,8 @@
             android:layout_height="wrap_content"
             android:text="Tổng cộng: "
             android:layout_marginTop="30dp"
-            android:textSize="16sp"
-            android:textStyle="bold"
+            android:textSize="25sp"
+            android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/barchart"
             app:layout_constraintTop_toBottomOf="@+id/barchart" />
@@ -111,7 +99,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:text=""
-            android:textSize="16sp"
+            android:textSize="25sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@id/tv_1"
             app:layout_constraintStart_toEndOf="@id/tv_1"

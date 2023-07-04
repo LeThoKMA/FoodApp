@@ -8,9 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.footapp.R
 import com.example.footapp.databinding.ItemCatgoryBinding
-import com.example.footapp.interface1.OrderInterface
 import com.example.footapp.model.DetailItemChoose
 import com.example.footapp.model.Item
+import com.example.footapp.utils.formatToPrice
 
 class OderAdapter(var list: ArrayList<Item?>, val callback: OrderInterface) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -53,14 +53,14 @@ class OderAdapter(var list: ArrayList<Item?>, val callback: OrderInterface) :
             listState: HashMap<String, Boolean>,
             listCount: HashMap<Int, Int>,
 
-        ) {
+            ) {
             if (item?.imgUrl?.isNotEmpty() == true) {
                 Glide.with(binding.root.context)
                     .load(item.imgUrl?.get(0)).into(binding.ivProduct)
             }
             binding.tvNameProduct.text = item?.name
             binding.amount.text = item?.amount.toString()
-            binding.tvPrice.text = item?.price.toString()
+            binding.tvPrice.text = item?.price.formatToPrice()
 
             if (listCount.containsKey(position)) {
                 binding.edtNumber.text = listCount[position].toString()

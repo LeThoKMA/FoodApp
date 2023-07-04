@@ -5,8 +5,8 @@ import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.footapp.base.BaseViewModel
 import com.example.footapp.MyPreference
+import com.example.footapp.base.BaseViewModel
 import com.example.footapp.di.NetworkModule
 import com.example.footapp.model.Test
 import com.example.footapp.network.ApiService
@@ -27,7 +27,10 @@ class LoginViewModel(val context: Context) : BaseViewModel() {
             flow { emit(apiService.login(Test(email, password))) }.flowOn(Dispatchers.IO)
                 .onStart { onRetrievePostListStart() }
                 .onCompletion { onRetrievePostListFinish() }
-                .catch { Toast.makeText(context, it.message, Toast.LENGTH_LONG).show() }
+                .catch {
+                    handleApiError(it)
+                    _doLogin.postValue(false)
+                }
                 .collect {
                     println(it.toString())
                     if (it.data?.token?.isNotBlank() == true) {
