@@ -67,19 +67,32 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/constraintLayout5" />
 
-        <com.github.mikephil.charting.charts.BarChart
+        <androidx.compose.ui.platform.ComposeView
             android:id="@+id/barchart"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginEnd="8dp"
             android:textSize="18sp"
-            android:layout_marginStart="700dp"
+            android:layout_marginStart="900dp"
             android:layout_marginTop="100dp"
             android:layout_marginBottom="200dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/constraintLayout5" />
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout5"/>
+<!--        <com.github.mikephil.charting.charts.BarChart-->
+<!--            android:id="@+id/barchart"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:layout_marginEnd="8dp"-->
+<!--            android:textSize="18sp"-->
+<!--            android:layout_marginStart="700dp"-->
+<!--            android:layout_marginTop="100dp"-->
+<!--            android:layout_marginBottom="200dp"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/constraintLayout5" />-->
 
         <TextView
             android:id="@+id/tv_1"
@@ -105,18 +118,17 @@
             app:layout_constraintStart_toEndOf="@id/tv_1"
             app:layout_constraintTop_toTopOf="@id/tv_1" />
 
-        <ImageView
-            android:id="@+id/iv_stonk"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rc_statistic_user"
             android:layout_marginTop="50dp"
-            android:layout_marginEnd="50dp"
+            android:layout_marginEnd="150dp"
             android:layout_marginStart="25dp"
             android:layout_marginBottom="50dp"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:src="@mipmap/ic_stonk_foreground"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/barchart"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_today" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_today"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

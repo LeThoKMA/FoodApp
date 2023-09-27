@@ -3,7 +3,11 @@ package com.example.footapp.base
 import android.content.Context
 import android.os.Bundle
 import android.os.SystemClock
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.Window
+import android.view.WindowManager
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.annotation.StringRes

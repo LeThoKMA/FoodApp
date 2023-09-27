@@ -18,7 +18,12 @@ import com.example.footapp.ui.customer.CustomerActivity
 import com.example.footapp.ui.orderlist.OrderListFragment
 import com.example.footapp.ui.pay.PayConfirmFragment
 import com.example.footapp.ui.statistic.StatisticFragment
-import com.example.footapp.utils.*
+import com.example.footapp.utils.ACCOUNT_FRAGMENT
+import com.example.footapp.utils.HOME_FRAGMENT_TAG
+import com.example.footapp.utils.ORDER_LIST_FRAGMENT
+import com.example.footapp.utils.PAY_CONFIRM_FRAGMENT
+import com.example.footapp.utils.STATISTIC_FRAGMENT
+import com.example.footapp.utils.hideSoftKeyboard
 import kotlinx.coroutines.launch
 
 class MainActivity : BaseActivity<ActivityMainBinding, OrderViewModel>() {

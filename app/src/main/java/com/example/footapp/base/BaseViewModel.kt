@@ -55,9 +55,6 @@ abstract class BaseViewModel : ViewModel() {
 
     protected fun onRetrievePostListFinish() {
         isLoading.postValue(false)
-//        Handler(Looper.getMainLooper()).postDelayed({
-//            isLoading.postValue(false)
-//        }, 500)
     }
 
     protected fun handleApiError(error: Throwable?) {

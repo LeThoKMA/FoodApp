@@ -7,7 +7,7 @@ import com.example.footapp.model.*
 import retrofit2.http.*
 
 interface ApiService {
-    @POST("login")
+    @POST("auth/login")
     suspend fun login(@Body user: Test): BaseResponse<LoginResponse>
 
     @GET("home/all")
@@ -36,7 +36,7 @@ interface ApiService {
     suspend fun getYearToStatistic(): BaseResponse<List<Int>>
 
     @GET("statistic/year/{year}")
-    suspend fun getYearToStatistic(@Path("year") year: Int): BaseResponse<List<ItemStatistic>>
+    suspend fun getYearToStatistic(@Path("year") year: Int): BaseResponse<StatisticResponse>
 
     @GET("statistic/today")
     suspend fun getStatisticInToday(): BaseResponse<ItemStatistic>
@@ -50,4 +50,6 @@ interface ApiService {
     @PUT("user/password")
     suspend fun changePass(@Body request: ChangePassRequest): BaseResponseNoBody
 
+    @GET("tracking/{month}/{year}")
+    suspend fun getStatisticStaff(@Path("month") month: Int, @Path("year") year: Int): BaseResponse<List<StaffData>>
 }
