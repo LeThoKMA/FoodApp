@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "27812270147",
+    "firebase_url": "https://foot-b4d00-default-rtdb.asia-southeast1.firebasedatabase.app",
     "project_id": "foot-b4d00",
     "storage_bucket": "foot-b4d00.appspot.com"
   },
@@ -19,6 +20,14 @@
           "android_info": {
             "package_name": "com.example.footapp",
             "certificate_hash": "771dc6e0c9abac0baae39cd4d1beddd2956e7a7b"
+          }
+        },
+        {
+          "client_id": "27812270147-jk5dj6cab8siu8jf9rgk43s8v1at4ohg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.footapp",
+            "certificate_hash": "6f6af7c598b7e8a194089da072574e4c7925fc42"
           }
         },
         {
