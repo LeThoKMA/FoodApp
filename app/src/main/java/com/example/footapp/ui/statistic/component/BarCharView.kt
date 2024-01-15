@@ -5,6 +5,7 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -28,10 +29,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.times
 import com.example.barchartcompose.ui.theme.GreenYellow
 import com.example.barchartcompose.ui.theme.LimeGreen
 import com.example.footapp.model.ItemStatistic
@@ -76,19 +79,45 @@ fun BarCharView(
                             bottom = if (index == values.lastIndex) 100.dp else 80.dp,
                             top = if (index == 0) 80.dp else 0.dp,
                         )
-                        .height(25.dp).width(100.dp),
+                        .height(25.dp)
+                        .width(100.dp),
                     fontSize = 18.sp,
                 )
             }
         }
 
         Box(
-            modifier = Modifier.width(1.5.dp).height(600.dp).padding(bottom = 20.dp)
+            modifier = Modifier
+                .width(1.5.dp)
+                .height(600.dp)
+                .padding(bottom = 20.dp)
                 .background(Color.Gray),
-        )
+        ) {
+            Canvas(
+                modifier = Modifier
+                    .fillMaxSize(),
 
+                ) {
+                values.forEachIndexed { index, i ->
+                    // top-down
+                    val lineY = if (index == 0) {
+                        80f // pivot
+                    } else {
+                        (105f.times(index + 1) - 21.5f) // (pivot+height)*(index +1) - ((height + textSize)/2)
+                    }
+                    drawLine(
+                        color = Color.Gray,
+                        start = Offset(-10f, lineY),
+                        end = Offset(10f, lineY),
+                        strokeWidth = 2f,
+                    )
+                }
+            }
+        }
         LazyRow(
-            modifier = Modifier.padding(start = 16.dp).height(600.dp),
+            modifier = Modifier
+                .padding(start = 16.dp)
+                .height(600.dp),
             verticalAlignment = Alignment.Bottom,
         ) {
             itemsIndexed(barDatas) { index, item ->
@@ -108,19 +137,22 @@ fun BarCharView(
                     enter = fadeIn(
                         animationSpec = tween(durationMillis = 3000),
                     ) +
-                        expandVertically(
-                            expandFrom = Alignment.Top,
-                            animationSpec = tween(durationMillis = 3000),
-                        ),
+                            expandVertically(
+                                expandFrom = Alignment.Top,
+                                animationSpec = tween(durationMillis = 3000),
+                            ),
                 ) {
                     Column(
-                        modifier = Modifier.wrapContentSize().align(Alignment.Bottom),
+                        modifier = Modifier
+                            .wrapContentSize()
+                            .align(Alignment.Bottom),
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
                         if (showValue) Text(text = item.revenue.formatToPrice())
 
                         Column(
-                            modifier = Modifier.padding(horizontal = 20.dp)
+                            modifier = Modifier
+                                .padding(horizontal = 20.dp)
                                 .animateContentSize()
                                 .width(50.dp)
                                 .height(targetHeight.dp)

@@ -59,6 +59,7 @@ class ItemChooseAdapter() :
             binding.ivUp.visibility = View.INVISIBLE
             binding.ivDown.visibility = View.INVISIBLE
             binding.ivCheck.visibility = View.INVISIBLE
+            binding.amount.visibility = View.VISIBLE
         }
     }
 }

@@ -13,29 +13,31 @@ import com.example.footapp.databinding.ActivityManageBinding
 import com.example.footapp.ui.login.LoginActivity
 
 class AccountFragment : BaseFragment<ActivityManageBinding, AccountViewModel>() {
+
     override fun getContentLayout(): Int {
         return R.layout.activity_manage
     }
 
     override fun initView() {
-        paddingStatusBar(binding.root)
-        val user = MyPreference().getInstance(binding.root.context)?.getUser()
+        val binding = binding!!
+        binding.let { paddingStatusBar(it.root) }
+        val user = MyPreference().getInstance(requireContext())?.getUser()
         if (user?.role == 1) {
-            binding.tvManageUser.visibility = View.GONE
-            binding.tvStatistic.visibility = View.GONE
-            binding.tvItem.visibility = View.GONE
-            binding.tvBills.visibility = View.GONE
+            binding.tvManageUser?.visibility = View.GONE
+            binding.tvStatistic?.visibility = View.GONE
+            binding.tvItem?.visibility = View.GONE
+            binding.tvBills?.visibility = View.GONE
         }
     }
 
     override fun initListener() {
-        binding.tvLogout.setOnClickListener {
+        binding?.tvLogout?.setOnClickListener {
             showDialog()
         }
-        binding.tvChangePass.setOnClickListener {
+        binding?.tvChangePass?.setOnClickListener {
             startActivity(
                 Intent(
-                    binding.root.context,
+                    requireContext(),
                     ChangePassActivity::class.java,
                 ),
             )
@@ -45,7 +47,7 @@ class AccountFragment : BaseFragment<ActivityManageBinding, AccountViewModel>() 
     override fun initViewModel() {
         viewModel = ViewModelProvider(
             this,
-            ViewModelFactory(binding.root.context),
+            ViewModelFactory(requireContext()),
         )[AccountViewModel::class.java]
     }
 
@@ -61,7 +63,7 @@ class AccountFragment : BaseFragment<ActivityManageBinding, AccountViewModel>() 
 
     fun showDialog() {
         val alertDialog: AlertDialog = this.let {
-            val builder = AlertDialog.Builder(binding.root.context)
+            val builder = AlertDialog.Builder(requireContext())
             builder.apply {
                 setMessage("Bạn có muốn đăng xuất")
                 setPositiveButton(

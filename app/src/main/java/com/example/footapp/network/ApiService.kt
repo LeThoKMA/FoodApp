@@ -27,7 +27,7 @@ interface ApiService {
         @Query("page") page: Int,
         @Query("time") time: String?,
         @Query("status") status: Int?,
-    ): BaseResponse<List<OrderItem>?>
+    ): BaseResponse<BillsResponse>
 
     @GET("bill/detail/{id}")
     suspend fun getOrderDetail(@Path("id") id: Int): BaseResponse<BillDetailResponse>
@@ -55,4 +55,10 @@ interface ApiService {
 
     @GET("tracking")
     suspend fun getTimeForStatisticUser(): BaseResponse<List<String>>
+
+    @GET("category")
+    suspend fun getCategory(): BaseResponse<List<CategoryResponse>>
+
+    @GET("home/{id}")
+    suspend fun getProductByType(@Path("id") id: Int): BaseResponse<List<Item>>
 }

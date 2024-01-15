@@ -3,53 +3,45 @@ package com.example.footapp
 import android.app.ActivityOptions
 import android.content.Intent
 import android.hardware.display.DisplayManager
-import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.fragment.NavHostFragment
 import com.example.footapp.base.BaseActivity
 import com.example.footapp.databinding.ActivityMainBinding
 import com.example.footapp.network.SocketIoManage
-import com.example.footapp.ui.Account.AccountFragment
-import com.example.footapp.ui.Order.HomeFragment
-import com.example.footapp.ui.Order.OrderViewModel
 import com.example.footapp.ui.customer.CustomerActivity
 import com.example.footapp.ui.orderlist.OrderListFragment
-import com.example.footapp.ui.pay.PayConfirmFragment
-import com.example.footapp.ui.statistic.StatisticFragment
-import com.example.footapp.utils.ACCOUNT_FRAGMENT
-import com.example.footapp.utils.HOME_FRAGMENT_TAG
 import com.example.footapp.utils.ORDER_LIST_FRAGMENT
-import com.example.footapp.utils.PAY_CONFIRM_FRAGMENT
-import com.example.footapp.utils.STATISTIC_FRAGMENT
 import com.example.footapp.utils.hideSoftKeyboard
 import kotlinx.coroutines.launch
 
 class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
 
-    lateinit var currentFragment: Fragment
-    private lateinit var targetFragment: Fragment
-    private val homeFragment by lazy {
-        initializeFragment(HOME_FRAGMENT_TAG) {
-            HomeFragment {
-                showPayConfirmFragment(
-                    it,
-                )
-            }
-        }
-    }
-    private val orderListFragment by lazy {
-        initializeFragment(ORDER_LIST_FRAGMENT) {
-            OrderListFragment(onRefreshData = { onRefreshDataInOrderList() })
-        }
-    }
-    private val payConfirmFragment by lazy { initializeFragment(PAY_CONFIRM_FRAGMENT) { PayConfirmFragment { onSuccessInPayConfirmFragment() } } }
-    private val accountFragment by lazy { initializeFragment(ACCOUNT_FRAGMENT) { AccountFragment() } }
-    private val statisticFragment by lazy { initializeFragment(STATISTIC_FRAGMENT) { StatisticFragment() } }
+    //    private val homeFragment by lazy {
+//        initializeFragment(HOME_FRAGMENT_TAG) {
+//            HomeFragment()
+//        }
+//    }
+//    private val orderListFragment by lazy {
+//        initializeFragment(ORDER_LIST_FRAGMENT) {
+//            OrderListFragment()
+//        }
+//    }
+//    private val payConfirmFragment by lazy { initializeFragment(PAY_CONFIRM_FRAGMENT) { PayConfirmFragment() } }
+//    private val accountFragment by lazy { initializeFragment(ACCOUNT_FRAGMENT) { AccountFragment() } }
+//    private val statisticFragment by lazy { initializeFragment(STATISTIC_FRAGMENT) { StatisticFragment() } }
     private var countOrder = 0
+    private lateinit var navHostFragment: NavHostFragment
 
     override fun observerData() {
+        viewModel.paySuccess.observe(this) {
+        }
+//        viewModel.refreshData.observe(this) {
+//            countOrder = 0
+//            binding.orderCount.visibility = View.GONE
+//        }
     }
 
     override fun getContentLayout(): Int {
@@ -60,10 +52,9 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
         setColorForStatusBar(R.color.colorPrimary)
         setLightIconStatusBar(true)
         showScreenCustomer()
-        supportFragmentManager
-            .beginTransaction()
-            .show(homeFragment)
-            .commit()
+
+        navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.fragmentContainer) as NavHostFragment? ?: return
 
         SocketIoManage.subcribe()
         SocketIoManage.mSocket?.on("bill") { args ->
@@ -83,37 +74,18 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
         binding.viewOrder.setOnClickListener {
             countOrder = 0
             binding.orderCount.visibility = View.GONE
-            supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.fragmentContainer, orderListFragment)
-                .commit()
+            navigateToDest(R.id.orderList_dest)
         }
         binding.viewHome.setOnClickListener {
-            (homeFragment as? HomeFragment)?.onHiddenChanged(false)
-            supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.fragmentContainer, homeFragment)
-                .commit()
+//            showFragment(homeFragment)
+//            (homeFragment as? HomeFragment)?.onHiddenChanged(false)
+            navigateToDest(R.id.home_dest)
         }
         binding.viewAccount.setOnClickListener {
-//            targetFragment = accountFragment
-//            currentFragment =
-//                supportFragmentManager.fragments.firstOrNull { !it.isHidden } ?: homeFragment
-//            showFragment(currentFragment, targetFragment)
-            supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.fragmentContainer, accountFragment)
-                .commit()
+            navigateToDest(R.id.account_dest)
         }
         binding.viewStatistic.setOnClickListener {
-//            targetFragment = statisticFragment
-//            currentFragment =
-//                supportFragmentManager.fragments.firstOrNull { !it.isHidden } ?: homeFragment
-//            showFragment(currentFragment, targetFragment)
-            supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.fragmentContainer, statisticFragment)
-                .commit()
+            navigateToDest(R.id.statistic_dest)
         }
     }
 
@@ -125,34 +97,28 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
         return supportFragmentManager.findFragmentByTag(tag) ?: createFragment().also { fragment ->
             supportFragmentManager
                 .beginTransaction()
+                .setReorderingAllowed(true)
                 .add(R.id.fragmentContainer, fragment, tag)
-//                .hide(fragment)
                 .commit()
         }
     }
 
-    private fun showFragment(currentFragment: Fragment, targetFragment: Fragment) {
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.fragmentContainer, targetFragment)
-            .commit()
+    private fun showFragment(targetFragment: Fragment) {
+        val currentFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainer)
+
+        if (currentFragment != null && currentFragment.javaClass == targetFragment.javaClass) {
+            // Fragment đã hiển thị, không cần thay thế
+            return
+        }
+        currentFragment?.let {
+            supportFragmentManager
+                .beginTransaction()
+                .hide(it)
+                .show(targetFragment)
+                .commit()
+        }
         hideSoftKeyboard()
         loadingDialog?.hide()
-    }
-
-    private fun showPayConfirmFragment(bundle: Bundle) {
-        currentFragment =
-            supportFragmentManager.fragments.firstOrNull { !it.isHidden } ?: homeFragment
-        // showFragment(currentFragment, targetFragment)
-        payConfirmFragment.arguments = bundle
-        showFragment(currentFragment, payConfirmFragment)
-    }
-
-    private fun onSuccessInPayConfirmFragment() {
-        (homeFragment as HomeFragment).onHiddenChanged(false)
-        currentFragment =
-            supportFragmentManager.fragments.firstOrNull { !it.isHidden } ?: homeFragment
-        showFragment(currentFragment, homeFragment)
     }
 
     private fun showScreenCustomer() {
@@ -174,8 +140,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
         }
     }
 
-    fun onRefreshDataInOrderList() {
-        countOrder = 0
-        binding.orderCount.visibility = View.GONE
+    private fun navigateToDest(id: Int) {
+        navHostFragment.navController.navigate(id)
     }
 }

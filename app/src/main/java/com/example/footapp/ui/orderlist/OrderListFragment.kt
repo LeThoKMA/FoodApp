@@ -11,9 +11,11 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.footapp.MainViewModel
 import com.example.footapp.OrderStatus
 import com.example.footapp.R
 import com.example.footapp.ViewModelFactory
@@ -30,17 +32,19 @@ import com.google.android.material.snackbar.Snackbar
  * Use the [OrderListFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class OrderListFragment(val onRefreshData: () -> Unit) :
+class OrderListFragment() :
     BaseFragment<FragmentOrderListBinding, OrderListViewModel>() {
-    lateinit var orderListAdapter: OrderListAdapter
+    var orderListAdapter: OrderListAdapter? = null
     val list = mutableListOf<OrderItem>()
-    var page = 1
+    var page = 0
     var time: String? = null
     var status: Int? = null
     var orderId: Int? = null
     var snackBar: Snackbar? = null
-    lateinit var timerSpinnerAdapter: TimerSpinnerAdapter
-    lateinit var statusSpinnerAdapter: StatusSpinnerAdapter
+    var timerSpinnerAdapter: TimerSpinnerAdapter? = null
+    var statusSpinnerAdapter: StatusSpinnerAdapter? = null
+
+    private val mainViewModel: MainViewModel by activityViewModels()
     override fun getContentLayout(): Int {
         return R.layout.fragment_order_list
     }
@@ -48,28 +52,30 @@ class OrderListFragment(val onRefreshData: () -> Unit) :
     override fun initViewModel() {
         viewModel = ViewModelProvider(
             this,
-            ViewModelFactory(binding.root.context),
+            ViewModelFactory(requireContext()),
         )[OrderListViewModel::class.java]
     }
 
     override fun initView() {
-        paddingStatusBar(binding.root)
+        val binding = binding!!
+        binding.let { paddingStatusBar(it.root) }
         orderListAdapter = OrderListAdapter(object : OrderDetailCallBack {
             override fun callBack(id: Int) {
                 viewModel.getOrderDetail(id)
             }
         })
-        binding.rcOrders.layoutManager = LinearLayoutManager(binding.root.context)
+        binding.rcOrders.layoutManager = LinearLayoutManager(requireContext())
         binding.rcOrders.adapter = orderListAdapter
 
-        timerSpinnerAdapter = TimerSpinnerAdapter(listOf("Mới", "Cũ"), binding.root.context)
+        timerSpinnerAdapter = TimerSpinnerAdapter(listOf("Mới", "Cũ"), requireContext())
         binding.spinnerTime.adapter = timerSpinnerAdapter
 
-        statusSpinnerAdapter = StatusSpinnerAdapter(listOf(0, 1, 2, 3, 4), binding.root.context)
+        statusSpinnerAdapter = StatusSpinnerAdapter(listOf(0, 1, 2, 3, 4), requireContext())
         binding.spinnerStatus.adapter = statusSpinnerAdapter
     }
 
     override fun initListener() {
+        val binding = binding!!
         binding.rcOrders.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
@@ -87,15 +93,15 @@ class OrderListFragment(val onRefreshData: () -> Unit) :
         })
         binding.spinnerTime.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-                page = 1
+                page = 0
+                list.clear()
                 if (p2 == 0) {
                     time = "latest"
-                    viewModel.fetchOrderList(page, time, status)
                 } else {
                     time = "oldest"
-                    viewModel.fetchOrderList(page, time, status)
                 }
-                list.clear()
+                viewModel.resetTotalPage()
+                viewModel.fetchOrderList(page, time, status)
             }
 
             override fun onNothingSelected(p0: AdapterView<*>?) {
@@ -104,15 +110,17 @@ class OrderListFragment(val onRefreshData: () -> Unit) :
 
         binding.spinnerStatus.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-                page = 1
+                page = 0
+                list.clear()
                 if (p2 == OrderStatus.ALL.ordinal) {
                     status = null
+                    viewModel.resetTotalPage()
                     viewModel.fetchOrderList(page, time, status)
                 } else {
                     status = p2
-                    viewModel.fetchOrderList(page, time, status)
+                    viewModel.resetTotalPage()
+                    viewModel.fetchOrderListWithStatus(page, time, status)
                 }
-                list.clear()
             }
 
             override fun onNothingSelected(p0: AdapterView<*>?) {
@@ -120,22 +128,31 @@ class OrderListFragment(val onRefreshData: () -> Unit) :
         }
 
         binding.refreshLayout.setOnRefreshListener {
-            page = 1
+            page = 0
             list.clear()
-            viewModel.fetchOrderList(1, time, status)
+            viewModel.resetTotalPage()
+            viewModel.fetchOrderList(0, time, status)
             snackBar?.dismiss()
-            onRefreshData.invoke()
+            mainViewModel.onRefreshDataInOrderList()
         }
     }
 
     override fun observerLiveData() {
-        viewModel.orderList.observe(this) {
+        val binding = binding!!
+        viewModel.orderList.observe(viewLifecycleOwner) {
             binding.refreshLayout.isRefreshing = false
             list.addAll(it)
-            val orders = list.toList()
-            orderListAdapter.submitList(orders)
+            orderListAdapter?.submitList(list)
+            orderListAdapter?.notifyDataSetChanged()
         }
-        viewModel.orderDetail.observe(this) {
+
+        viewModel.orderListStatus.observe(viewLifecycleOwner) {
+            binding.refreshLayout.isRefreshing = false
+            list.addAll(it)
+            orderListAdapter?.submitList(list)
+            orderListAdapter?.notifyDataSetChanged()
+        }
+        viewModel.orderDetail.observe(viewLifecycleOwner) {
             val bundle = Bundle()
             bundle.putParcelable("order_detail", it)
             val detailOrderDialog = DetailOrderDialog(
@@ -162,33 +179,35 @@ class OrderListFragment(val onRefreshData: () -> Unit) :
                 "",
             )
         }
-        viewModel.messageConfirm.observe(this) {
-            binding.root.context.toast(it)
+        viewModel.messageConfirm.observe(viewLifecycleOwner) {
+            requireContext().toast(it)
             list.forEach { if (it.id == orderId) it.status = OrderStatus.COMPLETED.ordinal }
             val orders = list.toList()
-            orderListAdapter.submitList(orders)
-            orderListAdapter.notifyDataSetChanged()
+            orderListAdapter?.submitList(orders)
+            orderListAdapter?.notifyDataSetChanged()
         }
 
-        viewModel.messageCancel.observe(this) {
-            binding.root.context.toast(it)
+        viewModel.messageCancel.observe(viewLifecycleOwner) {
+            requireContext().toast(it)
             list.forEach { if (it.id == orderId) it.status = OrderStatus.CANCELLED.ordinal }
             val orders = list.toList()
-            orderListAdapter.submitList(orders)
-            orderListAdapter.notifyDataSetChanged()
+            orderListAdapter?.submitList(orders)
+            orderListAdapter?.notifyDataSetChanged()
         }
     }
 
     @SuppressLint("ResourceAsColor")
     fun showSnackBar() {
         snackBar =
-            Snackbar.make(
-                binding.root,
-                "Trượt xuống để xem đơn hàng mới nhất !!!",
-                Snackbar.LENGTH_INDEFINITE,
-            )
+            this.view?.let {
+                Snackbar.make(
+                    it,
+                    "Trượt xuống để xem đơn hàng mới nhất !!!",
+                    Snackbar.LENGTH_INDEFINITE,
+                )
+            }
         val snackbarText =
-            snackBar!!.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+            snackBar?.view?.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
 
         val textSizeInSp = 18f // Kích thước chữ mong muốn (theo sp)
 
@@ -197,7 +216,37 @@ class OrderListFragment(val onRefreshData: () -> Unit) :
         layoutParams.topMargin = 75
         snackBar!!.view.layoutParams = layoutParams
         snackBar!!.view.setBackgroundColor(R.color.white)
-        snackbarText.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSizeInSp)
+        snackbarText?.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSizeInSp)
         snackBar?.show()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        binding?.refreshLayout?.isEnabled = false
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding?.refreshLayout?.isEnabled = true
+    }
+
+    override fun onStop() {
+        binding?.refreshLayout?.setOnRefreshListener(null)
+        binding?.refreshLayout?.removeAllViews()
+        super.onStop()
+    }
+
+    override fun onDestroyView() {
+        binding?.refreshLayout?.removeAllViews()
+        binding?.refreshLayout?.setOnRefreshListener(null)
+        orderListAdapter = null
+        statusSpinnerAdapter = null
+        timerSpinnerAdapter = null
+        viewModel.orderList.removeObservers(viewLifecycleOwner)
+        viewModel.orderListStatus.removeObservers(viewLifecycleOwner)
+        viewModel.orderDetail.removeObservers(viewLifecycleOwner)
+        viewModel.messageCancel.removeObservers(viewLifecycleOwner)
+        viewModel.messageConfirm.removeObservers(viewLifecycleOwner)
+        super.onDestroyView()
     }
 }

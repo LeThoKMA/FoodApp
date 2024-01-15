@@ -1,7 +1,10 @@
 package com.example.footapp.ui.pay
 
+import android.annotation.SuppressLint
 import android.widget.Toast
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.footapp.*
 import com.example.footapp.Response.BillResponse
@@ -13,35 +16,43 @@ import com.google.gson.Gson
 import java.text.SimpleDateFormat
 import java.util.*
 
-class PayConfirmFragment(val onSuccess: () -> Unit) :
+class PayConfirmFragment() :
     BaseFragment<ActivityPayConfirmBinding, PayConfirmViewModel>() {
     val simpleDateFormat = SimpleDateFormat(SIMPLE_DATE_FORMAT)
+    private val mainViewModel: MainViewModel by activityViewModels()
     lateinit var adapter: ItemConfirmAdapter
     var items: MutableList<DetailItemChoose> = mutableListOf()
     lateinit var billResponse: BillResponse
+
     override fun getContentLayout(): Int {
         return R.layout.activity_pay_confirm
     }
 
+    @SuppressLint("SetTextI18n")
     override fun initView() {
-        paddingStatusBar(binding.root)
+        val binding = binding!!
+        binding.let { paddingStatusBar(it.root) }
         billResponse =
-            Gson().fromJson(arguments?.getString(BILL_RESPONSE), BillResponse::class.java)
-        binding.tvName.text = MyPreference().getInstance(binding.root.context)?.getUser()?.fullname
+            Gson().fromJson(
+                mainViewModel.dataToPay.value?.getString(BILL_RESPONSE),
+                BillResponse::class.java,
+            )
+        binding.tvName.text = MyPreference().getInstance(requireContext())?.getUser()?.fullname
         binding.tvTime.text = simpleDateFormat.format(Calendar.getInstance().time)
-        items = arguments?.getParcelableArrayList(ITEMS_PICKED)!!
+        items = mainViewModel.dataToPay.value?.getParcelableArrayList(ITEMS_PICKED)!!
         binding.tvPromotionItem.text = billResponse.promotion.toString() + "%"
         val priceDiscount =
             (billResponse.promotion.div(100f)).times(billResponse.totalPrice!!).toInt()
         binding.tvPriceDiscount.text =
             priceDiscount.formatToPrice()
         adapter = ItemConfirmAdapter(items)
-        binding.rcItem.layoutManager = LinearLayoutManager(binding.root.context)
+        binding.rcItem.layoutManager = LinearLayoutManager(requireContext())
         binding.rcItem.adapter = adapter
         binding.tvPrice.text = billResponse.totalPrice!!.minus(priceDiscount).formatToPrice()
     }
 
     override fun initListener() {
+        val binding = binding!!
         binding.tvCreate.setOnClickListener {
             val priceDiscount =
                 (billResponse.promotion.div(100f)).times(billResponse.totalPrice!!).toInt()
@@ -63,16 +74,15 @@ class PayConfirmFragment(val onSuccess: () -> Unit) :
     override fun observerLiveData() {
         viewModel.message.observe(this) {
             viewModel.repository.resetData()
-            Toast.makeText(binding.root.context, it, Toast.LENGTH_LONG).show()
-            // loadingDialog?.hide()
-            onSuccess.invoke()
+            Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
+            findNavController().popBackStack(R.id.home_dest, false)
         }
     }
 
     override fun initViewModel() {
         viewModel = ViewModelProvider(
             this,
-            ViewModelFactory(binding.root.context),
+            ViewModelFactory(requireContext()),
         )[PayConfirmViewModel::class.java]
     }
 }

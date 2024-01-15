@@ -7,13 +7,11 @@
     <string name="text_all_has_error_network">Lỗi kết nối mạng</string>
     <string name="text_all_has_error_please_try">Có lỗi xảy ra, vui lòng thử lại</string>
     <string name="str_authe">Sai tên tài khoản hoặc mật khẩu</string>
-    <string-array name="type">
-        <item>Coffee</item>
-        <item>Tea</item>
-        <item>Juice</item>
-        <item>Smoothie</item>
-    </string-array>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_main2">MainActivity2</string>
+    <string name="home_dest">Home</string>
+    <string name="order_list_dest">OrderList</string>
+    <string name="statistic_dest">Statistic</string>
+    <string name="account_dest">Account</string>
+
 </resources>

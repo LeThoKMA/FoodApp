@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/home_dest">
+
+    <fragment
+        android:id="@+id/home_dest"
+        android:name="com.example.footapp.ui.Order.HomeFragment"
+        android:label="@string/home_dest"
+        tools:layout="@layout/home_fragment">
+        <action
+            android:id="@+id/next_action"
+            app:destination="@+id/orderList_dest">
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/orderList_dest"
+        android:label="@string/order_list_dest"
+        android:name="com.example.footapp.ui.orderlist.OrderListFragment"
+        tools:layout="@layout/fragment_order_list">
+        <action
+            android:id="@+id/next_action"
+            app:destination="@+id/statistic_dest">
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/statistic_dest"
+        android:label="@string/statistic_dest"
+        android:name="com.example.footapp.ui.statistic.StatisticFragment"
+        tools:layout="@layout/activity_statistic">
+        <action
+            android:id="@+id/next_action"
+            app:destination="@+id/account_dest">
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/account_dest"
+        android:label="@string/account_dest"
+        android:name="com.example.footapp.ui.Account.AccountFragment"
+        tools:layout="@layout/activity_manage_user"/>
+
+    <fragment
+        android:id="@+id/pay_dest"
+        android:label="Pay"
+        android:name="com.example.footapp.ui.pay.PayConfirmFragment"
+        tools:layout="@layout/activity_pay_confirm">
+        <action
+            android:id="@+id/action_pay_to_home"
+            app:destination="@+id/home_dest"
+            app:popUpTo="@id/home_dest"
+            app:popUpToInclusive="true">
+        </action>
+    </fragment>
+
+</navigation>

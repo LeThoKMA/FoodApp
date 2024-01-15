@@ -19,13 +19,13 @@ import com.example.footapp.R
 import com.example.footapp.utils.ANDROID
 import com.example.footapp.utils.STATUS_BAR_HEIGHT
 import com.google.android.material.snackbar.Snackbar
+import java.lang.reflect.Array.get
 
 abstract class BaseFragment<BINDING : ViewDataBinding, VM : BaseViewModel> :
     Fragment() {
 
     lateinit var viewModel: VM
-
-    lateinit var binding: BINDING
+    var binding: BINDING? = null
     var loadingDialog: AlertDialog? = null
     private var mLastClickTime: Long = 0
 
@@ -45,7 +45,7 @@ abstract class BaseFragment<BINDING : ViewDataBinding, VM : BaseViewModel> :
             container,
             false,
         )
-        return binding.root
+        return binding?.root
     }
 
     open fun isDoubleClick(): Boolean {
@@ -65,6 +65,26 @@ abstract class BaseFragment<BINDING : ViewDataBinding, VM : BaseViewModel> :
         observerDefaultLiveData()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
+        viewModel.isLoading.removeObservers(viewLifecycleOwner)
+        viewModel.errorMessage.removeObservers(viewLifecycleOwner)
+        viewModel.responseMessage.removeObservers(viewLifecycleOwner)
+    }
+
+    override fun onDestroy() {
+        loadingDialog?.dismiss()
+        super.onDestroy()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if (isRemoving) {
+            binding?.unbind()
+        }
+    }
+
     abstract fun getContentLayout(): Int
 
     abstract fun initViewModel()
@@ -77,7 +97,7 @@ abstract class BaseFragment<BINDING : ViewDataBinding, VM : BaseViewModel> :
 
     private fun observerDefaultLiveData() {
         viewModel.apply {
-            activity?.let {
+            requireActivity().let {
                 isLoading.observe(viewLifecycleOwner) {
                     if (it) {
                         loadingDialog?.show()
@@ -86,14 +106,14 @@ abstract class BaseFragment<BINDING : ViewDataBinding, VM : BaseViewModel> :
                     }
                 }
             }
-            activity?.let {
+            requireActivity().let {
                 errorMessage.observe(viewLifecycleOwner) {
                     if (it != null) {
                         showError(it.toInt())
                     }
                 }
             }
-            activity?.let {
+            requireActivity().let {
                 responseMessage.observe(viewLifecycleOwner) {
                     showError(it.toString())
                 }
@@ -102,45 +122,43 @@ abstract class BaseFragment<BINDING : ViewDataBinding, VM : BaseViewModel> :
     }
 
     private fun showError(errorMessage: String) {
-        Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
 //        val errorSnackbar = Snackbar.make(binding.root, errorMessage, Snackbar.LENGTH_LONG)
 //        errorSnackbar.setAction("", null)
 //        errorSnackbar.show()
     }
 
     private fun showError(@StringRes id: Int) {
-        val errorSnackbar = Snackbar.make(binding.root, id, Snackbar.LENGTH_LONG)
-        errorSnackbar.setAction("", null)
-        errorSnackbar.show()
+        val errorSnackbar = binding?.root?.let { Snackbar.make(it, id, Snackbar.LENGTH_LONG) }
+        errorSnackbar?.setAction("", null)
+        errorSnackbar?.show()
     }
 
-    private fun setupProgressDialog(): AlertDialog? {
-        if (context != null) {
-            val builder: AlertDialog.Builder =
-                AlertDialog.Builder(requireContext(), R.style.CustomDialog)
-            builder.setCancelable(false)
+    private fun setupProgressDialog(): AlertDialog {
+        val builder: AlertDialog.Builder =
+            AlertDialog.Builder(requireContext(), R.style.CustomDialog)
+        builder.setCancelable(false)
 
-            val myLayout = LayoutInflater.from(requireContext())
-            val dialogView: View = myLayout.inflate(R.layout.fragment_progress_dialog, null)
+        val myLayout = LayoutInflater.from(requireContext())
+        val dialogView: View = myLayout.inflate(R.layout.fragment_progress_dialog, null)
 
-            builder.setView(dialogView)
+        builder.setView(dialogView)
 
-            val dialog: AlertDialog = builder.create()
-            val window: Window? = dialog.window
-            if (window != null) {
-                val layoutParams = WindowManager.LayoutParams()
-                layoutParams.copyFrom(dialog.window?.attributes)
-                layoutParams.width = LinearLayout.LayoutParams.WRAP_CONTENT
-                layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT
-                dialog.window?.attributes = layoutParams
-            }
-            return dialog
+        val dialog: AlertDialog = builder.create()
+        val window: Window? = dialog.window
+        if (window != null) {
+            val layoutParams = WindowManager.LayoutParams()
+            layoutParams.copyFrom(dialog.window?.attributes)
+            layoutParams.width = LinearLayout.LayoutParams.WRAP_CONTENT
+            layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT
+            dialog.window?.attributes = layoutParams
         }
-        return null
+        return dialog
     }
 
     protected fun paddingStatusBar(view: View) {
-        view.setPadding(0, getStatusBarHeight(binding.root.context), 0, 0)
+        binding?.root?.context?.let { getStatusBarHeight(it) }
+            ?.let { view.setPadding(0, it, 0, 0) }
     }
 
     fun getStatusBarHeight(context: Context): Int {

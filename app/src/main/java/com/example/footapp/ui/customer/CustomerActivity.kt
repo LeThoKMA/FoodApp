@@ -82,7 +82,7 @@ class CustomerActivity : BaseActivity<ActivityCustomerBinding, CustomerViewModel
             }
         } else {
             val index = itemList.indexOf(itemList.find { it.id == item.id })
-            itemList.removeAt(index)
+            if(index>0)itemList.removeAt(index)
         }
         val list = itemList.toList()
         itemChooseAdapter.submitList(list)

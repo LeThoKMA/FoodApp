@@ -3,9 +3,17 @@ package com.example.footapp.ui.Order
 import android.os.Bundle
 import android.os.Parcelable
 import android.widget.Toast
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.footapp.MainViewModel
 import com.example.footapp.R
+import com.example.footapp.Response.BillResponse
+import com.example.footapp.Response.CategoryResponse
 import com.example.footapp.ViewModelFactory
 import com.example.footapp.base.BaseFragment
 import com.example.footapp.databinding.HomeFragmentBinding
@@ -15,30 +23,42 @@ import com.example.footapp.utils.BILL_RESPONSE
 import com.example.footapp.utils.ITEMS_PICKED
 import com.example.footapp.utils.formatToPrice
 import com.google.gson.Gson
+import kotlinx.coroutines.launch
 
-class HomeFragment(val onChangeFragment: (Bundle) -> Unit) :
-    BaseFragment<HomeFragmentBinding, OrderViewModel>(), OrderInterface {
+class HomeFragment() : BaseFragment<HomeFragmentBinding, OrderViewModel>(), OrderInterface {
+    private val mainViewModel: MainViewModel by activityViewModels()
     var listItem: ArrayList<Item?> = arrayListOf()
     var listItemChoose: MutableList<DetailItemChoose> = mutableListOf()
-    lateinit var oderAdapter: OderAdapter
-    lateinit var itemChooseAdapter: ItemChooseAdapter
+    var listCategory = mutableListOf<CategoryResponse>()
+    var oderAdapter: OderAdapter? = null
+    var itemChooseAdapter: ItemChooseAdapter? = null
+    var categoryAdapter: CategoryAdapter? = null
+
     override fun getContentLayout(): Int {
         return R.layout.home_fragment
     }
 
     override fun initView() {
-        paddingStatusBar(binding.root)
+        val binding = binding!!
+        binding.let { paddingStatusBar(it.root) }
         oderAdapter = OderAdapter(listItem, this)
-        binding.rvCategory.layoutManager = LinearLayoutManager(binding.root.context)
+        binding.rvCategory.layoutManager = LinearLayoutManager(requireContext())
         binding.rvCategory.adapter = oderAdapter
 
         itemChooseAdapter = ItemChooseAdapter()
-        binding.rvItemPick.layoutManager = LinearLayoutManager(binding.root.context)
+        binding.rvItemPick.layoutManager = LinearLayoutManager(requireContext())
         binding.rvItemPick.adapter = itemChooseAdapter
+
+        categoryAdapter = CategoryAdapter(listCategory, onClickItem = {
+            viewModel.getProductByType(it)
+        })
+        binding.rvType.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.rvType.adapter = categoryAdapter
     }
 
     override fun initListener() {
-        binding.tvCreate.setOnClickListener {
+        binding?.tvCreate?.setOnClickListener {
             viewModel.payConfirm(listItemChoose)
         }
     }
@@ -62,7 +82,7 @@ class HomeFragment(val onChangeFragment: (Bundle) -> Unit) :
             listItemChoose.removeAt(index)
         }
         val list = listItemChoose.toList()
-        itemChooseAdapter.submitList(list)
+        itemChooseAdapter?.submitList(list)
         viewModel.repository.sendData(item)
     }
 
@@ -73,7 +93,7 @@ class HomeFragment(val onChangeFragment: (Bundle) -> Unit) :
     override fun initViewModel() {
         viewModel = ViewModelProvider(
             this,
-            ViewModelFactory(binding.root.context),
+            ViewModelFactory(requireContext()),
         )[OrderViewModel::class.java]
     }
 
@@ -82,27 +102,42 @@ class HomeFragment(val onChangeFragment: (Bundle) -> Unit) :
             if (it != null) {
                 listItem.clear()
                 listItem.addAll(it)
-                oderAdapter.resetData()
+                oderAdapter?.resetData()
             }
-        }
-        viewModel.price.observe(viewLifecycleOwner) {
-            binding.tvPrice.text = it.formatToPrice()
         }
         viewModel.message.observe(viewLifecycleOwner) {
-            Toast.makeText(binding.root.context, it, Toast.LENGTH_LONG).show()
+            Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
         }
-        viewModel.confirm.observe(viewLifecycleOwner) {
-            if (it != null) {
-                it.let { it1 -> viewModel.repository.getBillResponse(it1) }
-                val bundle = Bundle()
-                bundle.putString(BILL_RESPONSE, Gson().toJson(it))
-                bundle.putParcelableArrayList(
-                    ITEMS_PICKED,
-                    listItemChoose as java.util.ArrayList<out Parcelable>,
-                )
-                // viewModel.isLoading.value = false
-                onChangeFragment.invoke(bundle)
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.price.collect {
+                binding?.tvPrice?.text = it.formatToPrice()
             }
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.confirm.collect {
+                    viewModel.isLoading.value = false
+                    if (it != BillResponse()) {
+                        it.let { it1 -> viewModel.repository.getBillResponse(it1) }
+                        val bundle = Bundle()
+                        bundle.putString(BILL_RESPONSE, Gson().toJson(it))
+                        bundle.putParcelableArrayList(
+                            ITEMS_PICKED,
+                            listItemChoose as java.util.ArrayList<out Parcelable>,
+                        )
+                        mainViewModel.gotoPayFragment(bundle)
+                        findNavController().navigate(R.id.pay_dest)
+                    }
+                }
+            }
+        }
+
+        viewModel.category.observe(viewLifecycleOwner) {
+            listCategory.clear()
+            it?.let { it1 -> listCategory.addAll(it1) }
+            categoryAdapter?.notifyDataSetChanged()
         }
     }
 
@@ -110,15 +145,29 @@ class HomeFragment(val onChangeFragment: (Bundle) -> Unit) :
         super.onHiddenChanged(hidden)
         if (!hidden) {
             listItemChoose.clear()
-            itemChooseAdapter.submitList(listItemChoose)
+            itemChooseAdapter?.submitList(listItemChoose)
+            oderAdapter?.resetData()
             viewModel.repository.resetData()
+            binding?.tvPrice?.text = 0.formatToPrice()
         }
     }
 
-//    override fun onStop() {
-//        super.onStop()
-//        viewModel.repository.resetData()
-//        listItemChoose.clear()
-//        itemChooseAdapter.notifyDataSetChanged()
-//    }
+    override fun onPause() {
+        super.onPause()
+
+//        if (isRemoving) {
+//            binding.unbind()
+//        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        categoryAdapter = null
+        itemChooseAdapter = null
+        oderAdapter = null
+    }
+
+    override fun onStop() {
+        super.onStop()
+    }
 }
