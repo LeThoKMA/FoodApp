@@ -12,15 +12,15 @@ import com.example.footapp.model.Item
 import com.example.footapp.model.ItemBillRequest
 import com.example.footapp.network.ApiService
 import com.example.footapp.repository.CustomerRepository
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -40,8 +40,8 @@ class OrderViewModel(
     private val _category = MutableLiveData<List<CategoryResponse>?>()
     val category: MutableLiveData<List<CategoryResponse>?> = _category
 
-    private val _confirm = MutableStateFlow(BillResponse())
-    val confirm: StateFlow<BillResponse> = _confirm
+    private val _confirm = Channel<Event>(Channel.BUFFERED)
+    val confirm = _confirm.receiveAsFlow()
 
     val message = MutableLiveData<String>()
 
@@ -83,8 +83,8 @@ class OrderViewModel(
                     }
                     .catch { Log.e("TAG", it.toString()) }
                     .collect {
-                        if (it.data != null) {
-                            _confirm.value = it.data
+                        it.data?.let { response ->
+                            _confirm.send(Event.OnConfirmSuccess(response))
                         }
                     }
             }
@@ -115,5 +115,9 @@ class OrderViewModel(
                     dataItems.postValue(it.data as ArrayList<Item>?)
                 }
         }
+    }
+
+    sealed class Event {
+        data class OnConfirmSuccess(val response: BillResponse) : Event()
     }
 }

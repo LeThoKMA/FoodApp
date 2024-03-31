@@ -23,6 +23,7 @@ import com.example.footapp.utils.BILL_RESPONSE
 import com.example.footapp.utils.ITEMS_PICKED
 import com.example.footapp.utils.formatToPrice
 import com.google.gson.Gson
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class HomeFragment() : BaseFragment<HomeFragmentBinding, OrderViewModel>(), OrderInterface {
@@ -115,22 +116,9 @@ class HomeFragment() : BaseFragment<HomeFragmentBinding, OrderViewModel>(), Orde
             }
         }
 
-        lifecycleScope.launch {
+        lifecycleScope.launch(Dispatchers.Main) {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.confirm.collect {
-                    viewModel.isLoading.value = false
-                    if (it != BillResponse()) {
-                        it.let { it1 -> viewModel.repository.getBillResponse(it1) }
-                        val bundle = Bundle()
-                        bundle.putString(BILL_RESPONSE, Gson().toJson(it))
-                        bundle.putParcelableArrayList(
-                            ITEMS_PICKED,
-                            listItemChoose as java.util.ArrayList<out Parcelable>,
-                        )
-                        mainViewModel.gotoPayFragment(bundle)
-                        findNavController().navigate(R.id.pay_dest)
-                    }
-                }
+                viewModel.confirm.collect(::handleEvent)
             }
         }
 
@@ -138,6 +126,29 @@ class HomeFragment() : BaseFragment<HomeFragmentBinding, OrderViewModel>(), Orde
             listCategory.clear()
             it?.let { it1 -> listCategory.addAll(it1) }
             categoryAdapter?.notifyDataSetChanged()
+        }
+    }
+
+    private fun handleEvent(event: OrderViewModel.Event) {
+        when (event) {
+            is OrderViewModel.Event.OnConfirmSuccess -> {
+                if (event.response != BillResponse()) {
+                    event.response.let { it1 -> viewModel.repository.getBillResponse(it1) }
+                    val bundle = Bundle()
+                    val tmpBill = BillResponse(
+                        event.response.id,
+                        event.response.totalPrice,
+                        event.response.givenPromotion,
+                    )
+                    bundle.putString(BILL_RESPONSE, Gson().toJson(tmpBill))
+                    bundle.putParcelableArrayList(
+                        ITEMS_PICKED,
+                        listItemChoose as java.util.ArrayList<out Parcelable>,
+                    )
+                    mainViewModel.gotoPayFragment(bundle)
+                    findNavController().navigate(R.id.pay_dest)
+                }
+            }
         }
     }
 

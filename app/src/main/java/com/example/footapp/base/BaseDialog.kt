@@ -8,7 +8,7 @@ import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 
-abstract class BaseDialog<BINDING : ViewDataBinding> : DialogFragment() {
+abstract class  BaseDialog<BINDING : ViewDataBinding> : DialogFragment() {
 
     lateinit var binding: BINDING
 

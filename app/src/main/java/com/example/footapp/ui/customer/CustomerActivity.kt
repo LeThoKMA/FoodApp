@@ -1,19 +1,27 @@
 package com.example.footapp.ui.customer
 
-import android.util.Log
+import android.graphics.BitmapFactory
+import android.os.Bundle
+import android.util.Base64
+import android.view.View
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.footapp.R
 import com.example.footapp.ViewModelFactory
 import com.example.footapp.base.BaseActivity
+import com.example.footapp.base.BaseDialog
 import com.example.footapp.databinding.ActivityCustomerBinding
 import com.example.footapp.model.DetailItemChoose
 import com.example.footapp.ui.Order.ItemChooseAdapter
 import com.example.footapp.utils.formatToPrice
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class CustomerActivity : BaseActivity<ActivityCustomerBinding, CustomerViewModel>() {
     lateinit var itemChooseAdapter: ItemChooseAdapter
@@ -28,6 +36,16 @@ class CustomerActivity : BaseActivity<ActivityCustomerBinding, CustomerViewModel
             val priceDiscount = (it.promotion.div(100f)).times(it.totalPrice!!).toInt()
             binding.tvPromotionDiscount.text = priceDiscount.formatToPrice()
             binding.tvPrice.text = it.totalPrice.minus(priceDiscount).formatToPrice()
+            lifecycleScope.launch(IO) {
+                val qrData = Base64.decode(it.qrResponse?.data?.qrDataString, Base64.DEFAULT)
+                withContext(Main) {
+                    val qrDialog = QrDialog()
+                    val bundle = Bundle()
+                    bundle.putByteArray("qr", qrData)
+                    qrDialog.arguments = bundle
+                    qrDialog.show(supportFragmentManager, "QR_DIALOG")
+                }
+            }
         }
         viewModel.repository.resetData.observe(this) {
             if (it) {
@@ -35,6 +53,7 @@ class CustomerActivity : BaseActivity<ActivityCustomerBinding, CustomerViewModel
                 itemChooseAdapter.submitList(itemList)
                 binding.tvPromotionDiscount.text = ""
                 binding.tvPrice.text = ""
+                (supportFragmentManager.findFragmentByTag("QR_DIALOG") as DialogFragment).dismiss()
             }
         }
         viewModel.data.observe(this) {
@@ -82,7 +101,7 @@ class CustomerActivity : BaseActivity<ActivityCustomerBinding, CustomerViewModel
             }
         } else {
             val index = itemList.indexOf(itemList.find { it.id == item.id })
-            if(index>0)itemList.removeAt(index)
+            if (index > 0) itemList.removeAt(index)
         }
         val list = itemList.toList()
         itemChooseAdapter.submitList(list)
