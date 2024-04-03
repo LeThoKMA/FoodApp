@@ -15,10 +15,10 @@
             android:layout_height="150dp"
             android:layout_marginStart="8dp"
             android:scaleType="centerCrop"
-            tools:src="@drawable/ic_picture_nodata"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:riv_corner_radius="6dp" />
+            app:riv_corner_radius="6dp"
+            tools:src="@drawable/ic_picture_nodata" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout"
@@ -34,15 +34,15 @@
                 android:id="@+id/tv_name_product"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:textColor="@color/black"
-                tools:text="Ca phe"
                 android:textSize="20sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Ca phe" />
 
 
             <TextView
@@ -58,18 +58,14 @@
 
             <TextView
                 android:id="@+id/tvDescription"
-                android:layout_width="50dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_margin="0dp"
-                android:gravity="center"
-                android:maxLength="6"
+                android:maxLines="3"
                 android:padding="4dp"
-                android:singleLine="true"
                 android:textSize="18sp"
-                app:layout_constraintTop_toBottomOf="@id/tv_price"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-               />
+                app:layout_constraintTop_toBottomOf="@id/tv_price" />
 
 
             <TextView
@@ -79,16 +75,16 @@
                 android:layout_marginEnd="8dp"
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/tv_name_product"/>
+                app:layout_constraintTop_toTopOf="@id/tv_name_product" />
 
             <TextView
-                app:layout_constraintEnd_toEndOf="@id/amount"
-                app:layout_constraintTop_toBottomOf="@id/amount"
                 android:id="@+id/tvSize"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                app:layout_constraintEnd_toEndOf="@id/amount"
+                app:layout_constraintTop_toTopOf="@id/tv_price" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

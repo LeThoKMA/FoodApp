@@ -35,7 +35,8 @@ class ItemAdapter(val context: Context, var list: MutableList<BillItem>) :
         return list.size
     }
 
-    class ViewHolder(val binding: ItemDetailCatgoryBinding) : RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder(val binding: ItemDetailCatgoryBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(item: BillItem) {
             if (item.item?.imgUrl?.isNotEmpty() == true) {
                 Glide.with(binding.root.context)
@@ -46,13 +47,15 @@ class ItemAdapter(val context: Context, var list: MutableList<BillItem>) :
             binding.tvNameProduct.text = item.item?.name
             binding.amount.text = item.quantity.toString()
             binding.tvPrice.text = item.price.formatToPrice()
-            binding.amount.text = "Số lượng: ${item.quantity}"
-            binding.tvSize.text = when(item.size){
+            binding.amount.text = "x: ${item.quantity}"
+            binding.tvSize.text = when (item.size) {
                 ItemSize.S.ordinal -> ItemSize.S.name
                 ItemSize.M.ordinal -> ItemSize.M.name
                 ItemSize.L.ordinal -> ItemSize.L.name
                 else -> ""
             }
+            binding.tvDescription.text = item.description?:""
+            println(item.description)
         }
     }
 }
