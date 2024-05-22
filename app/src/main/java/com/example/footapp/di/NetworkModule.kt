@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit
 // Safe here as we are dealing with a Dagger 2 module
 @Suppress("unused")
 object NetworkModule {
-    private val url = "https://edc0-2405-4803-fdea-67e0-d9c0-654b-fa00-b324.ngrok-free.app"
+    private val url = "http://10.0.2.2:8080"
 
     var mToken = ""
     private const val TIME_OUT: Long = 10

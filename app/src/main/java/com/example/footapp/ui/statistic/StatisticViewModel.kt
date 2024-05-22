@@ -87,11 +87,9 @@ class StatisticViewModel(var context: Context) : BaseViewModel() {
         flow { emit(apiService.getYearToStatistic(year)) }
             .onStart {
                 if (isLoading.value != true) onRetrievePostListStart()
-                _uiState.update { it.copy(isShowBarChart = false) }
             }
             .onCompletion {
                 onRetrievePostListFinish()
-                _uiState.update { it.copy(isShowBarChart = true) }
             }
             .catch { handleApiError(it) }
             .collect {
@@ -152,7 +150,6 @@ class StatisticViewModel(var context: Context) : BaseViewModel() {
         val stoneValue: Int = 0,
         val barDatas: List<ItemStatistic> = listOf(),
         val total: Int = 0,
-        val isShowBarChart: Boolean = false,
     )
 
     sealed class StateNormal {

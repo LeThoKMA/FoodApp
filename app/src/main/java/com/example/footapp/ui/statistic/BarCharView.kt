@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyRow
@@ -120,7 +121,7 @@ fun BarCharView(
                             ),
                 ) {
                     Column(
-                        modifier = Modifier.wrapContentSize().align(Alignment.Bottom),
+                        modifier = Modifier.fillMaxSize().align(Alignment.Bottom),
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
                         if (showValue) Text(text = item.revenue.formatToPrice())
@@ -140,7 +141,7 @@ fun BarCharView(
                         Text(
                             text = "Tháng ${item.time}",
                             fontSize = 18.sp,
-                            modifier = Modifier.height(20.dp),
+                            modifier = Modifier.padding(top = 20.dp),
                         )
                     }
                 }

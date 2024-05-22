@@ -2,6 +2,7 @@ package com.example.footapp.ui.statistic.component
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
@@ -21,7 +22,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,7 +34,6 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.unit.times
 import com.example.barchartcompose.ui.theme.GreenYellow
 import com.example.barchartcompose.ui.theme.LimeGreen
 import com.example.footapp.model.ItemStatistic
@@ -44,16 +43,8 @@ import com.example.footapp.utils.formatToPrice
 fun BarCharView(
     stoneValue: Int,
     barDatas: MutableList<ItemStatistic>,
-    isShowBarChart: Boolean,
 ) {
-    var isVisible by remember {
-        mutableStateOf(false)
-    }
-
-    LaunchedEffect(key1 = isShowBarChart, block = {
-        isVisible = isShowBarChart
-    })
-
+    val animVisibleState = remember { MutableTransitionState(false) }.apply { targetState = true }
     val values = listOf(
         stoneValue.times(5),
         stoneValue.times(4),
@@ -132,7 +123,7 @@ fun BarCharView(
                 )
                 val targetHeight = ((item.revenue.div(values[0].toFloat())).times(500f))
                 AnimatedVisibility(
-                    visible = isVisible,
+                    visibleState = animVisibleState,
                     modifier = Modifier.wrapContentSize(),
                     enter = fadeIn(
                         animationSpec = tween(durationMillis = 3000),
@@ -155,18 +146,18 @@ fun BarCharView(
                                 .padding(horizontal = 20.dp)
                                 .animateContentSize()
                                 .width(50.dp)
-                                .height(targetHeight.dp)
+                                .height(if (targetHeight > 600) (600 - 20).dp else targetHeight.dp)
                                 .padding(top = 12.5.dp)
                                 .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
                                 .background(gradientBrush)
                                 .clickable { showValue = !showValue },
                         ) {
                         }
-
                         Text(
                             text = "Tháng ${item.time}",
                             fontSize = 18.sp,
-                            modifier = Modifier.height(20.dp),
+                            modifier = Modifier
+                                .height(20.dp)
                         )
                     }
                 }
