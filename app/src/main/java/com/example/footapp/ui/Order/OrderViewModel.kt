@@ -45,7 +45,7 @@ class OrderViewModel(
 
     val message = MutableLiveData<String>()
 
-    var mapDetailItemChoose: HashMap<Int, DetailItemChoose> = hashMapOf()
+    private var mapDetailItemChoose: HashMap<Int, DetailItemChoose> = hashMapOf()
     var list: ArrayList<Item?> = arrayListOf()
     var size = 0
     var totalPrice = 0

@@ -68,7 +68,7 @@ class StatisticFragment : BaseFragment<ActivityStatisticByYearBinding, Statistic
             spinnerList.addAll(it.map { it.toString() })
             spinnerAdapter?.notifyDataSetChanged()
         }
-        viewModel.dataInDay.observe(this) {
+        viewModel.dataInDay.observe(viewLifecycleOwner) {
             it?.let {
                 val animator = ValueAnimator.ofInt(it.revenue.div(2) ?: 0, it.revenue)
                 animator.duration = 4000

@@ -2,9 +2,26 @@ package com.example.footapp.network
 
 import com.example.footapp.Request.ChangePassRequest
 import com.example.footapp.Request.ConfirmBillRequest
-import com.example.footapp.Response.*
-import com.example.footapp.model.*
-import retrofit2.http.*
+import com.example.footapp.Response.BaseResponse
+import com.example.footapp.Response.BaseResponseNoBody
+import com.example.footapp.Response.BillDetailResponse
+import com.example.footapp.Response.BillResponse
+import com.example.footapp.Response.BillsResponse
+import com.example.footapp.Response.CategoryResponse
+import com.example.footapp.Response.LoginResponse
+import com.example.footapp.Response.StatisticResponse
+import com.example.footapp.model.Item
+import com.example.footapp.model.ItemBillRequest
+import com.example.footapp.model.ItemStatistic
+import com.example.footapp.model.LoginModel
+import com.example.footapp.model.StaffData
+import com.example.footapp.model.User
+import retrofit2.http.Body
+import retrofit2.http.GET
+import retrofit2.http.POST
+import retrofit2.http.PUT
+import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface ApiService {
     @POST("auth/login")
@@ -31,6 +48,7 @@ interface ApiService {
 
     @GET("bill/detail/{id}")
     suspend fun getOrderDetail(@Path("id") id: Int): BaseResponse<BillDetailResponse>
+
 
     @GET("statistic/year")
     suspend fun getYearToStatistic(): BaseResponse<List<Int>>
