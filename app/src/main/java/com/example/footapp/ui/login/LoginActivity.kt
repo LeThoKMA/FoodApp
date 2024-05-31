@@ -18,7 +18,7 @@ class LoginActivity : BaseActivity<ActivitySignInBinding, LoginViewModel>() {
         return R.layout.activity_sign_in }
     override fun initView() {}
     override fun initViewModel() {
-        viewModel = ViewModelProvider(this, ViewModelFactory(this))[LoginViewModel::class.java] }
+        viewModel = ViewModelProvider(this, ViewModelFactory())[LoginViewModel::class.java] }
 
     override fun observerData() {
         viewModel.doLogin.observe(this) {

@@ -11,34 +11,34 @@ import com.example.footapp.ui.Account.AccountViewModel
 import com.example.footapp.ui.orderlist.OrderListViewModel
 import com.example.footapp.ui.statistic.StatisticViewModel
 
-class ViewModelFactory(private val context: Context) : ViewModelProvider.Factory {
+class ViewModelFactory() : ViewModelProvider.Factory {
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {
-            return LoginViewModel(context) as T
+            return LoginViewModel() as T
         }
         if (modelClass.isAssignableFrom(OrderViewModel::class.java)) {
-            return OrderViewModel(context) as T
+            return OrderViewModel() as T
         }
         if (modelClass.isAssignableFrom(CustomerViewModel::class.java)) {
-            return CustomerViewModel(context) as T
+            return CustomerViewModel() as T
         }
         if (modelClass.isAssignableFrom(PayConfirmViewModel::class.java)) {
-            return PayConfirmViewModel(context) as T
+            return PayConfirmViewModel() as T
         }
         if (modelClass.isAssignableFrom(OrderListViewModel::class.java)) {
-            return OrderListViewModel(context) as T
+            return OrderListViewModel() as T
         }
         if (modelClass.isAssignableFrom(AccountViewModel::class.java)) {
-            return AccountViewModel(context) as T
+            return AccountViewModel() as T
         }
         if (modelClass.isAssignableFrom(StatisticViewModel::class.java)) {
-            return StatisticViewModel(context) as T
+            return StatisticViewModel() as T
         }
 
         if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
-            return MainViewModel(context) as T
+            return MainViewModel() as T
         }
 
         throw IllegalArgumentException("Unknown ViewModel class")

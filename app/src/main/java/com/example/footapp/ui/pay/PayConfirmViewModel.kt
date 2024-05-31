@@ -14,7 +14,6 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class PayConfirmViewModel(
-    var context: Context,
 ) : BaseViewModel() {
     @Inject
     lateinit var apiService: ApiService

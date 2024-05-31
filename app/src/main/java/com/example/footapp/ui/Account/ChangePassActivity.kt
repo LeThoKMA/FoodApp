@@ -39,7 +39,7 @@ class ChangePassActivity :
     override fun initViewModel() {
         viewModel = ViewModelProvider(
             this,
-            ViewModelFactory(binding.root.context),
+            ViewModelFactory(),
         )[AccountViewModel::class.java]
     }
 }

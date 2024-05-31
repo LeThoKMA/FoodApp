@@ -52,7 +52,7 @@ class OrderListFragment() :
     override fun initViewModel() {
         viewModel = ViewModelProvider(
             this,
-            ViewModelFactory(requireContext()),
+            ViewModelFactory(),
         )[OrderListViewModel::class.java]
     }
 

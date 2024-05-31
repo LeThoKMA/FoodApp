@@ -47,7 +47,7 @@ class AccountFragment : BaseFragment<ActivityManageBinding, AccountViewModel>() 
     override fun initViewModel() {
         viewModel = ViewModelProvider(
             this,
-            ViewModelFactory(requireContext()),
+            ViewModelFactory(),
         )[AccountViewModel::class.java]
     }
 

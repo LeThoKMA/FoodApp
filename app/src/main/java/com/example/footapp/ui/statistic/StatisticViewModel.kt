@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.footapp.MyPreference
 import com.example.footapp.Response.StatisticResponse
 import com.example.footapp.base.BaseViewModel
+import com.example.footapp.di.App
 import com.example.footapp.model.ItemStatistic
 import com.example.footapp.model.StaffData
 import com.example.footapp.network.ApiService
@@ -24,12 +25,9 @@ import javax.inject.Inject
 import kotlin.math.log10
 import kotlin.math.pow
 
-class StatisticViewModel(var context: Context) : BaseViewModel() {
+class StatisticViewModel() : BaseViewModel() {
     @Inject
     lateinit var apiService: ApiService
-    var sdf = SimpleDateFormat("dd-MM-yyyy")
-    private var myPreference = MyPreference().getInstance(context)
-
     private val _years = MutableLiveData<List<Int>>()
     val year: LiveData<List<Int>> = _years
 

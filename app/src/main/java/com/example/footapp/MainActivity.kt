@@ -3,6 +3,11 @@ package com.example.footapp
 import android.app.ActivityOptions
 import android.content.Intent
 import android.hardware.display.DisplayManager
+import android.net.ConnectivityManager
+import android.net.LinkProperties
+import android.net.Network
+import android.net.NetworkCapabilities
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -18,30 +23,10 @@ import com.example.footapp.utils.hideSoftKeyboard
 import kotlinx.coroutines.launch
 
 class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
-
-    //    private val homeFragment by lazy {
-//        initializeFragment(HOME_FRAGMENT_TAG) {
-//            HomeFragment()
-//        }
-//    }
-//    private val orderListFragment by lazy {
-//        initializeFragment(ORDER_LIST_FRAGMENT) {
-//            OrderListFragment()
-//        }
-//    }
-//    private val payConfirmFragment by lazy { initializeFragment(PAY_CONFIRM_FRAGMENT) { PayConfirmFragment() } }
-//    private val accountFragment by lazy { initializeFragment(ACCOUNT_FRAGMENT) { AccountFragment() } }
-//    private val statisticFragment by lazy { initializeFragment(STATISTIC_FRAGMENT) { StatisticFragment() } }
     private var countOrder = 0
     private lateinit var navHostFragment: NavHostFragment
 
     override fun observerData() {
-        viewModel.paySuccess.observe(this) {
-        }
-//        viewModel.refreshData.observe(this) {
-//            countOrder = 0
-//            binding.orderCount.visibility = View.GONE
-//        }
     }
 
     override fun getContentLayout(): Int {
@@ -70,6 +55,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
         }
     }
 
+
     override fun initListener() {
         binding.viewOrder.setOnClickListener {
             countOrder = 0
@@ -77,8 +63,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
             navigateToDest(R.id.orderList_dest)
         }
         binding.viewHome.setOnClickListener {
-//            showFragment(homeFragment)
-//            (homeFragment as? HomeFragment)?.onHiddenChanged(false)
             navigateToDest(R.id.home_dest)
         }
         binding.viewAccount.setOnClickListener {
@@ -90,7 +74,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
     }
 
     override fun initViewModel() {
-        viewModel = ViewModelProvider(this, ViewModelFactory(this))[MainViewModel::class.java]
+        viewModel = ViewModelProvider(this, ViewModelFactory())[MainViewModel::class.java]
     }
 
     private fun initializeFragment(tag: String, createFragment: () -> Fragment): Fragment {
@@ -141,6 +125,12 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
     }
 
     private fun navigateToDest(id: Int) {
-        navHostFragment.navController.navigate(id)
+        val navController = navHostFragment.navController
+        val currentDestination = navController.currentDestination
+
+        // Kiểm tra xem điểm đến đã được hiển thị hay chưa
+        if (currentDestination?.id != id) {
+            navController.navigate(id)
+        }
     }
 }

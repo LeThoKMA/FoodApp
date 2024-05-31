@@ -44,6 +44,6 @@ class SplashScreen : BaseActivity<ActivitySplashScreenBinding, LoginViewModel>()
     }
 
     override fun initViewModel() {
-        viewModel = ViewModelProvider(this, ViewModelFactory(this))[LoginViewModel::class.java]
+        viewModel = ViewModelProvider(this, ViewModelFactory())[LoginViewModel::class.java]
     }
 }

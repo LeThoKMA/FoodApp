@@ -25,7 +25,6 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class OrderViewModel(
-    val context: Context,
 ) : BaseViewModel() {
     @Inject
     lateinit var apiService: ApiService

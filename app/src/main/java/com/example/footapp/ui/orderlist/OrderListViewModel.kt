@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class OrderListViewModel(val context: Context) : BaseViewModel() {
+class OrderListViewModel() : BaseViewModel() {
     @Inject
     lateinit var apiService: ApiService
 

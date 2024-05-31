@@ -82,7 +82,7 @@ class PayConfirmFragment() :
     override fun initViewModel() {
         viewModel = ViewModelProvider(
             this,
-            ViewModelFactory(requireContext()),
+            ViewModelFactory(),
         )[PayConfirmViewModel::class.java]
     }
 }

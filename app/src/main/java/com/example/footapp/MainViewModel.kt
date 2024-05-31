@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.footapp.base.BaseViewModel
 
-class MainViewModel(val context: Context) : BaseViewModel() {
+class MainViewModel() : BaseViewModel() {
     private val _paySuccess = MutableLiveData<Unit>()
     val paySuccess: LiveData<Unit> = _paySuccess
 

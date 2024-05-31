@@ -84,7 +84,7 @@ class CustomerActivity : BaseActivity<ActivityCustomerBinding, CustomerViewModel
     }
 
     override fun initViewModel() {
-        viewModel = ViewModelProvider(this, ViewModelFactory(this))[CustomerViewModel::class.java]
+        viewModel = ViewModelProvider(this, ViewModelFactory())[CustomerViewModel::class.java]
     }
 
     private fun receiveData(item: DetailItemChoose) {

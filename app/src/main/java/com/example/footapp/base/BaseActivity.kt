@@ -1,13 +1,22 @@
 package com.example.footapp.base
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.res.Resources
+import android.net.ConnectivityManager
+import android.net.LinkProperties
+import android.net.Network
+import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
+import android.util.TypedValue
 import android.view.*
+import android.widget.FrameLayout
 import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
@@ -19,15 +28,18 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import com.example.footapp.R
+import com.example.footapp.ui.Order.OrderWhenNetworkErrorActivity
+import com.example.footapp.ui.Order.OrderWhenNetworkErrorViewModel
+import com.example.footapp.ui.login.LoginActivity
 import com.google.android.material.snackbar.Snackbar
 
 abstract class BaseActivity<BINDING : ViewDataBinding, VM : BaseViewModel> :
     AppCompatActivity() {
-
+    private val connectivityManager by lazy { getSystemService(ConnectivityManager::class.java) }
     lateinit var binding: BINDING
     lateinit var viewModel: VM
     var loadingDialog: AlertDialog? = null
-
+    private var snackBar: Snackbar? = null
     private var mLastClickTime: Long = 0
 
     @SuppressLint("SourceLockedOrientationActivity")
@@ -43,7 +55,9 @@ abstract class BaseActivity<BINDING : ViewDataBinding, VM : BaseViewModel> :
         initView()
         initListener()
         observerData()
+        networkStateListener(this)
     }
+
 
     abstract fun observerData()
 
@@ -117,6 +131,32 @@ abstract class BaseActivity<BINDING : ViewDataBinding, VM : BaseViewModel> :
         return dialog
     }
 
+    private fun networkStateListener(context: Context) {
+        connectivityManager.registerDefaultNetworkCallback(object :
+            ConnectivityManager.NetworkCallback() {
+            override fun onAvailable(network: Network) {
+                if (context is OrderWhenNetworkErrorActivity) {
+                    showSnackBarNetworkIsBack()
+                }
+            }
+
+            override fun onLost(network: Network) {
+                if (context !is OrderWhenNetworkErrorActivity) {
+                    showSnackBarLostNetwork()
+                }
+            }
+
+            override fun onCapabilitiesChanged(
+                network: Network,
+                networkCapabilities: NetworkCapabilities
+            ) {
+            }
+
+            override fun onLinkPropertiesChanged(network: Network, linkProperties: LinkProperties) {
+            }
+        })
+    }
+
     fun transparentStatusbar() {
         window.statusBarColor = 0x00000000
         window.decorView.systemUiVisibility =
@@ -153,9 +193,55 @@ abstract class BaseActivity<BINDING : ViewDataBinding, VM : BaseViewModel> :
 //                window.statusBarColor = Color.WHITE
         }
     }
-//    protected fun paddingStatusBar(view: View) {
-//        view.setPadding(view.paddingStart, CommonUtils.getStatusBarHeight(this), view.paddingEnd, view.paddingBottom)
-//    }
+
+    @SuppressLint("ResourceAsColor")
+    fun showSnackBarLostNetwork() {
+        snackBar = Snackbar.make(
+            binding.root,
+            "Đã mất kết nối mạng, chuyển sang chế độ offline",
+            Snackbar.LENGTH_INDEFINITE,
+        )
+        val snackBarText =
+            snackBar?.view?.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+
+        val textSizeInSp = 18f // Kích thước chữ mong muốn (theo sp)
+
+        val layoutParams = snackBar?.view?.layoutParams as FrameLayout.LayoutParams
+        layoutParams.gravity = Gravity.CENTER_HORIZONTAL
+        layoutParams.topMargin = 75
+        snackBar!!.view.layoutParams = layoutParams
+        snackBar!!.view.setBackgroundColor(R.color.white)
+        snackBarText?.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSizeInSp)
+        snackBar!!.show()
+
+        snackBar!!.view.setOnClickListener {
+            startActivity(Intent(this, OrderWhenNetworkErrorActivity::class.java))
+        }
+    }
+
+    fun showSnackBarNetworkIsBack(){
+        snackBar = Snackbar.make(
+            binding.root,
+            "Đã có kết nối mạng, quay trở lại chế độ online",
+            Snackbar.LENGTH_INDEFINITE,
+        )
+        val snackBarText =
+            snackBar?.view?.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+
+        val textSizeInSp = 18f // Kích thước chữ mong muốn (theo sp)
+
+        val layoutParams = snackBar?.view?.layoutParams as FrameLayout.LayoutParams
+        layoutParams.gravity = Gravity.CENTER_HORIZONTAL
+        layoutParams.topMargin = 75
+        snackBar!!.view.layoutParams = layoutParams
+        snackBar!!.view.setBackgroundColor(R.color.white)
+        snackBarText?.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSizeInSp)
+        snackBar!!.show()
+
+        snackBar!!.view.setOnClickListener {
+            startActivity(Intent(this, LoginActivity::class.java))
+        }
+    }
 
     fun dpToPx(dp: Int): Int {
         return (dp * Resources.getSystem().displayMetrics.density).toInt()

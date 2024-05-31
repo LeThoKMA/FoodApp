@@ -28,12 +28,12 @@ import kotlinx.coroutines.launch
 
 class HomeFragment() : BaseFragment<HomeFragmentBinding, OrderViewModel>(), OrderInterface {
     private val mainViewModel: MainViewModel by activityViewModels()
-    var listItem: ArrayList<Item?> = arrayListOf()
-    var listItemChoose: MutableList<DetailItemChoose> = mutableListOf()
-    var listCategory = mutableListOf<CategoryResponse>()
-    var oderAdapter: OderAdapter? = null
-    var itemChooseAdapter: ItemChooseAdapter? = null
-    var categoryAdapter: CategoryAdapter? = null
+    private var listItem: ArrayList<Item?> = arrayListOf()
+    private var listItemChoose: MutableList<DetailItemChoose> = mutableListOf()
+    private var listCategory = mutableListOf<CategoryResponse>()
+    private var oderAdapter: OderAdapter? = null
+    private var itemChooseAdapter: ItemChooseAdapter? = null
+    private var categoryAdapter: CategoryAdapter? = null
 
     override fun getContentLayout(): Int {
         return R.layout.home_fragment
@@ -94,7 +94,7 @@ class HomeFragment() : BaseFragment<HomeFragmentBinding, OrderViewModel>(), Orde
     override fun initViewModel() {
         viewModel = ViewModelProvider(
             this,
-            ViewModelFactory(requireContext()),
+            ViewModelFactory(),
         )[OrderViewModel::class.java]
     }
 
@@ -165,10 +165,6 @@ class HomeFragment() : BaseFragment<HomeFragmentBinding, OrderViewModel>(), Orde
 
     override fun onPause() {
         super.onPause()
-
-//        if (isRemoving) {
-//            binding.unbind()
-//        }
     }
 
     override fun onDestroyView() {

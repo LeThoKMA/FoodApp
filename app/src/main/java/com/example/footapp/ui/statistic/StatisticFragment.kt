@@ -111,7 +111,7 @@ class StatisticFragment : BaseFragment<ActivityStatisticByYearBinding, Statistic
     override fun initViewModel() {
         viewModel = ViewModelProvider(
             this,
-            ViewModelFactory(requireContext()),
+            ViewModelFactory(),
         )[StatisticViewModel::class.java]
     }
 

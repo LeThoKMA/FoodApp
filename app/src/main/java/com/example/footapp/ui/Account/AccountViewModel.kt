@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.footapp.MyPreference
 import com.example.footapp.Request.ChangePassRequest
 import com.example.footapp.base.BaseViewModel
+import com.example.footapp.di.App
 import com.example.footapp.network.ApiService
 import com.example.footapp.utils.toast
 import kotlinx.coroutines.flow.catch
@@ -15,7 +16,7 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class AccountViewModel(val context: Context) : BaseViewModel() {
+class AccountViewModel() : BaseViewModel() {
     @Inject
     lateinit var apiService: ApiService
     val logout = MutableLiveData<Boolean>()
@@ -26,7 +27,7 @@ class AccountViewModel(val context: Context) : BaseViewModel() {
             flow { emit(apiService.logout()) }
                 .catch { handleApiError(it) }
                 .collect {
-                    MyPreference().getInstance(context)?.logout()
+                    MyPreference().getInstance(App.appComponent.getContext())?.logout()
                     logout.postValue(true)
                 }
         }
@@ -35,11 +36,11 @@ class AccountViewModel(val context: Context) : BaseViewModel() {
     fun changePass(old: String, new: String, repeat: String) {
         viewModelScope.launch {
             if (new != repeat) {
-                context.toast("Mật khẩu không trùng khớp")
+                App.appComponent.getContext().toast("Mật khẩu không trùng khớp")
                 return@launch
             }
             if (new.length < 6) {
-                context.toast("Mật khẩu tối thiểu 6 kí tự")
+                App.appComponent.getContext().toast("Mật khẩu tối thiểu 6 kí tự")
                 return@launch
             }
             flow {

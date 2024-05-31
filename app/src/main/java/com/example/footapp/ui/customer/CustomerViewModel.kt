@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class CustomerViewModel(val context: Context) : BaseViewModel() {
+class CustomerViewModel() : BaseViewModel() {
     @Inject
     lateinit var repository: CustomerRepository
 

@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.footapp.MyPreference
 import com.example.footapp.base.BaseViewModel
+import com.example.footapp.di.App
 import com.example.footapp.di.NetworkModule
 import com.example.footapp.model.LoginModel
 import com.example.footapp.network.ApiService
@@ -15,12 +16,12 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class LoginViewModel(val context: Context) : BaseViewModel() {
+class LoginViewModel() : BaseViewModel() {
     @Inject
     lateinit var apiService: ApiService
     private val _doLogin = MutableLiveData<Boolean>()
     val doLogin: LiveData<Boolean> = _doLogin
-    private var myPreference: MyPreference = MyPreference().getInstance(context)!!
+    private var myPreference: MyPreference = MyPreference().getInstance(App.appComponent.getContext())!!
 
     fun signIn(email: String, password: String) {
         viewModelScope.launch {
@@ -46,7 +47,13 @@ class LoginViewModel(val context: Context) : BaseViewModel() {
             flow { emit(apiService.fetchUserInfo()) }.flowOn(Dispatchers.IO)
                 .onStart { onRetrievePostListStart() }
                 .onCompletion { onRetrievePostListFinish() }
-                .catch { Toast.makeText(context, it.message, Toast.LENGTH_LONG).show() }
+                .catch {
+                    Toast.makeText(
+                        App.appComponent.getContext(),
+                        it.message,
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
                 .collect {
                     it.data?.let { it1 -> myPreference.saveUser(it1, password) }
                     _doLogin.postValue(true)
