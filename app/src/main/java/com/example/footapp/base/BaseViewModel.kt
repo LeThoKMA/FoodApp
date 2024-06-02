@@ -6,13 +6,20 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.footapp.MainViewModel
 import com.example.footapp.R
-import com.example.footapp.di.*
-import com.example.footapp.ui.pay.PayConfirmViewModel
+import com.example.footapp.di.App
+import com.example.footapp.di.DaggerViewModelInjector
+import com.example.footapp.di.DatabaseModule
+import com.example.footapp.di.NetworkModule
+import com.example.footapp.di.RepositoryModule
+import com.example.footapp.di.ViewModelInjector
+import com.example.footapp.ui.Account.AccountViewModel
 import com.example.footapp.ui.Order.OrderViewModel
+import com.example.footapp.ui.Order.offline.OfflineConfirmViewModel
+import com.example.footapp.ui.Order.offline.OrderWhenNetworkErrorViewModel
 import com.example.footapp.ui.customer.CustomerViewModel
 import com.example.footapp.ui.login.LoginViewModel
-import com.example.footapp.ui.Account.AccountViewModel
 import com.example.footapp.ui.orderlist.OrderListViewModel
+import com.example.footapp.ui.pay.PayConfirmViewModel
 import com.example.footapp.ui.statistic.StatisticViewModel
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -31,7 +38,8 @@ abstract class BaseViewModel : ViewModel() {
     private val injector: ViewModelInjector =
         DaggerViewModelInjector.builder().networkModule(NetworkModule).applicationComponent(
             App.appComponent,
-        ).repositoryComponent(RepositoryModule).build()
+        ).databaseModule(DatabaseModule)
+            .repositoryComponent(RepositoryModule).build()
 
     init {
         inject()
@@ -47,6 +55,8 @@ abstract class BaseViewModel : ViewModel() {
             is AccountViewModel -> injector.inject(this)
             is StatisticViewModel -> injector.inject(this)
             is MainViewModel -> injector.inject(this)
+            is OrderWhenNetworkErrorViewModel -> injector.inject(this)
+            is OfflineConfirmViewModel -> injector.inject(this)
         }
     }
 
@@ -74,10 +84,12 @@ abstract class BaseViewModel : ViewModel() {
                     e.printStackTrace()
                     responseMessage.postValue(error.message)
                 }
+
                 HttpsURLConnection.HTTP_UNAUTHORIZED -> errorMessage.postValue(R.string.str_authe)
                 HttpsURLConnection.HTTP_FORBIDDEN, HttpsURLConnection.HTTP_INTERNAL_ERROR, HttpsURLConnection.HTTP_NOT_FOUND -> responseMessage.postValue(
                     error.message,
                 )
+
                 else -> responseMessage.postValue(error.message)
             }
         } else if (error is SocketTimeoutException) {

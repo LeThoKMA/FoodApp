@@ -1,14 +1,15 @@
 package com.example.footapp
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.footapp.ui.pay.PayConfirmViewModel
+import com.example.footapp.ui.Account.AccountViewModel
+import com.example.footapp.ui.Order.OrderViewModel
+import com.example.footapp.ui.Order.offline.OfflineConfirmViewModel
+import com.example.footapp.ui.Order.offline.OrderWhenNetworkErrorViewModel
 import com.example.footapp.ui.customer.CustomerViewModel
 import com.example.footapp.ui.login.LoginViewModel
-import com.example.footapp.ui.Order.OrderViewModel
-import com.example.footapp.ui.Account.AccountViewModel
 import com.example.footapp.ui.orderlist.OrderListViewModel
+import com.example.footapp.ui.pay.PayConfirmViewModel
 import com.example.footapp.ui.statistic.StatisticViewModel
 
 class ViewModelFactory() : ViewModelProvider.Factory {
@@ -39,6 +40,14 @@ class ViewModelFactory() : ViewModelProvider.Factory {
 
         if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
             return MainViewModel() as T
+        }
+
+        if (modelClass.isAssignableFrom(OrderWhenNetworkErrorViewModel::class.java)) {
+            return OrderWhenNetworkErrorViewModel() as T
+        }
+
+        if (modelClass.isAssignableFrom(OfflineConfirmViewModel::class.java)) {
+            return OfflineConfirmViewModel() as T
         }
 
         throw IllegalArgumentException("Unknown ViewModel class")

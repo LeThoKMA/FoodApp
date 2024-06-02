@@ -28,8 +28,7 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import com.example.footapp.R
-import com.example.footapp.ui.Order.OrderWhenNetworkErrorActivity
-import com.example.footapp.ui.Order.OrderWhenNetworkErrorViewModel
+import com.example.footapp.ui.Order.offline.OrderWhenNetworkErrorActivity
 import com.example.footapp.ui.login.LoginActivity
 import com.google.android.material.snackbar.Snackbar
 
@@ -57,7 +56,6 @@ abstract class BaseActivity<BINDING : ViewDataBinding, VM : BaseViewModel> :
         observerData()
         networkStateListener(this)
     }
-
 
     abstract fun observerData()
 
@@ -143,12 +141,13 @@ abstract class BaseActivity<BINDING : ViewDataBinding, VM : BaseViewModel> :
             override fun onLost(network: Network) {
                 if (context !is OrderWhenNetworkErrorActivity) {
                     showSnackBarLostNetwork()
+                    binding.root.isEnabled = false
                 }
             }
 
             override fun onCapabilitiesChanged(
                 network: Network,
-                networkCapabilities: NetworkCapabilities
+                networkCapabilities: NetworkCapabilities,
             ) {
             }
 
@@ -219,7 +218,7 @@ abstract class BaseActivity<BINDING : ViewDataBinding, VM : BaseViewModel> :
         }
     }
 
-    fun showSnackBarNetworkIsBack(){
+    fun showSnackBarNetworkIsBack() {
         snackBar = Snackbar.make(
             binding.root,
             "Đã có kết nối mạng, quay trở lại chế độ online",
@@ -240,6 +239,17 @@ abstract class BaseActivity<BINDING : ViewDataBinding, VM : BaseViewModel> :
 
         snackBar!!.view.setOnClickListener {
             startActivity(Intent(this, LoginActivity::class.java))
+        }
+    }
+
+    private fun disableAllViews(viewGroup: ViewGroup) {
+        for (i in 0 until viewGroup.childCount) {
+            val child = viewGroup.getChildAt(i)
+            if (child is ViewGroup) {
+                disableAllViews(child) // Đệ quy nếu view con cũng là ViewGroup
+            } else {
+                child.isEnabled = false
+            }
         }
     }
 

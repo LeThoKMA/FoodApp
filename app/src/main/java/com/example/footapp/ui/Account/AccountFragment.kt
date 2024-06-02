@@ -23,10 +23,10 @@ class AccountFragment : BaseFragment<ActivityManageBinding, AccountViewModel>() 
         binding.let { paddingStatusBar(it.root) }
         val user = MyPreference().getInstance(requireContext())?.getUser()
         if (user?.role == 1) {
-            binding.tvManageUser?.visibility = View.GONE
-            binding.tvStatistic?.visibility = View.GONE
-            binding.tvItem?.visibility = View.GONE
-            binding.tvBills?.visibility = View.GONE
+            binding.tvManageUser.visibility = View.GONE
+            binding.tvStatistic.visibility = View.GONE
+            binding.tvItem.visibility = View.GONE
+            binding.tvBills.visibility = View.GONE
         }
     }
 

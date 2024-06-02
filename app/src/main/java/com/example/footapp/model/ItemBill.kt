@@ -1,12 +1,26 @@
 package com.example.footapp.model
 
-import com.google.firebase.database.IgnoreExtraProperties
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.PrimaryKey
 
-@IgnoreExtraProperties
-
+@Entity(
+    tableName = "ItemBill",
+    foreignKeys = [
+        ForeignKey(
+            entity = Bill::class,
+            parentColumns = ["billId"],
+            childColumns = ["billOwnerId"],
+            onDelete = ForeignKey.CASCADE,
+        ),
+    ],
+)
 data class ItemBill(
-    var id: Int? = 0,
-    var name: String = "",
-    var count: Int? = 0,
-    var price: Int? = 0,
+    @PrimaryKey(autoGenerate = true)
+    val idRow: Long = 0,
+    val productId: Int? = 0,
+    val count: Int? = 0,
+    val totalPrice: Int? = 0,
+    val staffId: Int? = null,
+    var billOwnerId: Long = 0,
 )

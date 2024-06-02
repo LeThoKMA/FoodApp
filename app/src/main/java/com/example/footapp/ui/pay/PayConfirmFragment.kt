@@ -18,10 +18,10 @@ import java.util.*
 
 class PayConfirmFragment() :
     BaseFragment<ActivityPayConfirmBinding, PayConfirmViewModel>() {
-    val simpleDateFormat = SimpleDateFormat(SIMPLE_DATE_FORMAT)
+    private val simpleDateFormat = SimpleDateFormat(SIMPLE_DATE_FORMAT)
     private val mainViewModel: MainViewModel by activityViewModels()
     lateinit var adapter: ItemConfirmAdapter
-    var items: MutableList<DetailItemChoose> = mutableListOf()
+    private var items: MutableList<DetailItemChoose> = mutableListOf()
     lateinit var billResponse: BillResponse
 
     override fun getContentLayout(): Int {

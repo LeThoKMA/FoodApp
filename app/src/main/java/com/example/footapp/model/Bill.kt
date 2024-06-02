@@ -1,13 +1,10 @@
 package com.example.footapp.model
 
-import com.google.firebase.database.IgnoreExtraProperties
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
-@IgnoreExtraProperties
+@Entity(tableName = "bills")
 data class Bill(
-    var idBill: Int? = 0,
-    var idUser: Int? = 0,
-    var username: String? = "",
-    var items: HashMap<String, ArrayList<ItemBill>>? = hashMapOf(),
-    var totalPrice: Int? = 0,
-    var dateTime: String? = "",
+    @PrimaryKey(autoGenerate = true)
+    val billId: Long = 0,
 )
