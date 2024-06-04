@@ -47,11 +47,12 @@ class OfflineConfirmActivity : BaseActivity<ActivityPayConfirmBinding, OfflineCo
     private fun handleState(state: OfflineConfirmViewModel.UiState) {
         when (state) {
             is OfflineConfirmViewModel.UiState.Message -> {
-                toast(state.message.toString())
+                if (state.message?.isNotEmpty() == true) toast(state.message.toString())
             }
 
             is OfflineConfirmViewModel.UiState.SuccessInsert -> {
                 toast(state.message.toString())
+                setResult(RESULT_OK)
                 finish()
             }
         }
@@ -81,6 +82,10 @@ class OfflineConfirmActivity : BaseActivity<ActivityPayConfirmBinding, OfflineCo
                 )
             }
                 ?.let { it1 -> viewModel.insertBill(it1) }
+        }
+        binding.tvCancel.setOnClickListener {
+            setResult(RESULT_OK)
+            finish()
         }
     }
 

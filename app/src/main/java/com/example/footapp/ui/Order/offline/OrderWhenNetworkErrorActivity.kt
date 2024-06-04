@@ -1,11 +1,20 @@
 package com.example.footapp.ui.Order.offline
 
+import android.app.Activity
+import android.app.ActivityOptions
 import android.content.Intent
+import android.hardware.display.DisplayManager
 import android.os.Parcelable
+import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.asLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.footapp.MainActivity
 import com.example.footapp.R
+import com.example.footapp.Response.BillResponse
 import com.example.footapp.Response.CategoryResponse
 import com.example.footapp.ViewModelFactory
 import com.example.footapp.base.BaseActivity
@@ -16,8 +25,10 @@ import com.example.footapp.ui.Order.CategoryAdapter
 import com.example.footapp.ui.Order.ItemChooseAdapter
 import com.example.footapp.ui.Order.OderAdapter
 import com.example.footapp.ui.Order.OrderInterface
+import com.example.footapp.ui.customer.CustomerActivity
 import com.example.footapp.utils.ITEMS_PICKED
 import com.example.footapp.utils.TOTAL_PRICE
+import com.example.footapp.utils.formatToPrice
 import com.example.footapp.utils.toast
 
 class OrderWhenNetworkErrorActivity :
@@ -28,8 +39,27 @@ class OrderWhenNetworkErrorActivity :
     private var oderAdapter: OderAdapter? = null
     private var itemChooseAdapter: ItemChooseAdapter? = null
     private var categoryAdapter: CategoryAdapter? = null
+    private var startForResult: ActivityResultLauncher<Intent>? = null
+
     override fun observerData() {
-        TODO("Not yet implemented")
+        viewModel.dataItems.observe(this) {
+            if (it != null) {
+                listItem.clear()
+                listItem.addAll(it)
+                oderAdapter?.resetData()
+            }
+        }
+        viewModel.message.observe(this) {
+            Toast.makeText(this, it, Toast.LENGTH_LONG).show()
+        }
+        viewModel.category.observe(this) {
+            listCategory.clear()
+            it?.let { it1 -> listCategory.addAll(it1) }
+            categoryAdapter?.notifyDataSetChanged()
+        }
+        viewModel.price.observe(this) {
+            binding.tvPrice.text = it.formatToPrice()
+        }
     }
 
     override fun getContentLayout(): Int {
@@ -37,6 +67,16 @@ class OrderWhenNetworkErrorActivity :
     }
 
     override fun initView() {
+        startForResult =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+                if (result.resultCode == Activity.RESULT_OK) {
+                    oderAdapter?.resetData()
+                    listItemChoose.clear()
+                    itemChooseAdapter?.submitList(null)
+                    viewModel.resetData()
+                    viewModel.repository.resetData()
+                }
+            }
         oderAdapter = OderAdapter(listItem, this)
         binding.rvCategory.layoutManager = LinearLayoutManager(this)
         binding.rvCategory.adapter = oderAdapter
@@ -46,23 +86,25 @@ class OrderWhenNetworkErrorActivity :
         binding.rvItemPick.adapter = itemChooseAdapter
 
         categoryAdapter = CategoryAdapter(listCategory, onClickItem = {
-            viewModel.getProductByType(it)
+            viewModel
         })
         binding.rvType.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         binding.rvType.adapter = categoryAdapter
+        showScreenCustomer()
     }
 
     override fun initListener() {
         binding.tvCreate.setOnClickListener {
             if (viewModel.totalPrice > 0) {
-                val intent = Intent(this, MainActivity::class.java)
+                val tmpBillResponse = BillResponse(totalPrice = viewModel.totalPrice)
+                val intent = Intent(this, OfflineConfirmActivity::class.java)
                 intent.putExtra(
                     ITEMS_PICKED,
                     listItemChoose as java.util.ArrayList<out Parcelable>,
                 )
                 intent.putExtra(TOTAL_PRICE, viewModel.totalPrice)
-                startActivity(intent)
+                startForResult?.launch(intent)
             } else {
                 toast("Hãy chọn món ăn")
             }
@@ -98,4 +140,24 @@ class OrderWhenNetworkErrorActivity :
         itemChooseAdapter?.submitList(list)
         viewModel.repository.sendData(item)
     }
+
+    private fun showScreenCustomer() {
+        val displayManager = getSystemService(DISPLAY_SERVICE) as DisplayManager
+        val displays = displayManager.displays
+        if (displays.size > 1) {
+            // Activity options are used to select the display screen.
+            val options = ActivityOptions.makeBasic()
+
+            // Select the display screen that you want to show the second activity
+            options.launchDisplayId = displays[1].displayId
+            // To display on the second screen that your intent must be set flag to make
+            // single task (combine FLAG_ACTIVITY_CLEAR_TOP and FLAG_ACTIVITY_NEW_TASK)
+            // or you also set it in the manifest (see more at the manifest file)
+            startActivity(
+                Intent(this, CustomerActivity::class.java),
+                options.toBundle(),
+            )
+        }
+    }
 }
+

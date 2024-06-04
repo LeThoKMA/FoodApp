@@ -79,4 +79,10 @@ interface ApiService {
 
     @GET("home/{id}")
     suspend fun getProductByType(@Path("id") id: Int): BaseResponse<List<Item>>
+
+    @POST("bill/add/offline/{id}")
+    suspend fun postBillOffline(
+        @Body request: List<ItemBillRequest>,
+        @Path("id") id: Int
+    ): BaseResponseNoBody
 }

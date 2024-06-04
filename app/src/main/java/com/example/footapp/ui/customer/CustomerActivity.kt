@@ -1,17 +1,16 @@
 package com.example.footapp.ui.customer
 
-import android.graphics.BitmapFactory
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.util.Base64
-import android.view.View
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.footapp.R
 import com.example.footapp.ViewModelFactory
-import com.example.footapp.base.BaseActivity
-import com.example.footapp.base.BaseDialog
+import com.example.footapp.base.BaseActivityForCustomer
 import com.example.footapp.databinding.ActivityCustomerBinding
 import com.example.footapp.model.DetailItemChoose
 import com.example.footapp.ui.Order.ItemChooseAdapter
@@ -23,10 +22,10 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class CustomerActivity : BaseActivity<ActivityCustomerBinding, CustomerViewModel>() {
-    lateinit var itemChooseAdapter: ItemChooseAdapter
+class CustomerActivity : BaseActivityForCustomer<ActivityCustomerBinding, CustomerViewModel>() {
+    private lateinit var itemChooseAdapter: ItemChooseAdapter
     private val itemList: MutableList<DetailItemChoose> = mutableListOf()
-    lateinit var bannerFragmentStateAdapter: BannerFragmentStateAdapter
+    private lateinit var bannerFragmentStateAdapter: BannerFragmentStateAdapter
 
     override fun observerData() {
         viewModel.repository.data.observe(this) {
@@ -53,7 +52,7 @@ class CustomerActivity : BaseActivity<ActivityCustomerBinding, CustomerViewModel
                 itemChooseAdapter.submitList(itemList)
                 binding.tvPromotionDiscount.text = ""
                 binding.tvPrice.text = ""
-                (supportFragmentManager.findFragmentByTag("QR_DIALOG") as DialogFragment).dismiss()
+                (supportFragmentManager.findFragmentByTag("QR_DIALOG") as? DialogFragment)?.dismiss()
             }
         }
         viewModel.data.observe(this) {
@@ -78,6 +77,11 @@ class CustomerActivity : BaseActivity<ActivityCustomerBinding, CustomerViewModel
         itemChooseAdapter = ItemChooseAdapter()
         binding.rcItem.layoutManager = LinearLayoutManager(this)
         binding.rcItem.adapter = itemChooseAdapter
+        if (checkInitialNetworkStatus()) {
+            viewModel.getBannerList()
+        } else {
+            viewModel.getBannerListOffline()
+        }
     }
 
     override fun initListener() {
@@ -109,5 +113,15 @@ class CustomerActivity : BaseActivity<ActivityCustomerBinding, CustomerViewModel
 
     override fun onResume() {
         super.onResume()
+    }
+
+    private fun checkInitialNetworkStatus(): Boolean {
+        val network = applicationContext.getSystemService(
+            ConnectivityManager::class.java
+        ).activeNetwork
+        val networkCapabilities = applicationContext.getSystemService(
+            ConnectivityManager::class.java
+        ).getNetworkCapabilities(network)
+        return networkCapabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true
     }
 }

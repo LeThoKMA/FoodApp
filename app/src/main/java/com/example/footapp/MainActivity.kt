@@ -133,4 +133,9 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
             navController.navigate(id)
         }
     }
+
+    override fun onDestroy() {
+        SocketIoManage.mSocket?.off()
+        super.onDestroy()
+    }
 }

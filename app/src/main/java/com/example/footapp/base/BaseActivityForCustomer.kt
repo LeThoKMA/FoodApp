@@ -35,27 +35,20 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkRequest
 import com.example.footapp.R
-import com.example.footapp.di.App
 import com.example.footapp.ui.Order.offline.OrderWhenNetworkErrorActivity
 import com.example.footapp.ui.customer.CustomerActivity
 import com.example.footapp.ui.login.LoginActivity
 import com.example.footapp.worker.UploadWorker
 import com.google.android.material.snackbar.Snackbar
 
-abstract class BaseActivity<BINDING : ViewDataBinding, VM : BaseViewModel> :
+abstract class BaseActivityForCustomer<BINDING : ViewDataBinding, VM : BaseViewModel> :
     AppCompatActivity() {
-    private val connectivityManager by lazy {
-        applicationContext.getSystemService(
-            ConnectivityManager::class.java
-        )
-    }
 
     lateinit var binding: BINDING
     lateinit var viewModel: VM
     var loadingDialog: AlertDialog? = null
     private var snackBar: Snackbar? = null
     private var mLastClickTime: Long = 0
-    private var networkCallback: ConnectivityManager.NetworkCallback? = null
 
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,7 +63,6 @@ abstract class BaseActivity<BINDING : ViewDataBinding, VM : BaseViewModel> :
         initView()
         initListener()
         observerData()
-        networkStateListener(this)
     }
 
     abstract fun observerData()
@@ -93,19 +85,19 @@ abstract class BaseActivity<BINDING : ViewDataBinding, VM : BaseViewModel> :
 
     private fun observerDefaultLiveData() {
         viewModel.apply {
-            isLoading.observe(this@BaseActivity) {
+            isLoading.observe(this@BaseActivityForCustomer) {
                 if (it) {
                     loadingDialog?.show()
                 } else {
                     loadingDialog?.dismiss()
                 }
             }
-            errorMessage.observe(this@BaseActivity) {
+            errorMessage.observe(this@BaseActivityForCustomer) {
                 if (it != null) {
                     showError(it.toInt())
                 }
             }
-            responseMessage.observe(this@BaseActivity) {
+            responseMessage.observe(this@BaseActivityForCustomer) {
                 showError(it.toString())
             }
         }
@@ -145,49 +137,6 @@ abstract class BaseActivity<BINDING : ViewDataBinding, VM : BaseViewModel> :
         return dialog
     }
 
-    private fun networkStateListener(context: Context) {
-        networkCallback = object :
-            ConnectivityManager.NetworkCallback() {
-            override fun onAvailable(network: Network) {
-                if (context is OrderWhenNetworkErrorActivity) {
-                    showSnackBarNetworkIsBack()
-                }
-                val constraints = Constraints.Builder()
-                    .setRequiredNetworkType(NetworkType.CONNECTED)
-                    .build()
-
-                // Tạo một yêu cầu công việc (WorkRequest)
-                val uploadWorkRequest: OneTimeWorkRequest =
-                    OneTimeWorkRequestBuilder<UploadWorker>()
-                        .setConstraints(constraints)
-                        .build()
-
-                // Thêm công việc vào hàng đợi để thực hiện
-                WorkManager.getInstance(context).enqueueUniqueWork(
-                    UploadWorker.WORKER_NAME, // Tên duy nhất cho công việc
-                    ExistingWorkPolicy.KEEP, // Chính sách giữ lại công việc hiện tại nếu đã tồn tại
-                    uploadWorkRequest
-                )
-            }
-
-            override fun onLost(network: Network) {
-                if (context !is OrderWhenNetworkErrorActivity) {
-                    showSnackBarLostNetwork()
-                    binding.root.isEnabled = false
-                }
-            }
-
-            override fun onCapabilitiesChanged(
-                network: Network,
-                networkCapabilities: NetworkCapabilities,
-            ) {
-            }
-
-            override fun onLinkPropertiesChanged(network: Network, linkProperties: LinkProperties) {
-            }
-        }
-        connectivityManager?.registerDefaultNetworkCallback(networkCallback!!)
-    }
 
     fun transparentStatusbar() {
         window.statusBarColor = 0x00000000
@@ -293,7 +242,6 @@ abstract class BaseActivity<BINDING : ViewDataBinding, VM : BaseViewModel> :
 
     override fun onDestroy() {
         loadingDialog?.dismiss()
-        connectivityManager?.unregisterNetworkCallback(networkCallback!!)
         super.onDestroy()
     }
 }

@@ -1,21 +1,21 @@
 package com.example.footapp.ui.Order.offline
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.footapp.Response.BillResponse
 import com.example.footapp.Response.CategoryResponse
 import com.example.footapp.base.BaseViewModel
 import com.example.footapp.model.DetailItemChoose
 import com.example.footapp.model.Item
 import com.example.footapp.network.ApiService
 import com.example.footapp.repository.CustomerRepository
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.flow
+import com.example.footapp.ui.Order.HomeRepository
+import com.example.footapp.utils.fromString
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,17 +25,17 @@ class OrderWhenNetworkErrorViewModel : BaseViewModel() {
 
     @Inject
     lateinit var repository: CustomerRepository
-    val dataItems = MutableLiveData<ArrayList<Item>>()
 
-    private val _price = MutableSharedFlow<Int>()
-    val price: SharedFlow<Int> = _price
+    @Inject
+    lateinit var homeRepository: HomeRepository
+    var dataItems = MutableLiveData<MutableList<Item>>()
+        private set
+
+    private val _price = MutableLiveData<Int>()
+    val price: LiveData<Int> = _price
 
     private val _category = MutableLiveData<List<CategoryResponse>?>()
     val category: MutableLiveData<List<CategoryResponse>?> = _category
-
-    private val _confirm = Channel<Event>(Channel.BUFFERED)
-    val confirm = _confirm.receiveAsFlow()
-
     val message = MutableLiveData<String>()
 
     private var mapDetailItemChoose: HashMap<Int, DetailItemChoose> = hashMapOf()
@@ -43,8 +43,9 @@ class OrderWhenNetworkErrorViewModel : BaseViewModel() {
     var size = 0
     var totalPrice = 0
 
+
     init {
-        fetchItems()
+        fetchTypeFromDb()
     }
 
     fun addItemToBill(item: DetailItemChoose) {
@@ -60,35 +61,38 @@ class OrderWhenNetworkErrorViewModel : BaseViewModel() {
                 total += item1.value.totalPrice ?: 0
             }
             totalPrice = total
-            _price.emit(total)
+            _price.postValue(total)
         }
     }
 
-    fun fetchItems() {
+    private fun fetchTypeFromDb() {
         viewModelScope.launch {
-            flow {
-                emit(Pair(apiService.getItems(), apiService.getCategory()))
-            }.onStart { onRetrievePostListStart() }
-                .onCompletion { onRetrievePostListFinish() }
-                .collect { pairs ->
-                    dataItems.postValue(pairs.first.data as ArrayList<Item>?)
-                    _category.postValue(pairs.second.data)
-                }
-        }
-    }
-
-    fun getProductByType(id: Int) {
-        viewModelScope.launch {
-            flow { emit(apiService.getProductByType(id)) }
+            homeRepository.getAllType()
                 .onStart { onRetrievePostListStart() }
+                .map { it.map { typeDb -> CategoryResponse(typeDb.id, typeDb.name) } }
+                .combine(
+                    homeRepository.getAllItem().map {
+                        it.map { itemDb ->
+                            Item(
+                                itemDb.id,
+                                itemDb.name,
+                                itemDb.price,
+                                itemDb.amount,
+                                fromString(itemDb.imgUrl ?: "")
+                            )
+                        }
+                    }, transform = { it1, it2 -> Pair(it1, it2) })
+                .catch { message.postValue(it.message) }
                 .onCompletion { onRetrievePostListFinish() }
                 .collect {
-                    dataItems.postValue(it.data as ArrayList<Item>?)
+                    _category.postValue(it.first)
+                    dataItems.postValue(it.second.toMutableList())
                 }
         }
     }
 
-    sealed class Event {
-        data class OnConfirmSuccess(val response: BillResponse) : Event()
+    fun resetData() {
+        mapDetailItemChoose.clear()
+        totalPrice = 0
     }
 }

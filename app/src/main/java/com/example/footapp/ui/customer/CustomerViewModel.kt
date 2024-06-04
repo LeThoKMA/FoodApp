@@ -21,19 +21,28 @@ class CustomerViewModel() : BaseViewModel() {
     private val _data = MutableLiveData<List<String>>()
     val data: LiveData<List<String>> = _data
 
-    init {
-        getBannerList()
-    }
-
-    private fun getBannerList() {
+    fun getBannerList() {
         viewModelScope.launch {
             flow { emit(apiService.getBannerList()) }
                 .onStart { onRetrievePostListStart() }
                 .onCompletion { onRetrievePostListFinish() }
+                .onEach { it.data?.forEach { url -> repository.insertBanner(url) } }
                 .catch { handleApiError(it) }
                 .collect {
                     it.data?.let { _data.postValue(it) }
                 }
         }
     }
+
+    fun getBannerListOffline() {
+        viewModelScope.launch {
+            repository.getAllBanner().onStart { onRetrievePostListStart() }
+                .map { it.map { it.url }.filterNotNull() }
+                .onCompletion { onRetrievePostListFinish() }
+                .collect {
+                    _data.postValue(it)
+                }
+        }
+    }
+
 }

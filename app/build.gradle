@@ -130,4 +130,6 @@ dependencies {
 
     // To use Kotlin annotation processing tool (kapt)
     kapt "androidx.room:room-compiler:2.6.0"
+
+    implementation 'androidx.work:work-runtime-ktx:2.8.0'
 }

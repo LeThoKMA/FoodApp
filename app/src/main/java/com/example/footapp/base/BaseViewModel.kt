@@ -4,6 +4,12 @@ import android.text.TextUtils
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.work.Constraints
+import androidx.work.ExistingWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequest
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.example.footapp.MainViewModel
 import com.example.footapp.R
 import com.example.footapp.di.App
@@ -21,6 +27,7 @@ import com.example.footapp.ui.login.LoginViewModel
 import com.example.footapp.ui.orderlist.OrderListViewModel
 import com.example.footapp.ui.pay.PayConfirmViewModel
 import com.example.footapp.ui.statistic.StatisticViewModel
+import com.example.footapp.worker.UploadWorker
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody

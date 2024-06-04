@@ -1,6 +1,5 @@
 package com.example.footapp.ui.Order
 
-import android.content.Context
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -10,15 +9,21 @@ import com.example.footapp.base.BaseViewModel
 import com.example.footapp.model.DetailItemChoose
 import com.example.footapp.model.Item
 import com.example.footapp.model.ItemBillRequest
+import com.example.footapp.model.dbmodel.ItemDB
+import com.example.footapp.model.dbmodel.TypeDB
 import com.example.footapp.network.ApiService
 import com.example.footapp.repository.CustomerRepository
+import com.example.footapp.utils.fromList
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -31,8 +36,11 @@ class OrderViewModel(
 
     @Inject
     lateinit var repository: CustomerRepository
-    val dataItems = MutableLiveData<ArrayList<Item>>()
 
+    @Inject
+    lateinit var homeRepository: HomeRepository
+
+    val dataItems = MutableLiveData<ArrayList<Item>>()
     private val _price = MutableSharedFlow<Int>()
     val price: SharedFlow<Int> = _price
 
@@ -73,9 +81,7 @@ class OrderViewModel(
     fun payConfirm(list: List<DetailItemChoose>) {
         if (totalPrice > 0) {
             viewModelScope.launch {
-                val bilLRequest: MutableList<ItemBillRequest> = mutableListOf()
-                list.forEach { bilLRequest.add(ItemBillRequest(it.id, it.count, it.totalPrice)) }
-                flow { emit(apiService.makeBill(bilLRequest)) }
+                homeRepository.confirmBill(list = list)
                     .onStart { onRetrievePostListStart() }
                     .onCompletion {
                         onRetrievePostListFinish()
@@ -92,12 +98,28 @@ class OrderViewModel(
         }
     }
 
-    fun fetchItems() {
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private fun fetchItems() {
         viewModelScope.launch {
-            flow {
-                emit(Pair(apiService.getItems(), apiService.getCategory()))
-            }.onStart { onRetrievePostListStart() }
+            homeRepository.fetchItems().onStart { onRetrievePostListStart() }
                 .onCompletion { onRetrievePostListFinish() }
+                .onEach { pair ->
+                    pair.second.data?.forEach {
+                        homeRepository.insertType(TypeDB(it.id, it.name))
+                    }
+                    pair.first.data?.forEach {
+                        homeRepository.insertItem(
+                            ItemDB(
+                                id = it.id,
+                                name = it.name,
+                                price = it.price,
+                                amount = it.amount,
+                                imgUrl = fromList(it.imgUrl ?: emptyList()),
+                                typeId = it.category?.id ?: 0
+                            )
+                        )
+                    }
+                }.flowOn(Dispatchers.IO)
                 .collect { pairs ->
                     dataItems.postValue(pairs.first.data as ArrayList<Item>?)
                     _category.postValue(pairs.second.data)
@@ -107,7 +129,7 @@ class OrderViewModel(
 
     fun getProductByType(id: Int) {
         viewModelScope.launch {
-            flow { emit(apiService.getProductByType(id)) }
+            homeRepository.getProductByType(id)
                 .onStart { onRetrievePostListStart() }
                 .onCompletion { onRetrievePostListFinish() }
                 .collect {
