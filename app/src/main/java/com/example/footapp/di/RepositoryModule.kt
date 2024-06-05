@@ -3,6 +3,7 @@ package com.example.footapp.di
 import com.example.footapp.DAO.BannerDao
 import com.example.footapp.DAO.BillDao
 import com.example.footapp.DAO.ItemDao
+import com.example.footapp.DAO.QrDefaultDao
 import com.example.footapp.DAO.TypeDBDao
 import com.example.footapp.network.ApiService
 import com.example.footapp.repository.CustomerRepository
@@ -19,9 +20,14 @@ object RepositoryModule {
 
     @Provides
     @JvmStatic
-    fun getCustomerRepository(bannerDao: BannerDao): CustomerRepository {
+    fun getCustomerRepository(
+        bannerDao: BannerDao,
+        typeDBDao: TypeDBDao,
+        itemDao: ItemDao,
+        qrDefaultDao: QrDefaultDao
+    ): CustomerRepository {
         if (customerRepository == null) {
-            customerRepository = CustomerRepository(bannerDao)
+            customerRepository = CustomerRepository(bannerDao, typeDBDao, itemDao, qrDefaultDao)
         }
         return customerRepository!!
     }
@@ -41,8 +47,9 @@ object RepositoryModule {
         typeDBDao: TypeDBDao,
         billDao: BillDao,
         bannerDao: BannerDao,
+        qrDefaultDao: QrDefaultDao,
         apiService: ApiService
     ): HomeRepository {
-        return HomeRepository(itemDao, typeDBDao, billDao, bannerDao, apiService)
+        return HomeRepository(itemDao, typeDBDao, billDao, bannerDao, qrDefaultDao, apiService)
     }
 }

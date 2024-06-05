@@ -14,8 +14,8 @@ import com.example.footapp.utils.formatToPrice
 
 class OderAdapter(var list: ArrayList<Item?>, val callback: OrderInterface) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    var listState: HashMap<String, Boolean> = hashMapOf()
-    var listCount: HashMap<Int, Int> = hashMapOf()
+    private var listState: HashMap<String, Boolean> = hashMapOf()
+    private var listCount: HashMap<Int, Int> = hashMapOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -37,7 +37,7 @@ class OderAdapter(var list: ArrayList<Item?>, val callback: OrderInterface) :
                 listState,
                 listCount,
 
-            )
+                )
         }
     }
 
@@ -151,7 +151,9 @@ class OderAdapter(var list: ArrayList<Item?>, val callback: OrderInterface) :
             // }
         }
     }
+
     fun resetData() {
+        listCount.clear()
         listState.clear()
         notifyDataSetChanged()
     }

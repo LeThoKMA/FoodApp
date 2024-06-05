@@ -40,7 +40,7 @@ import com.example.footapp.model.ItemStatistic
 import com.example.footapp.utils.formatToPrice
 
 @Composable
-fun BarCharView(
+fun BarChartView(
     stoneValue: Int,
     barDatas: MutableList<ItemStatistic>,
 ) {

@@ -59,6 +59,8 @@ class OrderViewModel(
 
     init {
         fetchItems()
+        fetchQrDefault()
+        repository.resetData()
     }
 
     fun addItemToBill(item: DetailItemChoose) {
@@ -135,6 +137,14 @@ class OrderViewModel(
                 .collect {
                     dataItems.postValue(it.data as ArrayList<Item>?)
                 }
+        }
+    }
+
+    private fun fetchQrDefault() {
+        viewModelScope.launch {
+            homeRepository.getQrDefault().collect {
+                it.data?.let { it1 -> homeRepository.insertQr(it1) }
+            }
         }
     }
 

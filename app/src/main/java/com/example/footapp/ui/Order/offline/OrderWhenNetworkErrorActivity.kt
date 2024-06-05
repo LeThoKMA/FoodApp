@@ -10,12 +10,12 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.asLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.footapp.MainActivity
 import com.example.footapp.R
 import com.example.footapp.Response.BillResponse
 import com.example.footapp.Response.CategoryResponse
+import com.example.footapp.Response.QrData
+import com.example.footapp.Response.QrResponse
 import com.example.footapp.ViewModelFactory
 import com.example.footapp.base.BaseActivity
 import com.example.footapp.databinding.HomeOfflineActivityBinding
@@ -70,11 +70,11 @@ class OrderWhenNetworkErrorActivity :
         startForResult =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
                 if (result.resultCode == Activity.RESULT_OK) {
-                    oderAdapter?.resetData()
                     listItemChoose.clear()
-                    itemChooseAdapter?.submitList(null)
-                    viewModel.resetData()
+                    itemChooseAdapter?.submitList(listItemChoose)
+                    oderAdapter?.resetData()
                     viewModel.repository.resetData()
+                    binding.tvPrice.text = 0.formatToPrice()
                 }
             }
         oderAdapter = OderAdapter(listItem, this)
@@ -86,7 +86,7 @@ class OrderWhenNetworkErrorActivity :
         binding.rvItemPick.adapter = itemChooseAdapter
 
         categoryAdapter = CategoryAdapter(listCategory, onClickItem = {
-            viewModel
+            viewModel.getProductByType(it)
         })
         binding.rvType.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
@@ -97,7 +97,10 @@ class OrderWhenNetworkErrorActivity :
     override fun initListener() {
         binding.tvCreate.setOnClickListener {
             if (viewModel.totalPrice > 0) {
-                val tmpBillResponse = BillResponse(totalPrice = viewModel.totalPrice)
+                val tmpBillResponse = BillResponse(
+                    totalPrice = viewModel.totalPrice,
+                    qrResponse = QrResponse(data = QrData(qrDataURL = viewModel.qrDefault))
+                )
                 val intent = Intent(this, OfflineConfirmActivity::class.java)
                 intent.putExtra(
                     ITEMS_PICKED,
@@ -105,8 +108,9 @@ class OrderWhenNetworkErrorActivity :
                 )
                 intent.putExtra(TOTAL_PRICE, viewModel.totalPrice)
                 startForResult?.launch(intent)
+                viewModel.repository.getBillResponse(tmpBillResponse)
             } else {
-                toast("Hãy chọn món ăn")
+                toast("Hãy chọn đồ uống")
             }
         }
     }

@@ -43,9 +43,8 @@ class OrderListViewModel() : BaseViewModel() {
         if (page <= totalPage) {
             viewModelScope.launch {
                 flow { emit(apiService.getOrderList(page, time, status)) }
-                    .onStart { onRetrievePostListStart() }
+                    .onStart { }
                     .onCompletion {
-                        onRetrievePostListFinish()
                     }
                     .catch { handleApiError(it) }
                     .collect {

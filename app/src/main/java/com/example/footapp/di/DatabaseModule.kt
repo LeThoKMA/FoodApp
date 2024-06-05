@@ -6,6 +6,7 @@ import com.example.footapp.DAO.AppDatabase
 import com.example.footapp.DAO.BannerDao
 import com.example.footapp.DAO.BillDao
 import com.example.footapp.DAO.ItemDao
+import com.example.footapp.DAO.QrDefaultDao
 import com.example.footapp.DAO.TypeDBDao
 import dagger.Module
 import dagger.Provides
@@ -41,4 +42,8 @@ object DatabaseModule {
     @Provides
     @Reusable
     fun provideBannerDao(appDatabase: AppDatabase): BannerDao = appDatabase.bannerDao()
+
+    @Provides
+    @Reusable
+    fun provideQrDefaultDao(appDatabase: AppDatabase): QrDefaultDao = appDatabase.qrDefaultDao()
 }

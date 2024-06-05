@@ -10,23 +10,23 @@ object SocketIoManage {
     val defaultChannel = "land-channel-"
 
     init {
-        mSocket = IO.socket("http://10.0.2.2:8081")
+            mSocket = IO.socket("http://10.0.2.2:8081")
 
-        val onConnect: Emitter.Listener =
-            Emitter.Listener { Log.d("SocketIoManage", "connected...") }
+            val onConnect: Emitter.Listener =
+                Emitter.Listener { Log.d("SocketIoManage", "connected...") }
 
-        val onConnectError: Emitter.Listener =
-            Emitter.Listener {
-                val e = it[0] as Exception
-                Log.d("SocketIoManage", e.toString())
-            }
+            val onConnectError: Emitter.Listener =
+                Emitter.Listener {
+                    val e = it[0] as Exception
+                    Log.d("SocketIoManage", e.toString())
+                }
 
-        val onConnectDis: Emitter.Listener =
-            Emitter.Listener { Log.d("SocketIoManage", "Disconnect...") }
-        mSocket?.on(Socket.EVENT_CONNECT, onConnect)
-        mSocket?.on(Socket.EVENT_CONNECT_ERROR, onConnectError)
-        mSocket?.on(Socket.EVENT_DISCONNECT, onConnectDis)
-        mSocket?.connect()
+            val onConnectDis: Emitter.Listener =
+                Emitter.Listener { Log.d("SocketIoManage", "Disconnect...") }
+            mSocket?.on(Socket.EVENT_CONNECT, onConnect)
+            mSocket?.on(Socket.EVENT_CONNECT_ERROR, onConnectError)
+            mSocket?.on(Socket.EVENT_DISCONNECT, onConnectDis)
+            mSocket?.connect()
     }
 
     fun subcribe() {

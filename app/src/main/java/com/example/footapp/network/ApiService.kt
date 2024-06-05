@@ -9,6 +9,7 @@ import com.example.footapp.Response.BillResponse
 import com.example.footapp.Response.BillsResponse
 import com.example.footapp.Response.CategoryResponse
 import com.example.footapp.Response.LoginResponse
+import com.example.footapp.Response.QrResponse
 import com.example.footapp.Response.StatisticResponse
 import com.example.footapp.model.Item
 import com.example.footapp.model.ItemBillRequest
@@ -85,4 +86,7 @@ interface ApiService {
         @Body request: List<ItemBillRequest>,
         @Path("id") id: Int
     ): BaseResponseNoBody
+
+    @GET("bill/qr/default")
+    suspend fun getQrDefault(): BaseResponse<QrResponse>
 }

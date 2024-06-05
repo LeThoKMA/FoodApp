@@ -25,10 +25,10 @@ class OrderWhenNetworkErrorViewModel : BaseViewModel() {
 
     @Inject
     lateinit var repository: CustomerRepository
-
-    @Inject
-    lateinit var homeRepository: HomeRepository
     var dataItems = MutableLiveData<MutableList<Item>>()
+        private set
+
+    var qrDefault = ""
         private set
 
     private val _price = MutableLiveData<Int>()
@@ -46,15 +46,17 @@ class OrderWhenNetworkErrorViewModel : BaseViewModel() {
 
     init {
         fetchTypeFromDb()
+        fetchQrData()
+        repository.resetData()
     }
 
     fun addItemToBill(item: DetailItemChoose) {
         viewModelScope.launch {
             if (item.flag == null || !item.flag!!) {
                 val itemRemove = DetailItemChoose(item.id, item.name, 0, 0, 0, null, false)
-                mapDetailItemChoose.put(itemRemove.id ?: 0, itemRemove)
+                mapDetailItemChoose[itemRemove.id ?: 0] = itemRemove
             } else {
-                mapDetailItemChoose.put(item.id ?: 0, item)
+                mapDetailItemChoose[item.id ?: 0] = item
             }
             var total = 0
             for (item1 in mapDetailItemChoose) {
@@ -67,11 +69,11 @@ class OrderWhenNetworkErrorViewModel : BaseViewModel() {
 
     private fun fetchTypeFromDb() {
         viewModelScope.launch {
-            homeRepository.getAllType()
+            repository.getAllType()
                 .onStart { onRetrievePostListStart() }
                 .map { it.map { typeDb -> CategoryResponse(typeDb.id, typeDb.name) } }
                 .combine(
-                    homeRepository.getAllItem().map {
+                    repository.getAllItem().map {
                         it.map { itemDb ->
                             Item(
                                 itemDb.id,
@@ -88,6 +90,34 @@ class OrderWhenNetworkErrorViewModel : BaseViewModel() {
                     _category.postValue(it.first)
                     dataItems.postValue(it.second.toMutableList())
                 }
+        }
+    }
+
+    fun getProductByType(id: Int) {
+        viewModelScope.launch {
+            repository.getAllItemByType(id)
+                .onStart { onRetrievePostListStart() }
+                .map {
+                    it.map { itemDb ->
+                        Item(
+                            itemDb.id,
+                            itemDb.name,
+                            itemDb.price,
+                            itemDb.amount,
+                            fromString(itemDb.imgUrl ?: "")
+                        )
+                    }
+                }
+                .onCompletion { onRetrievePostListFinish() }
+                .collect {
+                    dataItems.postValue(it.toMutableList())
+                }
+        }
+    }
+
+    private fun fetchQrData() {
+        viewModelScope.launch {
+            qrDefault = repository.getQrDefault()[0].url.toString()
         }
     }
 

@@ -3,17 +3,20 @@ package com.example.footapp.ui.Order
 import com.example.footapp.DAO.BannerDao
 import com.example.footapp.DAO.BillDao
 import com.example.footapp.DAO.ItemDao
+import com.example.footapp.DAO.QrDefaultDao
 import com.example.footapp.DAO.TypeDBDao
 import com.example.footapp.Response.BaseResponse
 import com.example.footapp.Response.BaseResponseNoBody
 import com.example.footapp.Response.BillResponse
 import com.example.footapp.Response.CategoryResponse
+import com.example.footapp.Response.QrResponse
 import com.example.footapp.model.BillWithItems
 import com.example.footapp.model.DetailItemChoose
 import com.example.footapp.model.Item
 import com.example.footapp.model.ItemBillRequest
 import com.example.footapp.model.dbmodel.BannerDB
 import com.example.footapp.model.dbmodel.ItemDB
+import com.example.footapp.model.dbmodel.QrDefault
 import com.example.footapp.model.dbmodel.TypeDB
 import com.example.footapp.network.ApiService
 import kotlinx.coroutines.Dispatchers
@@ -27,6 +30,7 @@ class HomeRepository @Inject constructor(
     private val typeDBDao: TypeDBDao,
     private val billDao: BillDao,
     private val bannerDao: BannerDao,
+    private val qrDefaultDao: QrDefaultDao,
     private val apiService: ApiService
 ) {
     private val dispatcher = Dispatchers.IO
@@ -83,8 +87,12 @@ class HomeRepository @Inject constructor(
         billDao.deleteBill(item.bill)
     }
 
-    suspend fun insertBanner(url: String) = withContext(dispatcher) {
-        bannerDao.insertIfNotExists(BannerDB(url = url))
+    suspend fun getQrDefault(): Flow<BaseResponse<QrResponse>> = withContext(dispatcher) {
+        flow { emit(apiService.getQrDefault()) }
+    }
+
+    suspend fun insertQr(qrResponse: QrResponse) = withContext(dispatcher) {
+        qrDefaultDao.insertIfNotExists(QrDefault(url = qrResponse.data.qrDataURL))
     }
 
     suspend fun getAllBanner(): Flow<List<BannerDB>> = withContext(dispatcher) {

@@ -34,7 +34,7 @@ import com.google.android.material.snackbar.Snackbar
  */
 class OrderListFragment() :
     BaseFragment<FragmentOrderListBinding, OrderListViewModel>() {
-    var orderListAdapter: OrderListAdapter? = null
+    private var orderListAdapter: OrderListAdapter? = null
     val list = mutableListOf<OrderItem>()
     var page = 0
     var time: String? = null

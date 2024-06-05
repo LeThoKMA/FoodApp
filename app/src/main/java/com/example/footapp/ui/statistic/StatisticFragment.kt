@@ -4,8 +4,6 @@ import android.animation.ValueAnimator
 import android.view.View
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
@@ -17,7 +15,7 @@ import com.example.footapp.ViewModelFactory
 import com.example.footapp.base.BaseFragment
 import com.example.footapp.databinding.ActivityStatisticByYearBinding
 import com.example.footapp.ui.history.StatisticStaffAdapter
-import com.example.footapp.ui.statistic.component.BarCharView
+import com.example.footapp.ui.statistic.component.BarChartView
 import com.example.footapp.utils.formatToPrice
 import kotlinx.coroutines.launch
 
@@ -100,7 +98,7 @@ class StatisticFragment : BaseFragment<ActivityStatisticByYearBinding, Statistic
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect {
                     binding?.barchart?.setContent {
-                        BarCharView(it.stoneValue, it.barDatas.toMutableList())
+                        BarChartView(it.stoneValue, it.barDatas.toMutableList())
                     }
                     binding?.tvTotal?.text = it.total.formatToPrice()
                 }
