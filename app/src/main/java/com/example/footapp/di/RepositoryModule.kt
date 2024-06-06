@@ -22,12 +22,10 @@ object RepositoryModule {
     @JvmStatic
     fun getCustomerRepository(
         bannerDao: BannerDao,
-        typeDBDao: TypeDBDao,
-        itemDao: ItemDao,
         qrDefaultDao: QrDefaultDao
     ): CustomerRepository {
         if (customerRepository == null) {
-            customerRepository = CustomerRepository(bannerDao, typeDBDao, itemDao, qrDefaultDao)
+            customerRepository = CustomerRepository(bannerDao, qrDefaultDao)
         }
         return customerRepository!!
     }
@@ -35,8 +33,12 @@ object RepositoryModule {
     @Provides
     @JvmStatic
     @Reusable
-    fun provideOfflineRepository(billDao: BillDao): OfflineRepository {
-        return OfflineRepository(billDao)
+    fun provideOfflineRepository(
+        billDao: BillDao,
+        typeDBDao: TypeDBDao,
+        itemDao: ItemDao,
+    ): OfflineRepository {
+        return OfflineRepository(billDao, typeDBDao, itemDao)
     }
 
     @Provides

@@ -14,6 +14,7 @@ import com.example.footapp.base.BaseActivityForCustomer
 import com.example.footapp.databinding.ActivityCustomerBinding
 import com.example.footapp.model.DetailItemChoose
 import com.example.footapp.ui.Order.ItemChooseAdapter
+import com.example.footapp.ui.Order.ItemPickedInterface
 import com.example.footapp.utils.formatToPrice
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
@@ -23,13 +24,18 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class CustomerActivity : BaseActivityForCustomer<ActivityCustomerBinding, CustomerViewModel>() {
-    private lateinit var itemChooseAdapter: ItemChooseAdapter
+    private lateinit var itemChooseAdapter: ItemChooseCustomerAdapter
     private val itemList: MutableList<DetailItemChoose> = mutableListOf()
     private lateinit var bannerFragmentStateAdapter: BannerFragmentStateAdapter
 
     override fun observerData() {
-        viewModel.repository.data.observe(this) {
+        viewModel.repository.dataAdd.observe(this) {
             receiveData(it)
+        }
+        viewModel.repository.dataRemove.observe(this) { data ->
+            val index = itemList.indexOf(itemList.find { it.id == data.id })
+            itemList.removeAt(index)
+            itemChooseAdapter.notifyItemRemoved(index)
         }
         viewModel.repository.billResponse.observe(this) {
             val priceDiscount = (it.promotion.div(100f)).times(it.totalPrice!!).toInt()
@@ -49,7 +55,7 @@ class CustomerActivity : BaseActivityForCustomer<ActivityCustomerBinding, Custom
         viewModel.repository.resetData.observe(this) {
             if (it) {
                 itemList.clear()
-                itemChooseAdapter.submitList(itemList)
+                itemChooseAdapter.notifyDataSetChanged()
                 binding.tvPromotionDiscount.text = ""
                 binding.tvPrice.text = ""
                 (supportFragmentManager.findFragmentByTag("QR_DIALOG") as? DialogFragment)?.dismiss()
@@ -74,7 +80,7 @@ class CustomerActivity : BaseActivityForCustomer<ActivityCustomerBinding, Custom
     }
 
     override fun initView() {
-        itemChooseAdapter = ItemChooseAdapter()
+        itemChooseAdapter = ItemChooseCustomerAdapter(itemList)
         binding.rcItem.layoutManager = LinearLayoutManager(this)
         binding.rcItem.adapter = itemChooseAdapter
         if (checkInitialNetworkStatus()) {
@@ -92,23 +98,19 @@ class CustomerActivity : BaseActivityForCustomer<ActivityCustomerBinding, Custom
     }
 
     private fun receiveData(item: DetailItemChoose) {
-        if (item.flag == true) {
-            if (itemList.find { it.id == item.id } == null) {
-                itemList.add(item)
-            } else {
-                for (i in 0 until itemList.size) {
-                    if (itemList[i].id == item.id) {
-                        itemList[i] = item
-                        break
-                    }
+        if (itemList.find { it.id == item.id } == null) {
+            itemList.add(item)
+        } else {
+            for (i in 0 until itemList.size) {
+                if (itemList[i].id == item.id) {
+                    itemList[i] = item
+                    break
                 }
             }
-        } else {
-            val index = itemList.indexOf(itemList.find { it.id == item.id })
-            if (index > 0) itemList.removeAt(index)
         }
-        val list = itemList.toList()
-        itemChooseAdapter.submitList(list)
+        itemChooseAdapter.notifyItemChanged(itemList.indexOf(item))
+        binding.rcItem.scrollToPosition(itemList.indexOf(item))
+
     }
 
     override fun onResume() {

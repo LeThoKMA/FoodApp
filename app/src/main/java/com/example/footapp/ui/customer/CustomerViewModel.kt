@@ -1,6 +1,5 @@
 package com.example.footapp.ui.customer
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -17,6 +16,8 @@ class CustomerViewModel() : BaseViewModel() {
 
     @Inject
     lateinit var apiService: ApiService
+
+
 
     private val _data = MutableLiveData<List<String>>()
     val data: LiveData<List<String>> = _data

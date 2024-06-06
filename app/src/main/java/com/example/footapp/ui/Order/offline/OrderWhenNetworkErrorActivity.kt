@@ -23,6 +23,7 @@ import com.example.footapp.model.DetailItemChoose
 import com.example.footapp.model.Item
 import com.example.footapp.ui.Order.CategoryAdapter
 import com.example.footapp.ui.Order.ItemChooseAdapter
+import com.example.footapp.ui.Order.ItemPickedInterface
 import com.example.footapp.ui.Order.OderAdapter
 import com.example.footapp.ui.Order.OrderInterface
 import com.example.footapp.ui.customer.CustomerActivity
@@ -32,7 +33,8 @@ import com.example.footapp.utils.formatToPrice
 import com.example.footapp.utils.toast
 
 class OrderWhenNetworkErrorActivity :
-    BaseActivity<HomeOfflineActivityBinding, OrderWhenNetworkErrorViewModel>(), OrderInterface {
+    BaseActivity<HomeOfflineActivityBinding, OrderWhenNetworkErrorViewModel>(), OrderInterface,
+    ItemPickedInterface {
     private var listItem: ArrayList<Item?> = arrayListOf()
     private var listItemChoose: MutableList<DetailItemChoose> = mutableListOf()
     private var listCategory = mutableListOf<CategoryResponse>()
@@ -71,17 +73,16 @@ class OrderWhenNetworkErrorActivity :
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
                 if (result.resultCode == Activity.RESULT_OK) {
                     listItemChoose.clear()
-                    itemChooseAdapter?.submitList(listItemChoose)
+                    itemChooseAdapter?.notifyDataSetChanged()
                     oderAdapter?.resetData()
                     viewModel.repository.resetData()
                     binding.tvPrice.text = 0.formatToPrice()
                 }
             }
         oderAdapter = OderAdapter(listItem, this)
-        binding.rvCategory.layoutManager = LinearLayoutManager(this)
         binding.rvCategory.adapter = oderAdapter
 
-        itemChooseAdapter = ItemChooseAdapter()
+        itemChooseAdapter = ItemChooseAdapter(listItemChoose, this)
         binding.rvItemPick.layoutManager = LinearLayoutManager(this)
         binding.rvItemPick.adapter = itemChooseAdapter
 
@@ -122,27 +123,23 @@ class OrderWhenNetworkErrorActivity :
         )[OrderWhenNetworkErrorViewModel::class.java]
     }
 
-    override fun addItemToBill(item: DetailItemChoose) {
-        viewModel.addItemToBill(item)
-        if (item.flag == true) {
-            if (listItemChoose.find { it.id == item.id } == null) {
-                listItemChoose.add(item)
-            } else {
-                for (i in 0 until listItemChoose.size) {
-                    if (listItemChoose[i].id == item.id) {
-                        listItemChoose[i] = item
-                        break
-                    }
-                }
-            }
-        } else {
-            if (listItemChoose.find { it.id == item.id } == null) return
-            val index = listItemChoose.indexOf(listItemChoose.find { it.id == item.id })
-            listItemChoose.removeAt(index)
-        }
-        val list = listItemChoose.toList()
-        itemChooseAdapter?.submitList(list)
-        viewModel.repository.sendData(item)
+    override fun addItemToBill(item: Item) {
+        val detailItemChoose =
+            DetailItemChoose(item.id, item.name, 1, item.price, item.imgUrl)
+        listItemChoose.add(detailItemChoose)
+        itemChooseAdapter?.notifyItemInserted(listItemChoose.size - 1)
+        viewModel.addItemToBill(detailItemChoose)
+        viewModel.repository.addItem(detailItemChoose)
+        binding?.rvItemPick?.scrollToPosition(listItemChoose.size - 1)
+    }
+
+    override fun removeItem(item: Item) {
+        val index = listItemChoose.indexOfFirst { it.id == item.id }
+        val detailItemChoose = listItemChoose.find { it.id == item.id }
+        listItemChoose.removeAt(index)
+        itemChooseAdapter?.notifyItemRemoved(index)
+        viewModel.removeItemInBill(item.id)
+        detailItemChoose?.let { viewModel.repository.removeItem(it) }
     }
 
     private fun showScreenCustomer() {
@@ -161,6 +158,27 @@ class OrderWhenNetworkErrorActivity :
                 Intent(this, CustomerActivity::class.java),
                 options.toBundle(),
             )
+        }
+    }
+
+    override fun plus(detailItemChoose: DetailItemChoose) {
+        val newItem = listItemChoose.find { it.id == detailItemChoose.id }?.also { it.count++ }
+        itemChooseAdapter?.notifyItemChanged(listItemChoose.indexOf(newItem))
+        binding?.rvItemPick?.scrollToPosition(listItemChoose.indexOf(newItem))
+
+        newItem?.let { viewModel.addItemToBill(it) }
+        if (newItem != null) {
+            viewModel.repository.addItem(newItem)
+        }
+    }
+
+    override fun minus(detailItemChoose: DetailItemChoose) {
+        if (detailItemChoose.count > 1) {
+            val newItem = listItemChoose.find { it.id == detailItemChoose.id }?.also { it.count-- }
+            itemChooseAdapter?.notifyItemChanged(listItemChoose.indexOf(newItem))
+            binding?.rvItemPick?.scrollToPosition(listItemChoose.indexOf(newItem))
+            newItem?.let { viewModel.addItemToBill(it) }
+            newItem?.let { viewModel.repository.addItem(it) }
         }
     }
 }

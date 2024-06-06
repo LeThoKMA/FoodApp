@@ -10,43 +10,37 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.footapp.R
 import com.example.footapp.databinding.ItemCatgoryBinding
+import com.example.footapp.databinding.ItemPickedBinding
 import com.example.footapp.model.DetailItemChoose
 import com.example.footapp.utils.formatToPrice
 
-class ItemChooseAdapter() :
-    ListAdapter<DetailItemChoose, RecyclerView.ViewHolder>(object :
-        DiffUtil.ItemCallback<DetailItemChoose>() {
-        override fun areItemsTheSame(
-            oldItem: DetailItemChoose,
-            newItem: DetailItemChoose,
-        ): Boolean {
-            return oldItem.id == newItem.id
-        }
-
-        override fun areContentsTheSame(
-            oldItem: DetailItemChoose,
-            newItem: DetailItemChoose,
-        ): Boolean {
-            return oldItem == newItem
-        }
-    }) {
+class ItemChooseAdapter(
+    private val list: List<DetailItemChoose>,
+    private val itemPickedInterface: ItemPickedInterface
+) :
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding = DataBindingUtil.inflate(
             layoutInflater,
-            R.layout.item_catgory,
+            R.layout.item_picked,
             parent,
             false,
-        ) as ItemCatgoryBinding
+        ) as ItemPickedBinding
         return ViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        (holder as ViewHolder).bind(getItem(position))
+    override fun getItemCount(): Int {
+        return list.size
     }
 
-    class ViewHolder(val binding: ItemCatgoryBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: DetailItemChoose) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        (holder as ViewHolder).bind(list[position], itemPickedInterface)
+    }
+
+
+    class ViewHolder(val binding: ItemPickedBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(item: DetailItemChoose, itemPickedInterface: ItemPickedInterface) {
             if (item.imgUrl?.isNotEmpty() == true) {
                 Glide.with(binding.root.context)
                     .load(item.imgUrl!![0]).into(binding.ivProduct)
@@ -54,12 +48,10 @@ class ItemChooseAdapter() :
                 binding.ivProduct.setImageResource(R.drawable.ic_picture_nodata)
             }
             binding.tvNameProduct.text = item.name
-            binding.amount.text = item.count.toString()
+            binding.edtNumber.text = item.count.toString()
             binding.tvPrice.text = item.price.formatToPrice()
-            binding.ivUp.visibility = View.INVISIBLE
-            binding.ivDown.visibility = View.INVISIBLE
-            binding.ivCheck.visibility = View.INVISIBLE
-            binding.amount.visibility = View.VISIBLE
+            binding.ivUp.setOnClickListener { itemPickedInterface.plus(item) }
+            binding.ivDown.setOnClickListener { itemPickedInterface.minus(item) }
         }
     }
 }

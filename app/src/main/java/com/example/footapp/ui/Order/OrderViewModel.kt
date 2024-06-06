@@ -65,18 +65,22 @@ class OrderViewModel(
 
     fun addItemToBill(item: DetailItemChoose) {
         viewModelScope.launch {
-            if (item.flag == null || !item.flag!!) {
-                val itemRemove = DetailItemChoose(item.id, item.name, 0, 0, 0, null, false)
-                mapDetailItemChoose.put(itemRemove.id ?: 0, itemRemove)
-            } else {
-                mapDetailItemChoose.put(item.id ?: 0, item)
-            }
+            mapDetailItemChoose.put(item.id, item)
             var total = 0
             for (item1 in mapDetailItemChoose) {
                 total += item1.value.totalPrice ?: 0
             }
             totalPrice = total
             _price.emit(total)
+        }
+    }
+
+    fun removeItemInBill(id: Int) {
+        viewModelScope.launch {
+            val detailItemChoose = mapDetailItemChoose[id]
+            mapDetailItemChoose.remove(id)
+            totalPrice -= detailItemChoose?.totalPrice ?: 0
+            _price.emit(totalPrice)
         }
     }
 

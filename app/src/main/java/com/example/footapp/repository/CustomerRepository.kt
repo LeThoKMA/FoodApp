@@ -20,13 +20,15 @@ import javax.inject.Inject
 
 class CustomerRepository @Inject constructor(
     private val bannerDao: BannerDao,
-    private val typeDBDao: TypeDBDao,
-    private val itemDao: ItemDao,
     private val qrDefaultDao: QrDefaultDao
 ) {
     private val dispatcher = Dispatchers.IO
-    private val _data = MutableLiveData<DetailItemChoose>()
-    val data: LiveData<DetailItemChoose> = _data
+    private val _dataAdd = MutableLiveData<DetailItemChoose>()
+    val dataAdd: LiveData<DetailItemChoose> = _dataAdd
+
+    private val _dataRemove = MutableLiveData<DetailItemChoose>()
+    val dataRemove: LiveData<DetailItemChoose> = _dataRemove
+
 
     private val _billResponse = MutableLiveData<BillResponse>()
     val billResponse: LiveData<BillResponse> = _billResponse
@@ -34,8 +36,12 @@ class CustomerRepository @Inject constructor(
     private val _resetData = MutableLiveData<Boolean>()
     val resetData: LiveData<Boolean> = _resetData
 
-    fun sendData(item: DetailItemChoose) {
-        _data.postValue(item)
+    fun addItem(item: DetailItemChoose) {
+        _dataAdd.postValue(item)
+    }
+
+    fun removeItem(item: DetailItemChoose) {
+        _dataRemove.postValue(item)
     }
 
     fun getBillResponse(billResponse: BillResponse) {
@@ -52,18 +58,6 @@ class CustomerRepository @Inject constructor(
 
     suspend fun getAllBanner(): Flow<List<BannerDB>> = withContext(dispatcher) {
         flow { emit(bannerDao.getAllBanner()) }
-    }
-
-    suspend fun getAllType(): Flow<List<TypeDB>> = withContext(dispatcher) {
-        flow { emit(typeDBDao.getAllType()) }
-    }
-
-    suspend fun getAllItemByType(idType: Int): Flow<List<ItemDB>> = withContext(dispatcher) {
-        flow { emit(itemDao.getItemByType(idType)) }
-    }
-
-    suspend fun getAllItem(): Flow<List<ItemDB>> = withContext(dispatcher) {
-        flow { emit(itemDao.getAllItem()) }
     }
 
     suspend fun getQrDefault(): List<QrDefault> = withContext(dispatcher) {

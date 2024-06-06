@@ -25,6 +25,9 @@ class OrderWhenNetworkErrorViewModel : BaseViewModel() {
 
     @Inject
     lateinit var repository: CustomerRepository
+
+    @Inject
+    lateinit var offlineRepository: OfflineRepository
     var dataItems = MutableLiveData<MutableList<Item>>()
         private set
 
@@ -52,33 +55,37 @@ class OrderWhenNetworkErrorViewModel : BaseViewModel() {
 
     fun addItemToBill(item: DetailItemChoose) {
         viewModelScope.launch {
-            if (item.flag == null || !item.flag!!) {
-                val itemRemove = DetailItemChoose(item.id, item.name, 0, 0, 0, null, false)
-                mapDetailItemChoose[itemRemove.id ?: 0] = itemRemove
-            } else {
-                mapDetailItemChoose[item.id ?: 0] = item
-            }
+            mapDetailItemChoose.put(item.id, item)
             var total = 0
             for (item1 in mapDetailItemChoose) {
                 total += item1.value.totalPrice ?: 0
             }
             totalPrice = total
-            _price.postValue(total)
+            _price.postValue(totalPrice)
+        }
+    }
+
+    fun removeItemInBill(id: Int) {
+        viewModelScope.launch {
+            val detailItemChoose = mapDetailItemChoose[id]
+            mapDetailItemChoose.remove(id)
+            totalPrice -= detailItemChoose?.totalPrice ?: 0
+            _price.postValue(totalPrice)
         }
     }
 
     private fun fetchTypeFromDb() {
         viewModelScope.launch {
-            repository.getAllType()
+            offlineRepository.getAllType()
                 .onStart { onRetrievePostListStart() }
                 .map { it.map { typeDb -> CategoryResponse(typeDb.id, typeDb.name) } }
                 .combine(
-                    repository.getAllItem().map {
+                    offlineRepository.getAllItem().map {
                         it.map { itemDb ->
                             Item(
-                                itemDb.id,
+                                itemDb.id!!,
                                 itemDb.name,
-                                itemDb.price,
+                                itemDb.price!!,
                                 itemDb.amount,
                                 fromString(itemDb.imgUrl ?: "")
                             )
@@ -95,14 +102,14 @@ class OrderWhenNetworkErrorViewModel : BaseViewModel() {
 
     fun getProductByType(id: Int) {
         viewModelScope.launch {
-            repository.getAllItemByType(id)
+            offlineRepository.getAllItemByType(id)
                 .onStart { onRetrievePostListStart() }
                 .map {
                     it.map { itemDb ->
                         Item(
-                            itemDb.id,
+                            itemDb.id!!,
                             itemDb.name,
-                            itemDb.price,
+                            itemDb.price!!,
                             itemDb.amount,
                             fromString(itemDb.imgUrl ?: "")
                         )

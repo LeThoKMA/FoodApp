@@ -26,7 +26,8 @@ import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class HomeFragment() : BaseFragment<HomeFragmentBinding, OrderViewModel>(), OrderInterface {
+class HomeFragment() : BaseFragment<HomeFragmentBinding, OrderViewModel>(), OrderInterface,
+    ItemPickedInterface {
     private val mainViewModel: MainViewModel by activityViewModels()
     private var listItem: ArrayList<Item?> = arrayListOf()
     private var listItemChoose: MutableList<DetailItemChoose> = mutableListOf()
@@ -43,18 +44,15 @@ class HomeFragment() : BaseFragment<HomeFragmentBinding, OrderViewModel>(), Orde
         val binding = binding!!
         binding.let { paddingStatusBar(it.root) }
         oderAdapter = OderAdapter(listItem, this)
-        binding.rvCategory.layoutManager = LinearLayoutManager(requireContext())
         binding.rvCategory.adapter = oderAdapter
 
-        itemChooseAdapter = ItemChooseAdapter()
+        itemChooseAdapter = ItemChooseAdapter(listItemChoose, this)
         binding.rvItemPick.layoutManager = LinearLayoutManager(requireContext())
         binding.rvItemPick.adapter = itemChooseAdapter
 
         categoryAdapter = CategoryAdapter(listCategory, onClickItem = {
             viewModel.getProductByType(it)
         })
-        binding.rvType.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.rvType.adapter = categoryAdapter
     }
 
@@ -64,27 +62,23 @@ class HomeFragment() : BaseFragment<HomeFragmentBinding, OrderViewModel>(), Orde
         }
     }
 
-    override fun addItemToBill(item: DetailItemChoose) {
-        viewModel.addItemToBill(item)
-        if (item.flag == true) {
-            if (listItemChoose.find { it.id == item.id } == null) {
-                listItemChoose.add(item)
-            } else {
-                for (i in 0 until listItemChoose.size) {
-                    if (listItemChoose[i].id == item.id) {
-                        listItemChoose[i] = item
-                        break
-                    }
-                }
-            }
-        } else {
-            if (listItemChoose.find { it.id == item.id } == null) return
-            val index = listItemChoose.indexOf(listItemChoose.find { it.id == item.id })
-            listItemChoose.removeAt(index)
-        }
-        val list = listItemChoose.toList()
-        itemChooseAdapter?.submitList(list)
-        viewModel.repository.sendData(item)
+    override fun addItemToBill(item: Item) {
+        val detailItemChoose =
+            DetailItemChoose(item.id, item.name, 1, item.price, item.imgUrl)
+        listItemChoose.add(detailItemChoose)
+        itemChooseAdapter?.notifyItemInserted(listItemChoose.size - 1)
+        viewModel.addItemToBill(detailItemChoose)
+        viewModel.repository.addItem(detailItemChoose)
+        binding?.rvItemPick?.scrollToPosition(listItemChoose.size - 1)
+    }
+
+    override fun removeItem(item: Item) {
+        val index = listItemChoose.indexOfFirst { it.id == item.id }
+        val detailItemChoose = listItemChoose.find { it.id == item.id }
+        listItemChoose.removeAt(index)
+        itemChooseAdapter?.notifyItemRemoved(index)
+        viewModel.removeItemInBill(item.id)
+        detailItemChoose?.let { viewModel.repository.removeItem(it) }
     }
 
     override fun onDestroy() {
@@ -156,7 +150,7 @@ class HomeFragment() : BaseFragment<HomeFragmentBinding, OrderViewModel>(), Orde
         super.onHiddenChanged(hidden)
         if (!hidden) {
             listItemChoose.clear()
-            itemChooseAdapter?.submitList(listItemChoose)
+            itemChooseAdapter?.notifyDataSetChanged()
             oderAdapter?.resetData()
             viewModel.repository.resetData()
             binding?.tvPrice?.text = 0.formatToPrice()
@@ -176,5 +170,26 @@ class HomeFragment() : BaseFragment<HomeFragmentBinding, OrderViewModel>(), Orde
 
     override fun onStop() {
         super.onStop()
+    }
+
+    override fun plus(detailItemChoose: DetailItemChoose) {
+        val newItem = listItemChoose.find { it.id == detailItemChoose.id }?.also { it.count++ }
+        itemChooseAdapter?.notifyItemChanged(listItemChoose.indexOf(newItem))
+        binding?.rvItemPick?.scrollToPosition(listItemChoose.indexOf(newItem))
+
+        newItem?.let { viewModel.addItemToBill(it) }
+        if (newItem != null) {
+            viewModel.repository.addItem(newItem)
+        }
+    }
+
+    override fun minus(detailItemChoose: DetailItemChoose) {
+        if (detailItemChoose.count > 1) {
+            val newItem = listItemChoose.find { it.id == detailItemChoose.id }?.also { it.count-- }
+            itemChooseAdapter?.notifyItemChanged(listItemChoose.indexOf(newItem))
+            binding?.rvItemPick?.scrollToPosition(listItemChoose.indexOf(newItem))
+            newItem?.let { viewModel.addItemToBill(it) }
+            newItem?.let { viewModel.repository.addItem(it) }
+        }
     }
 }

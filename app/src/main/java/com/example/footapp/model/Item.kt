@@ -9,11 +9,11 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class Item(
     @SerializedName("id")
-    var id: Int? = 0,
+    var id: Int = 0,
     @SerializedName("name")
     var name: String? = "",
     @SerializedName("unitPrice")
-    var price: Int? = 0,
+    var price: Int = 0,
     @SerializedName("quantity")
     var amount: Int? = 0,
     @SerializedName("imageLinks")

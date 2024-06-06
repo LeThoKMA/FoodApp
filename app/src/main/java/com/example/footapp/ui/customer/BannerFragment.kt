@@ -23,7 +23,9 @@ class BannerFragment() : Fragment() {
         val img = view.findViewById<ImageView>(R.id.img_banner)
         arguments?.takeIf { it.containsKey("banner") }.apply {
             Glide.with(view.rootView.context)
-                .load(this?.getString("banner")).centerCrop().override(466, 592).into(img)
+                .load(this?.getString("banner"))
+//                .centerCrop().override(466, 592)
+                .into(img)
         }
     }
 }
