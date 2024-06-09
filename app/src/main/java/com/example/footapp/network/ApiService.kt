@@ -2,6 +2,7 @@ package com.example.footapp.network
 
 import com.example.footapp.Request.ChangePassRequest
 import com.example.footapp.Request.ConfirmBillRequest
+import com.example.footapp.Request.RefreshTokenRequest
 import com.example.footapp.Response.BaseResponse
 import com.example.footapp.Response.BaseResponseNoBody
 import com.example.footapp.Response.BillDetailResponse
@@ -10,6 +11,7 @@ import com.example.footapp.Response.BillsResponse
 import com.example.footapp.Response.CategoryResponse
 import com.example.footapp.Response.LoginResponse
 import com.example.footapp.Response.QrResponse
+import com.example.footapp.Response.RefreshTokenResponse
 import com.example.footapp.Response.StatisticResponse
 import com.example.footapp.model.Item
 import com.example.footapp.model.ItemBillRequest
@@ -27,6 +29,10 @@ import retrofit2.http.Query
 interface ApiService {
     @POST("auth/login")
     suspend fun login(@Body user: LoginModel): BaseResponse<LoginResponse>
+
+    @POST("auth/refresh-token")
+    suspend fun refreshToken(@Body request: RefreshTokenRequest): BaseResponse<RefreshTokenResponse>
+
 
     @GET("home/all")
     suspend fun getItems(): BaseResponse<List<Item>>

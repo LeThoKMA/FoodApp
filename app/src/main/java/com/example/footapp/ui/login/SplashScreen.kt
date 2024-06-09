@@ -13,6 +13,7 @@ import com.example.footapp.databinding.ActivitySplashScreenBinding
 import com.example.footapp.model.User
 import com.example.footapp.ui.Order.offline.OrderWhenNetworkErrorActivity
 
+
 class SplashScreen : BaseActivity<ActivitySplashScreenBinding, LoginViewModel>() {
     override fun observerData() {
         viewModel.doLogin.observe(this) {
@@ -31,16 +32,12 @@ class SplashScreen : BaseActivity<ActivitySplashScreenBinding, LoginViewModel>()
     }
 
     override fun initView() {
-        val preference = MyPreference().getInstance(this)
         if (checkInitialNetworkStatus()) {
-            if (preference?.getUser() == User()) {
+            if (!viewModel.haveToken()) {
                 startActivity(Intent(this, LoginActivity::class.java))
                 finishAffinity()
             } else {
-                viewModel.signIn(
-                    preference?.getUser()?.username.toString(),
-                    preference?.getPasswd().toString(),
-                )
+                viewModel.fetchUserInfo()
             }
         } else {
             startActivity(Intent(this, OrderWhenNetworkErrorActivity::class.java))

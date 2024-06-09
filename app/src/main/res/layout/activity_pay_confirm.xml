@@ -194,6 +194,6 @@
             app:layout_constraintEnd_toEndOf="@+id/rc_item"
 
             app:layout_constraintTop_toTopOf="@+id/tv_cancel" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout></layout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -2,28 +2,41 @@ package com.example.footapp
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.preference.PreferenceManager
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKey
+import com.example.footapp.di.App
 import com.example.footapp.model.User
+import com.example.footapp.utils.PREF_ACCESS_TOKEN
+import com.example.footapp.utils.PREF_REFRESH_TOKEN
 
 class MyPreference {
-    private var accountUtil: MyPreference? = null
+
     private var pref: SharedPreferences? = null
     private var editor: SharedPreferences.Editor? = null
 
-    fun getInstance(context: Context): MyPreference? {
-        if (accountUtil == null) accountUtil = MyPreference()
-        if (pref == null) {
-            pref = PreferenceManager.getDefaultSharedPreferences(context)
-            accountUtil?.pref = pref
-        }
-        return accountUtil
+    init {
+        pref = getSecureSharedPreferences(App.appComponent.getContext())
+        editor = pref?.edit()
     }
 
-    fun saveUser(user: User, password: String) {
+    private fun getSecureSharedPreferences(context: Context): SharedPreferences {
+        val masterKey = MasterKey.Builder(context)
+            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+            .build()
+
+        return EncryptedSharedPreferences.create(
+            context,
+            Companion.PREF_FILE_NAME,
+            masterKey,
+            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM,
+        )
+    }
+
+    fun saveUser(user: User) {
         editor = pref?.edit()
         editor?.putString("id", user.id.toString())
         editor?.putString("username", user.username)
-        editor?.putString("passwd", password)
         editor?.putInt("admin", user.role ?: 1)
         editor?.putString("fullname", user.fullname)
         editor?.apply()
@@ -47,13 +60,39 @@ class MyPreference {
         return user
     }
 
+    fun saveToken(accessToken: String) {
+        editor?.putString(PREF_ACCESS_TOKEN, accessToken)
+        editor?.apply()
+    }
+
+    fun saveRefreshToken(token: String) {
+        editor?.putString(PREF_REFRESH_TOKEN, token)
+        editor?.apply()
+    }
+
+    fun getAccessToken(): String? = pref?.getString(PREF_ACCESS_TOKEN, "")
+
+    fun getRefreshToken(): String? = pref?.getString(PREF_REFRESH_TOKEN, "")
     fun logout() {
         editor = pref?.edit()
         editor?.remove("id")
         editor?.remove("username")
-        editor?.remove("passwd")
-        editor?.remove("salary")
         editor?.remove("admin")
+        editor?.remove(PREF_ACCESS_TOKEN)
+        editor?.remove(PREF_REFRESH_TOKEN)
         editor?.apply()
+    }
+
+    companion object {
+        private const val PREF_FILE_NAME = "secure_prefs"
+
+        @Volatile
+        private var accountUtil: MyPreference? = null
+
+        @JvmStatic
+        fun getInstance(): MyPreference =
+            accountUtil ?: synchronized(this) {
+                accountUtil ?: MyPreference().also { accountUtil = it }
+            }
     }
 }

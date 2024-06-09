@@ -37,7 +37,7 @@ class PayConfirmFragment() :
                 mainViewModel.dataToPay.value?.getString(BILL_RESPONSE),
                 BillResponse::class.java,
             )
-        binding.tvName.text = MyPreference().getInstance(requireContext())?.getUser()?.fullname
+        binding.tvName.text = MyPreference.getInstance().getUser().fullname
         binding.tvTime.text = simpleDateFormat.format(Calendar.getInstance().time)
         items = mainViewModel.dataToPay.value?.getParcelableArrayList(ITEMS_PICKED)!!
         binding.tvPromotionItem.text = billResponse.promotion.toString() + "%"

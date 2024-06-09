@@ -34,7 +34,7 @@ class OfflineConfirmActivity : BaseActivity<ActivityPayConfirmBinding, OfflineCo
         }
     }
     private val totalPrice by lazy { intent.getIntExtra(TOTAL_PRICE, 0) }
-    private val staff by lazy { MyPreference().getInstance(this)?.getUser() }
+    private val staff by lazy { MyPreference.getInstance().getUser() }
 
     override fun observerData() {
         lifecycleScope.launch {

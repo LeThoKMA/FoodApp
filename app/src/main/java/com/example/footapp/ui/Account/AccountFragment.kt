@@ -21,7 +21,7 @@ class AccountFragment : BaseFragment<ActivityManageBinding, AccountViewModel>() 
     override fun initView() {
         val binding = binding!!
         binding.let { paddingStatusBar(it.root) }
-        val user = MyPreference().getInstance(requireContext())?.getUser()
+        val user = MyPreference.getInstance().getUser()
         if (user?.role == 1) {
             binding.tvManageUser.visibility = View.GONE
             binding.tvStatistic.visibility = View.GONE

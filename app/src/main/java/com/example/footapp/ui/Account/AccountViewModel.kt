@@ -27,7 +27,7 @@ class AccountViewModel() : BaseViewModel() {
             flow { emit(apiService.logout()) }
                 .catch { handleApiError(it) }
                 .collect {
-                    MyPreference().getInstance(App.appComponent.getContext())?.logout()
+                    MyPreference.getInstance().logout()
                     logout.postValue(true)
                 }
         }
