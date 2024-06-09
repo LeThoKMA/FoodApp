@@ -5,6 +5,7 @@ import android.content.Intent
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.example.footapp.MyPreference
 import com.example.footapp.R
 import com.example.footapp.ViewModelFactory
@@ -22,11 +23,11 @@ class AccountFragment : BaseFragment<ActivityManageBinding, AccountViewModel>() 
         val binding = binding!!
         binding.let { paddingStatusBar(it.root) }
         val user = MyPreference.getInstance().getUser()
-        if (user?.role == 1) {
+        if (user.role == 1) {
             binding.tvManageUser.visibility = View.GONE
-            binding.tvStatistic.visibility = View.GONE
             binding.tvItem.visibility = View.GONE
-            binding.tvBills.visibility = View.GONE
+        } else {
+            binding.tvManageUser.visibility = View.VISIBLE
         }
     }
 
@@ -41,6 +42,9 @@ class AccountFragment : BaseFragment<ActivityManageBinding, AccountViewModel>() 
                     ChangePassActivity::class.java,
                 ),
             )
+        }
+        binding?.tvManageUser?.setOnClickListener {
+            findNavController().navigate(R.id.create_account_dest)
         }
     }
 

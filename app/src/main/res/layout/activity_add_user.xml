@@ -6,7 +6,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.user.AddUserActivity">
+        tools:context=".ui.user.AddUserFragment">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/rc_toolbar"
@@ -80,21 +80,21 @@
                     android:layout_marginTop="14dp"
                     android:text="Số điện thoại"
                     android:textColor="@color/black"
-                    android:textSize="13sp"
+                    android:textSize="16sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <EditText
-                    android:id="@+id/edt_name"
+                    android:id="@+id/edt_phone"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="15sp"
                     android:background="@null"
                     android:imeOptions="actionNext"
-                    android:inputType="text"
+                    android:inputType="number"
                     android:lines="1"
-                    android:textSize="16sp"
+                    android:textSize="20sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@id/tv_phone"
@@ -118,28 +118,72 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="18dp"
-
                     android:text="Tên"
                     android:textColor="@color/black"
-                    android:textSize="13sp"
+                    android:textSize="16sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
                     tools:layout_editor_absoluteY="15dp" />
 
                 <EditText
-                    android:id="@+id/edt_salary"
+                    android:id="@+id/edt_name"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="15dp"
                     android:background="@null"
                     android:imeOptions="actionNext"
-                    android:inputType="number"
+                    android:inputType="text"
                     android:lines="1"
+                    android:textSize="20sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="@id/tv_name"
                     app:layout_constraintTop_toBottomOf="@id/tv_name"
+                    app:layout_constraintVertical_bias="0.0" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/bg_white_radius_10"
+                android:elevation="4dp">
+
+                <TextView
+                    android:id="@+id/tvAccount"
+                    fontPath="fonts/Roboto-Bold.ttf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="18dp"
+                    android:text="Tên đăng nhập"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:layout_editor_absoluteY="15dp" />
+
+                <EditText
+                    android:id="@+id/edtAccount"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
+                    android:background="@null"
+                    android:imeOptions="actionNext"
+                    android:inputType="text"
+                    android:lines="1"
+                    android:textSize="20sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="@id/tvAccount"
+                    app:layout_constraintTop_toBottomOf="@id/tvAccount"
                     app:layout_constraintVertical_bias="0.0" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -202,7 +246,7 @@
                     android:layout_marginTop="15dp"
                     android:text="Mật khẩu"
                     android:textColor="@color/black"
-                    android:textSize="13sp"
+                    android:textSize="16sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -217,7 +261,7 @@
                     android:imeOptions="actionNext"
                     android:inputType="textPassword"
                     android:lines="1"
-                    android:textSize="16sp"
+                    android:textSize="20sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@id/tv_passwd"
@@ -258,7 +302,7 @@
 
                     android:text="Nhập lại mật khẩu"
                     android:textColor="@color/black"
-                    android:textSize="13sp"
+                    android:textSize="16sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -273,7 +317,7 @@
                     android:imeOptions="actionNext"
                     android:inputType="textPassword"
                     android:lines="1"
-                    android:textSize="16sp"
+                    android:textSize="20sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@id/tv_confirm_passwd"
@@ -293,6 +337,32 @@
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <RadioGroup
+                android:id="@+id/rg_role"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal"
+                android:padding="20dp">
+
+                <RadioButton
+                    android:id="@+id/rbStaff"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="Nhân viên"
+                    android:textSize="20sp" />
+
+                <RadioButton
+                    android:id="@+id/rbShip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="32dp"
+                    android:text="Shipper"
+                    android:textSize="20sp" />
+            </RadioGroup>
 
 
             <TextView

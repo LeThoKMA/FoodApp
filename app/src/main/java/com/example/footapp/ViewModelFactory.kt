@@ -11,6 +11,7 @@ import com.example.footapp.ui.login.LoginViewModel
 import com.example.footapp.ui.orderlist.OrderListViewModel
 import com.example.footapp.ui.pay.PayConfirmViewModel
 import com.example.footapp.ui.statistic.StatisticViewModel
+import com.example.footapp.ui.user.AddUserViewModel
 
 class ViewModelFactory() : ViewModelProvider.Factory {
 
@@ -48,6 +49,10 @@ class ViewModelFactory() : ViewModelProvider.Factory {
 
         if (modelClass.isAssignableFrom(OfflineConfirmViewModel::class.java)) {
             return OfflineConfirmViewModel() as T
+        }
+
+        if (modelClass.isAssignableFrom(AddUserViewModel::class.java)) {
+            return AddUserViewModel() as T
         }
 
         throw IllegalArgumentException("Unknown ViewModel class")

@@ -27,6 +27,7 @@ import com.example.footapp.ui.login.LoginViewModel
 import com.example.footapp.ui.orderlist.OrderListViewModel
 import com.example.footapp.ui.pay.PayConfirmViewModel
 import com.example.footapp.ui.statistic.StatisticViewModel
+import com.example.footapp.ui.user.AddUserViewModel
 import com.example.footapp.worker.UploadWorker
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -64,6 +65,7 @@ abstract class BaseViewModel : ViewModel() {
             is MainViewModel -> injector.inject(this)
             is OrderWhenNetworkErrorViewModel -> injector.inject(this)
             is OfflineConfirmViewModel -> injector.inject(this)
+            is AddUserViewModel -> injector.inject(this)
         }
     }
 

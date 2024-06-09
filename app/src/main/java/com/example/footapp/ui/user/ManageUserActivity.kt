@@ -1,7 +1,6 @@
 package com.example.footapp.ui.user
 
 import android.content.Intent
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.footapp.R
 import com.example.footapp.base.BaseActivity
@@ -44,7 +43,7 @@ class ManageUserActivity :
     override fun initListener() {
         binding.imvBack.setOnClickListener { finish() }
         binding.imgPlus.setOnClickListener {
-            var intent = Intent(this, AddUserActivity::class.java)
+            var intent = Intent(this, AddUserFragment::class.java)
             intent.putExtra(TOTAL_USER, size)
             startActivity(intent)
         }

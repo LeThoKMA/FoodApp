@@ -10,6 +10,7 @@ import com.example.footapp.ui.login.LoginViewModel
 import com.example.footapp.ui.orderlist.OrderListViewModel
 import com.example.footapp.ui.pay.PayConfirmViewModel
 import com.example.footapp.ui.statistic.StatisticViewModel
+import com.example.footapp.ui.user.AddUserViewModel
 import dagger.Component
 
 @Component(
@@ -28,6 +29,7 @@ interface ViewModelInjector {
     fun inject(viewModel: MainViewModel)
     fun inject(viewModel: OrderWhenNetworkErrorViewModel)
     fun inject(viewModel: OfflineConfirmViewModel)
+    fun inject(viewModel: AddUserViewModel)
 
     @Component.Builder
     interface Builder {

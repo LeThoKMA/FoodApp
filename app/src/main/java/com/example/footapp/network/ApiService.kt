@@ -3,6 +3,7 @@ package com.example.footapp.network
 import com.example.footapp.Request.ChangePassRequest
 import com.example.footapp.Request.ConfirmBillRequest
 import com.example.footapp.Request.RefreshTokenRequest
+import com.example.footapp.Request.RegisterRequest
 import com.example.footapp.Response.BaseResponse
 import com.example.footapp.Response.BaseResponseNoBody
 import com.example.footapp.Response.BillDetailResponse
@@ -32,6 +33,12 @@ interface ApiService {
 
     @POST("auth/refresh-token")
     suspend fun refreshToken(@Body request: RefreshTokenRequest): BaseResponse<RefreshTokenResponse>
+
+    @POST("auth/register/store")
+    suspend fun registerStore(
+        @Body request: RegisterRequest,
+        @Query("isStaff") isStaff: Boolean = true
+    ): BaseResponseNoBody
 
 
     @GET("home/all")
