@@ -15,8 +15,8 @@ import com.example.footapp.model.DetailItemChoose
 import com.example.footapp.utils.formatToPrice
 
 class ItemChooseAdapter(
-    private val list: List<DetailItemChoose>,
-    private val itemPickedInterface: ItemPickedInterface
+    private var list: List<DetailItemChoose>,
+    private var itemPickedInterface: ItemPickedInterface
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {

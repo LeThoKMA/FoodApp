@@ -126,4 +126,13 @@ class CustomerActivity : BaseActivityForCustomer<ActivityCustomerBinding, Custom
         ).getNetworkCapabilities(network)
         return networkCapabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true
     }
+
+    override fun onDestroy() {
+        itemList.clear()
+        itemChooseAdapter.notifyDataSetChanged()
+        binding.tvPromotionDiscount.text = ""
+        binding.tvPrice.text = ""
+        (supportFragmentManager.findFragmentByTag("QR_DIALOG") as? DialogFragment)?.dismiss()
+        super.onDestroy()
+    }
 }

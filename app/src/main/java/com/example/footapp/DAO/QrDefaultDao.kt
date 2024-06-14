@@ -10,7 +10,7 @@ import com.example.footapp.model.dbmodel.QrDefault
 
 @Dao
 interface QrDefaultDao {
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertItem(qrDefault: QrDefault): Long
 
     @Query("SELECT COUNT(*) FROM QrDefault WHERE url = :url")

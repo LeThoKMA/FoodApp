@@ -56,7 +56,10 @@ class OrderWhenNetworkErrorActivity :
         }
         viewModel.category.observe(this) {
             listCategory.clear()
-            it?.let { it1 -> listCategory.addAll(it1) }
+            it?.let { it1 ->
+                listCategory.add(CategoryResponse(0, "Tất cả", true))
+                listCategory.addAll(it1)
+            }
             categoryAdapter?.notifyDataSetChanged()
         }
         viewModel.price.observe(this) {
@@ -86,8 +89,11 @@ class OrderWhenNetworkErrorActivity :
         binding.rvItemPick.layoutManager = LinearLayoutManager(this)
         binding.rvItemPick.adapter = itemChooseAdapter
 
-        categoryAdapter = CategoryAdapter(listCategory, onClickItem = {
-            viewModel.getProductByType(it)
+        categoryAdapter = CategoryAdapter(listCategory, onClickItem = {id ->
+            listCategory.forEach { if (it.id != id) it.isPicked = false }
+            listCategory[id].isPicked = true
+            categoryAdapter?.notifyDataSetChanged()
+            viewModel.getProductByType(id)
         })
         binding.rvType.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)

@@ -6,5 +6,6 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class CategoryResponse(
     val id: Int,
-    val name: String
+    val name: String,
+    var isPicked: Boolean = false
 ) : Parcelable

@@ -41,7 +41,7 @@ interface ApiService {
     ): BaseResponseNoBody
 
 
-    @GET("home/all")
+    @GET("home/products")
     suspend fun getItems(): BaseResponse<List<Item>>
 
     @POST("bill")

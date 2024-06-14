@@ -50,8 +50,11 @@ class HomeFragment() : BaseFragment<HomeFragmentBinding, OrderViewModel>(), Orde
         binding.rvItemPick.layoutManager = LinearLayoutManager(requireContext())
         binding.rvItemPick.adapter = itemChooseAdapter
 
-        categoryAdapter = CategoryAdapter(listCategory, onClickItem = {
-            viewModel.getProductByType(it)
+        categoryAdapter = CategoryAdapter(listCategory, onClickItem = { id ->
+            listCategory.forEach { if (it.id != id) it.isPicked = false }
+            listCategory[id].isPicked = true
+            categoryAdapter?.notifyDataSetChanged()
+            viewModel.getProductByType(id)
         })
         binding.rvType.adapter = categoryAdapter
     }
@@ -118,8 +121,17 @@ class HomeFragment() : BaseFragment<HomeFragmentBinding, OrderViewModel>(), Orde
 
         viewModel.category.observe(viewLifecycleOwner) {
             listCategory.clear()
-            it?.let { it1 -> listCategory.addAll(it1) }
+            it?.let { it1 ->
+                listCategory.add(CategoryResponse(0, "Tất cả", true))
+                listCategory.addAll(it1)
+            }
             categoryAdapter?.notifyDataSetChanged()
+        }
+        mainViewModel.paySuccess.observe(viewLifecycleOwner){
+            listItemChoose.clear()
+            itemChooseAdapter?.notifyDataSetChanged()
+            oderAdapter?.resetData()
+            binding?.tvPrice?.text = 0.formatToPrice()
         }
     }
 
@@ -149,11 +161,6 @@ class HomeFragment() : BaseFragment<HomeFragmentBinding, OrderViewModel>(), Orde
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
         if (!hidden) {
-            listItemChoose.clear()
-            itemChooseAdapter?.notifyDataSetChanged()
-            oderAdapter?.resetData()
-            viewModel.repository.resetData()
-            binding?.tvPrice?.text = 0.formatToPrice()
         }
     }
 

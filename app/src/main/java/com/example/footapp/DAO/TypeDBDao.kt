@@ -12,7 +12,7 @@ interface TypeDBDao {
     @Query("SELECT COUNT(*) FROM TypeDB WHERE name = :name")
     suspend fun countByName(name: String): Int
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(typeDB: TypeDB): Long
 
     @Transaction

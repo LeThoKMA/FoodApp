@@ -75,6 +75,7 @@ class PayConfirmFragment() :
         viewModel.message.observe(this) {
             viewModel.repository.resetData()
             Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
+            mainViewModel.onPaySuccess()
             findNavController().popBackStack(R.id.home_dest, false)
         }
     }

@@ -135,12 +135,17 @@ class OrderViewModel(
 
     fun getProductByType(id: Int) {
         viewModelScope.launch {
-            homeRepository.getProductByType(id)
-                .onStart { onRetrievePostListStart() }
-                .onCompletion { onRetrievePostListFinish() }
-                .collect {
-                    dataItems.postValue(it.data as ArrayList<Item>?)
+            if (id == 0) {
+                homeRepository.fetchItems().catch { handleApiError(it) }.collect { pairs ->
+                    dataItems.postValue(pairs.first.data as ArrayList<Item>?)
                 }
+            } else {
+                homeRepository.getProductByType(id)
+                    .catch { handleApiError(it) }
+                    .collect {
+                        dataItems.postValue(it.data as ArrayList<Item>?)
+                    }
+            }
         }
     }
 

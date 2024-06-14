@@ -10,7 +10,7 @@ import com.example.footapp.model.dbmodel.TypeDB
 
 @Dao
 interface ItemDao {
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertItem(itemDb: ItemDB): Long
 
     @Query("SELECT COUNT(*) FROM ItemDB WHERE name = :name")

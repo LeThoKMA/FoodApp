@@ -102,23 +102,43 @@ class OrderWhenNetworkErrorViewModel : BaseViewModel() {
 
     fun getProductByType(id: Int) {
         viewModelScope.launch {
-            offlineRepository.getAllItemByType(id)
-                .onStart { onRetrievePostListStart() }
-                .map {
-                    it.map { itemDb ->
-                        Item(
-                            itemDb.id!!,
-                            itemDb.name,
-                            itemDb.price!!,
-                            itemDb.amount,
-                            fromString(itemDb.imgUrl ?: "")
-                        )
+            if (id == 0) {
+                offlineRepository.getAllType()
+                    .map { it.map { typeDb -> CategoryResponse(typeDb.id, typeDb.name) } }
+                    .combine(
+                        offlineRepository.getAllItem().map {
+                            it.map { itemDb ->
+                                Item(
+                                    itemDb.id!!,
+                                    itemDb.name,
+                                    itemDb.price!!,
+                                    itemDb.amount,
+                                    fromString(itemDb.imgUrl ?: "")
+                                )
+                            }
+                        }, transform = { it1, it2 -> Pair(it1, it2) })
+                    .catch { message.postValue(it.message) }
+                    .collect {
+                        dataItems.postValue(it.second.toMutableList())
                     }
-                }
-                .onCompletion { onRetrievePostListFinish() }
-                .collect {
-                    dataItems.postValue(it.toMutableList())
-                }
+            } else {
+                offlineRepository.getAllItemByType(id)
+                    .map {
+                        it.map { itemDb ->
+                            Item(
+                                itemDb.id!!,
+                                itemDb.name,
+                                itemDb.price!!,
+                                itemDb.amount,
+                                fromString(itemDb.imgUrl ?: "")
+                            )
+                        }
+                    }
+                    .collect {
+                        dataItems.postValue(it.toMutableList())
+                    }
+            }
+
         }
     }
 

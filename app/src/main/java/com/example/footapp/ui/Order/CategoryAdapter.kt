@@ -29,6 +29,12 @@ class CategoryAdapter(
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val tvName: TextView = view.findViewById(R.id.tv_type)
         fun bind(item: CategoryResponse, onClickItem: (Int) -> Unit) {
+            if (item.isPicked) {
+                tvName.setBackgroundResource(R.drawable.bg_blue)
+            } else {
+                tvName.setBackgroundResource(R.drawable.bg_gray)
+
+            }
             tvName.text = item.name
             tvName.setOnClickListener { onClickItem.invoke(item.id) }
         }
